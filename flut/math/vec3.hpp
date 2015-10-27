@@ -17,6 +17,9 @@ namespace flut
 			//vec3_( const vec3_& other ) : x( other.x ), y( other.y ), z( other.z ) {}
 			//vec3_<T>& operator=( const vec3_<T>& other ) { x = other.x; y = other.y; z = other.z; }
 
+			/// Scalar multiplication
+			vec3_<T>& operator*=( T s ) { x *= s; y *= s; z *= s; return *this; }
+
 			T x, y, z;
 			T* data() { return &x; }
 		};
@@ -34,7 +37,7 @@ namespace flut
 		template< typename T > vec3_<T> operator-( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return vec3_<T>( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z ); }
 
-		/// Multiply with scalar
+		/// Scalar multiplication
 		template< typename T > vec3_<T> operator*( T s, const vec3_<T>& v )
 		{ return vec3_<T>( s * v.x, s * v.y, s * v.z ); }
 		template< typename T > vec3_<T> operator*( const vec3_<T>& v, T s )
@@ -67,6 +70,10 @@ namespace flut
 		/// Dot product of two vec3
 		template< typename T > T dot_product( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z; }
+
+		/// Cross product
+		template< typename T > vec3_<T> cross_product( const vec3_<T>& v1, const vec3_<T>& v2 )
+		{ return vec3_<T>( v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x ); }
 
 		/// stream out
 		template< typename T >

@@ -22,7 +22,15 @@ namespace flut
 		template< typename T > quat_<T> operator*( const quat_<T>& q1, const quat_<T>& q2 );
 
 		/** Vector multiplication. */
-		template< typename T > vec3_<T> operator*( const quat_<T>& q1, const vec3_<T>& v );
+		template< typename T > vec3_<T> operator*( const quat_<T>& q, const vec3_<T>& v )
+		{
+			vec3_<T> qv( q.x, q.y, q.z );
+			vec3_<T> uv = cross_product( qv, v );
+			vec3_<T> uuv = cross_product( qv, uv );
+			uv *= T( 2 ) * q.w;
+			uuv *= T( 2 );
+			return v + uv + uuv;
+		}
 
 		/** Negation (conjugate). */
 		template< typename T > quat_<T> operator-( const quat_<T>& q );
