@@ -18,7 +18,7 @@ namespace flut
 			//vec3_<T>& operator=( const vec3_<T>& other ) { x = other.x; y = other.y; z = other.z; }
 
 			/// Scalar multiplication
-			vec3_<T>& operator*=( T s ) { x *= s; y *= s; z *= s; return *this; }
+			//vec3_<T>& operator*=( T s ) { x *= s; y *= s; z *= s; return *this; }
 
 			T x, y, z;
 			T* data() { return &x; }
@@ -42,6 +42,8 @@ namespace flut
 		{ return vec3_<T>( s * v.x, s * v.y, s * v.z ); }
 		template< typename T > vec3_<T> operator*( const vec3_<T>& v, T s )
 		{ return vec3_<T>( s * v.x, s * v.y, s * v.z ); }
+		template< typename T > vec3_<T> operator*=( vec3_<T>& v, T s )
+		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
 		/// Get length of a vec3
 		template< typename T > T length( const vec3_<T>& v )
