@@ -7,6 +7,30 @@ namespace flut
 {
 	namespace math
 	{
+		template< typename Q > struct v4i { const static bool value = false; };
+
+		template<> struct v4i< quatf >
+		{
+			typedef float elem_t;
+			static const elem_t& w( const quatf& q ) { return q.w; }
+			static const elem_t& x( const quatf& q ) { return q.x; }
+			static const elem_t& y( const quatf& q ) { return q.y; }
+			static const elem_t& z( const quatf& q ) { return q.z; }
+			static quatf make( elem_t w, elem_t x, elem_t y, elem_t z ) { return quatf( w, x, y, z ); }
+			const static bool value = true;
+		};
+
+		template<> struct v4i< quatd >
+		{
+			typedef double elem_t;
+			static const elem_t& w( const quatd& q ) { return q.w; }
+			static const elem_t& x( const quatd& q ) { return q.x; }
+			static const elem_t& y( const quatd& q ) { return q.y; }
+			static const elem_t& z( const quatd& q ) { return q.z; }
+			static quatd make( elem_t w, elem_t x, elem_t y, elem_t z ) { return quatd( w, x, y, z ); }
+			const static bool value = true;
+		};
+
 		/** Get quaternion using three axis vectors. */
 		template< typename Q, typename V > Q make_from_axes( const V& x, const V& y, const V& z )
 		{
@@ -14,9 +38,7 @@ namespace flut
 		}
 
 		template< typename Q1, typename Q2 > Q1 make_from_quat( const Q2& q )
-		{
-			return v4i<Q1>::make( v4i<Q2>::w( q ), v4i<Q2>::x( q ), v4i<Q2>::y( q ), v4i<Q2>::z( q ) );
-		}
+		{ return v4i<Q1>::make( v4i<Q2>::w( q ), v4i<Q2>::x( q ), v4i<Q2>::y( q ), v4i<Q2>::z( q ) ); }
 
 
 		/** Quaternion multiplication. */

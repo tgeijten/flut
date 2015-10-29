@@ -24,15 +24,15 @@ namespace flut
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
 		/// Get length of a vec3
-		template< typename T > T length( const vec3_<T>& v )
+		template< typename T > T length( vec3_<T> v )
 		{ return sqrt( v.x * v.x + v.y * v.y + v.z * v.z ); }
 
 		/// Get squared length of a vec3
-		template< typename T > T squared_length( const vec3_<T>& v )
+		template< typename T > T squared_length( vec3_<T> v )
 		{ return v.x * v.x + v.y * v.y + v.z * v.z; }
 
 		/// Get normalized vec3
-		template< typename T > vec3_<T> normalized( const vec3_<T>& v )
+		template< typename T > vec3_<T> normalized( vec3_<T> v )
 		{
 			T l = length( v );
 			if ( l > std::numeric_limits< T >::epsilon() ) return ( T( 1 ) / l ) * v;
