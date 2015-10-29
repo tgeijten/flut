@@ -1,19 +1,20 @@
 #pragma once
 
-#include "vec3_type.hpp"
 #include <limits>
+
+#include "vec3_type.hpp"
 
 namespace flut
 {
 	namespace math
 	{
 		/// Addition
-		template< typename T > vec3_<T> operator+( const vec3_<T>& v1, const vec3_<T>& v2 )
-		{ return vec3_<T>( v1.x + v2.x, v1.y + v2.y, v1.z + v2.z ); }
+		template< typename T > T operator+( const T& v1, const T& v2 )
+		{ return v3i<T>::make( v3i<T>::x(v1) + v3i<T>::x(v2), v3i<T>::y(v1) + v3i<T>::y(v2), v3i<T>::z(v1) + v3i<T>::z(v2) ); }
 
 		/// Subtraction
-		template< typename T > vec3_<T> operator-( const vec3_<T>& v1, const vec3_<T>& v2 )
-		{ return vec3_<T>( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z ); }
+		template< typename T > T operator-( const T& v1, const T& v2 )
+		{ return v3i<T>::make( v3i<T>::x(v1) - v3i<T>::x(v2), v3i<T>::y(v1) - v3i<T>::y(v2), v3i<T>::z(v1) - v3i<T>::z(v2) ); }
 
 		/// Scalar multiplication
 		template< typename T > vec3_<T> operator*( T s, const vec3_<T>& v )
