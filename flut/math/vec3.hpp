@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vec3_type.hpp"
-#include <limits>
 
 namespace flut
 {
@@ -35,7 +34,7 @@ namespace flut
 		template< typename T > vec3_<T> normalized( vec3_<T> v )
 		{
 			T l = length( v );
-			if ( l > std::numeric_limits< T >::epsilon() ) return ( T( 1 ) / l ) * v;
+			if ( l > constants<T>::epsilon() ) return ( T( 1 ) / l ) * v;
 			else return vec3_<T>( 0 );
 		}
 
@@ -43,7 +42,7 @@ namespace flut
 		template< typename T > void normalize( vec3_<T>& v )
 		{
 			T l = length( v );
-			if ( l > std::numeric_limits< T >::epsilon() )
+			if ( l > constants<T>::epsilon() )
 			{ T inv_l = T( 1 ) / l; v.x *= s; v.y *= s; v.z *= s; }
 		}
 

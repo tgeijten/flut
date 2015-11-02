@@ -11,7 +11,13 @@ namespace flut
 		{
 			vec3_() {}
 			vec3_( E x, E y, E z ) : x( x ), y( y ), z( z ) {}
-			E x, y, z;
+			const E& operator[]( index_t idx ) const { return data[idx]; }
+			E& operator[]( index_t idx ) { return data[idx]; }
+			union
+			{
+				E x, y, z;
+				E data[3];
+			};
 		};
 
 		/// template instantiations
