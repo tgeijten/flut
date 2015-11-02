@@ -21,8 +21,13 @@
     <ClInclude Include="..\..\flut\math\vec3_type.hpp" />
     <ClInclude Include="..\..\flut\system\assert.hpp" />
     <ClInclude Include="..\..\flut\system\log.hpp" />
+    <ClInclude Include="..\..\test\scone\core.h" />
+    <ClInclude Include="..\..\test\scone\Quat.h" />
+    <ClInclude Include="..\..\test\scone\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\test\scone\Quat.cpp" />
+    <ClCompile Include="..\..\test\scone\Vec3.cpp" />
     <ClCompile Include="..\..\test\test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

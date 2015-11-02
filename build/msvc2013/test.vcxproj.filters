@@ -10,6 +10,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{c1a09d3e-73ea-4ff5-9223-eec197e4afd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\scone">
+      <UniqueIdentifier>{2699a03c-bdf1-414a-b732-e5ef20b82353}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\flut\math\quat.hpp">
@@ -42,10 +45,25 @@
     <ClInclude Include="..\..\flut\math\random.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\test\scone\core.h">
+      <Filter>test\scone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\scone\Quat.h">
+      <Filter>test\scone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\scone\Vec3.h">
+      <Filter>test\scone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\test.cpp">
       <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\scone\Quat.cpp">
+      <Filter>test\scone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\scone\Vec3.cpp">
+      <Filter>test\scone</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

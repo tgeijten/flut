@@ -35,7 +35,7 @@ namespace flut
 		{
 			T l = length( v );
 			if ( l > constants<T>::epsilon() ) return ( T( 1 ) / l ) * v;
-			else return vec3_<T>( 0 );
+			else return v;
 		}
 
 		/// Normalize a vec3
@@ -55,13 +55,11 @@ namespace flut
 		{ return vec3_<T>( v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x ); }
 
 		/// stream out
-		template< typename T >
-		std::ostream& operator<<( std::ostream& str, const vec3_<T>& v )
+		template< typename T > std::ostream& operator<<( std::ostream& str, const vec3_<T>& v )
 		{ str << v.x << ' ' << v.y << ' ' << v.z; return str; }
 
 		/// stream in
-		template< typename T >
-		std::istream& operator>>( std::istream& str, vec3_<T>& v )
+		template< typename T > std::istream& operator>>( std::istream& str, vec3_<T>& v )
 		{ str >> v.x >> v.y >> v.z; return str; }
 	}
 }

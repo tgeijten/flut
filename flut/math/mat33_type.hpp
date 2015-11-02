@@ -15,12 +15,9 @@ namespace flut
 				e00( v00 ), e01( v01 ), e02( v02 ), e10( v10 ), e11( v11 ), e12( v12 ), e20( v20 ), e21( v21 ), e22( v22 ) {}
 			~mat33_() {}
 
-			T* operator[]( index_t row ) { return data[ row * 3 ]; }
-			union
-			{
-				T e00, e01, e02, e10, e11, e12, e20, e21, e22;
-				T data[3][3];
-			};
+			T* operator[]( index_t row ) { return &ptr()[ row * 3 ]; }
+			T* ptr() { return &e00; }
+			T e00, e01, e02, e10, e11, e12, e20, e21, e22;
 		};
 
 		typedef mat33_< real_t > mat33;

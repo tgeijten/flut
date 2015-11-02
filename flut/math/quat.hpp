@@ -4,6 +4,7 @@
 #include "mat33.hpp"
 #include "math_types.hpp"
 #include "../system/assert.hpp"
+#include <ostream>
 
 namespace flut
 {
@@ -72,7 +73,7 @@ namespace flut
 		template< typename T > quat_<T> make_quat_from_axes( const vec3_<T>& x, const vec3_<T>& y, const vec3_<T>& z )
 		{
 			quat_<T> q;
-			mat33_<T> m = mat33_from_axes( x, y, z );
+			mat33_<T> m = mat33_from_axes( normalized( x ), normalized( y ), normalized( z ) );
 
 			T t = m[0][0] + m[1][1] + m[2][2];
 			if ( t > 0.0 )
@@ -103,5 +104,10 @@ namespace flut
 
 			return q;
 		}
+
+
+		/// Stream output
+		template< typename T > std::ostream& operator<<( std::ostream& str, const quat_<T>& v )
+		{ str << v.w << ' ' << v.x << ' ' << v.y << ' ' << v.z; return str; }
 	}
 }
