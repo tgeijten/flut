@@ -19,6 +19,9 @@
     <ClInclude Include="..\..\flut\math\random.hpp" />
     <ClInclude Include="..\..\flut\math\vec3.hpp" />
     <ClInclude Include="..\..\flut\math\vec3_type.hpp" />
+    <ClInclude Include="..\..\flut\storage\buffer_info.hpp" />
+    <ClInclude Include="..\..\flut\storage\frame.hpp" />
+    <ClInclude Include="..\..\flut\storage\ring_buffer.hpp" />
     <ClInclude Include="..\..\flut\string_tools.hpp" />
     <ClInclude Include="..\..\flut\system\assert.hpp" />
     <ClInclude Include="..\..\flut\system\log.hpp" />

@@ -19,7 +19,6 @@
 
 #define flut_nvp( variable_ ) ( #variable_"=" + to_string( variable_ ) + ' ' )
 
-
 namespace fluc
 {
 	namespace log

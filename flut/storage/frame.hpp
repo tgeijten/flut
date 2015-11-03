@@ -1,8 +1,8 @@
 #pragma once
 
-namespace scone
+namespace flut
 {
-	namespace data
+	namespace storage
 	{
 		template< typename BufferT< typename DataT > >
 		struct frame

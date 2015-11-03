@@ -1,8 +1,8 @@
 #pragma once
 
-namespace scone
+namespace flut
 {
-	namespace data
+	namespace storage
 	{
 		template< typename T >
 		struct ring_buffer

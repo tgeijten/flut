@@ -13,6 +13,9 @@
     <Filter Include="test\scone">
       <UniqueIdentifier>{2699a03c-bdf1-414a-b732-e5ef20b82353}</UniqueIdentifier>
     </Filter>
+    <Filter Include="storage">
+      <UniqueIdentifier>{d1540012-2086-4fc3-93f6-391c5da14e9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\flut\math\quat.hpp">
@@ -55,6 +58,15 @@
     </ClInclude>
     <ClInclude Include="..\..\flut\math\mat33_type.hpp">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\storage\buffer_info.hpp">
+      <Filter>storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\storage\frame.hpp">
+      <Filter>storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\storage\ring_buffer.hpp">
+      <Filter>storage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

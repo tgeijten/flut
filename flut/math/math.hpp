@@ -7,7 +7,7 @@ namespace flut
 {
 	namespace math
 	{
-		/// math constants
+		/// constants
 		template< typename T = real_t > struct constants
 		{
 			static T pi() { return T( 3.14159265358979 ); }
