@@ -14,14 +14,24 @@ namespace flut
 
 #define FLUT_CRITICAL_ERROR( message_ ) throw flut::Exception( message_ );
 
+#ifdef _DEBUG
+
+#define flut_debug_assert( expression_ ) \
+if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_ );
+
+#define flut_debug_assert_msg( expression_, message_ ) \
+if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
+
+#endif
+
 #define flut_assert( expression_ ) \
-if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __func__ ) + "(): "#expression_ );
+if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_ );
 
 #define flut_assert_msg( expression_, message_ ) \
-if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __func__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
+if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
 
 #define flut_throw( message_ ) \
-throw flut::Exception( std::string( __func__ ) + "(): " + std::string( message_ ) )
+throw flut::Exception( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) )
 
 #define flut_throw_if( condition_, message_ ) \
 { if ( condition_ ) throw flut::Exception( std::string( __func__ ) + "(): " + std::string( message_ ) ); }

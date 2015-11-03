@@ -2,6 +2,7 @@
 
 #include <iosfwd>
 #include <ostream>
+#include "../string_tools.hpp"
 
 #define fluc_do_periodic( interval_, statement_ ) { static local_count_ = 0; if ( local_count_++ % interval_ == 0 ) { statement_; } }
 
@@ -16,18 +17,21 @@
 #define FLUC_LOG_OUTPUT_STREAM std::cout
 #endif
 
+#define flut_nvp( variable_ ) ( #variable_"=" + to_string( variable_ ) + ' ' )
+
+
 namespace fluc
 {
 	namespace log
 	{
 		struct stream_ignore_wrapper {
 			template< typename T >
-			null_stream& operator<<( T& value ) const { return *this; }
+			stream_ignore_wrapper& operator<<( T& value ) const { return *this; }
 		};
 
 		struct stream_output_wrapper {
 			template< typename T >
-			null_stream& operator<<( T& value ) const { std::cout << T; return *this; }
+			stream_output_wrapper& operator<<( T& value ) const { std::cout << T; return *this; }
 		};
 
 		const stream_ignore_wrapper ignore_stream;

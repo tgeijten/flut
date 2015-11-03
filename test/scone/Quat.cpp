@@ -299,22 +299,22 @@ namespace scone
 		switch( eulerOrder )
 		{
 		case EULER_ORDER_XYZ:
-			return QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * QuatFromAxisAngle( Vec3::UNIT_Z, zAngle );
+			return QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * ( QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) );
 			break;
 		case EULER_ORDER_XZY:
-			return QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * QuatFromAxisAngle( Vec3::UNIT_Y, yAngle );
+			return QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * ( QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) );
 			break;
 		case EULER_ORDER_YXZ:
-			return QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * QuatFromAxisAngle( Vec3::UNIT_Z, zAngle );
+			return QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * ( QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) );
 			break;
 		case EULER_ORDER_YZX:
-			return QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * QuatFromAxisAngle( Vec3::UNIT_X, xAngle );
+			return QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * ( QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) );
 			break;
 		case EULER_ORDER_ZXY:
-			return QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * QuatFromAxisAngle( Vec3::UNIT_Y, yAngle );
+			return QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * ( QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) * QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) );
 			break;
 		case EULER_ORDER_ZYX:
-			return QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * QuatFromAxisAngle( Vec3::UNIT_X, xAngle );
+			return QuatFromAxisAngle( Vec3::UNIT_Z, zAngle ) * ( QuatFromAxisAngle( Vec3::UNIT_Y, yAngle ) * QuatFromAxisAngle( Vec3::UNIT_X, xAngle ) );
 			break;
 		default:
 			throw std::logic_error( "Euler order not supported" );
@@ -326,9 +326,9 @@ namespace scone
 	{
 		// Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
 		// article "Quaternion Calculus and Fast Animation".
-		Vec3 xnorm = xvec.GetNormalized();
-		Vec3 ynorm = yvec.GetNormalized();
-		Vec3 znorm = zvec.GetNormalized();
+		Vec3 xnorm = xvec;
+		Vec3 ynorm = yvec;
+		Vec3 znorm = zvec;
 
 		Quat q_ret;
 		Real rot[3][3];

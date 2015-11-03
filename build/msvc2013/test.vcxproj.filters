@@ -27,15 +27,6 @@
     <ClInclude Include="..\..\flut\math\vec3_type.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\flut\math\mat33.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\mat33_type.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\math_types.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\flut\system\assert.hpp">
       <Filter>system</Filter>
     </ClInclude>
@@ -53,6 +44,17 @@
     </ClInclude>
     <ClInclude Include="..\..\test\scone\Vec3.h">
       <Filter>test\scone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\string_tools.hpp" />
+    <ClInclude Include="..\..\flut\types.hpp" />
+    <ClInclude Include="..\..\flut\math\math.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\mat33.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\mat33_type.hpp">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

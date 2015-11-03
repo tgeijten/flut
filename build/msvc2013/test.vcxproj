@@ -13,14 +13,16 @@
   <ItemGroup>
     <ClInclude Include="..\..\flut\math\mat33.hpp" />
     <ClInclude Include="..\..\flut\math\mat33_type.hpp" />
-    <ClInclude Include="..\..\flut\math\math_types.hpp" />
+    <ClInclude Include="..\..\flut\math\math.hpp" />
     <ClInclude Include="..\..\flut\math\quat.hpp" />
     <ClInclude Include="..\..\flut\math\quat_type.hpp" />
     <ClInclude Include="..\..\flut\math\random.hpp" />
     <ClInclude Include="..\..\flut\math\vec3.hpp" />
     <ClInclude Include="..\..\flut\math\vec3_type.hpp" />
+    <ClInclude Include="..\..\flut\string_tools.hpp" />
     <ClInclude Include="..\..\flut\system\assert.hpp" />
     <ClInclude Include="..\..\flut\system\log.hpp" />
+    <ClInclude Include="..\..\flut\types.hpp" />
     <ClInclude Include="..\..\test\scone\core.h" />
     <ClInclude Include="..\..\test\scone\Quat.h" />
     <ClInclude Include="..\..\test\scone\Vec3.h" />

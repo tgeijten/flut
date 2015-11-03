@@ -30,21 +30,17 @@ namespace flut
 		template< typename T > T squared_length( vec3_<T> v )
 		{ return v.x * v.x + v.y * v.y + v.z * v.z; }
 
-		/// Get normalized vec3
-		template< typename T > vec3_<T> normalized( vec3_<T> v )
-		{
-			T l = length( v );
-			if ( l > constants<T>::epsilon() ) return ( T( 1 ) / l ) * v;
-			else return v;
-		}
+		/// test if a vec3 is of unit length
+		template< typename T > T is_normalized( vec3_<T> v )
+		{ return equals( v.x * v.x + v.y * v.y + v.z * v.z, T(1) ); }
 
 		/// Normalize a vec3
 		template< typename T > void normalize( vec3_<T>& v )
-		{
-			T l = length( v );
-			if ( l > constants<T>::epsilon() )
-			{ T inv_l = T( 1 ) / l; v.x *= s; v.y *= s; v.z *= s; }
-		}
+		{ T l = length( v ); if ( l > constants<T>::epsilon() ) { T s = inv( l ); v.x *= s; v.y *= s; v.z *= s; } }
+
+		/// Get normalized vec3
+		template< typename T > vec3_<T> normalized( vec3_<T> v )
+		{ normalize( v ); return v; }
 
 		/// Dot product of two vec3
 		template< typename T > T dot_product( const vec3_<T>& v1, const vec3_<T>& v2 )

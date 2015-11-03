@@ -1,52 +1,26 @@
 #pragma once
 
-#include <iosfwd>
-#include <stdarg.h>
-#include <string>
+#include "types.hpp"
+#include <sstream>
 #include <vector>
+#include <stdarg.h>
 
-namespace moper
+namespace flut
 {
-	/// Get formatted string (printf style)
-	std::string stringf( const char* format, ... ) {
-		va_list args;
-		va_start( args, format );
-		char buf[ 256 ];
-		vsprintf_s( buf, sizeof( buf ), format, args );
-		va_end( args );
-		return std::string( buf );
-	}
+	/// get left n characters
+	string left_str( const string& str, size_t n ) { return str.substr( 0, n ); }
 
-	/// Get file extension (without dot -- or is it??)
-	std::string get_filename_ext( const std::string& str ) {
-		size_t n = str.find_last_of( "." );
-		if ( n == std::string::npos ) {
-			std::string ext = str.substr( n );
-			if ( ext.find_last_of( "/\\" ) != std::string::npos ) // check if not part of folder
-				return ext;
-		}
-		return std::string(); // no extension found
-	}
+	/// get middle n characters, starting from pos
+	string mid_str( const string& str, index_t pos, size_t n = string::npos ) { return str.substr( pos, n ); }
 
-	/// Get file without extension (without dot)
-	std::string get_filename_stem( const std::string& str ) {
-		return str.substr( 0, str.size() - get_filename_ext( str ).size() );
-	}
+	/// get middle n characters, starting from pos
+	string right_str( const string& str, size_t n ) { return str.substr( str.size() - n, string::npos ); }
 
-	/// convert any streamable type to string
-	template< typename T >
-	string to_string( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+	/// get middle n characters, starting from pos
+	index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
-	/// convert string to any streamable type
-	template< typename T >
-	T from_string( const std::string& s ) { T value; std::istringstream ostr( s ); str << value; return str.str(); }
-	template<> std::string from_string< std::string >( const std::string& s ) { return s; }
-
-	/// get a string between quotes
-	inline std::string quoted( const std::string& s ) { return '\"' + s + '\"'; }
-
-	/// tokenize a string
-	std::vector< std::string > split_string( const std::string& s, const std::string& sep_chars ) {
+	/// split a string into a vector of strings
+	std::vector< string > split_str( const std::string& s, const std::string& sep_chars ) {
 		std::vector< std::string > strings;
 		size_t ofs = s.find_first_not_of( sep_chars.c_str(), 0 );
 		while ( ofs != std::string::npos ) {
@@ -56,4 +30,41 @@ namespace moper
 		}
 		return strings;
 	}
+
+	/// get formatted string (printf style)
+	string stringf( const char* format, ... ) {
+		va_list args;
+		va_start( args, format );
+		char buf[ 256 ];
+		vsprintf_s( buf, sizeof( buf ), format, args );
+		va_end( args );
+		return std::string( buf );
+	}
+
+	/// Get file extension (without dot)
+	string get_filename_ext( const string& str ) {
+		size_t n = str.find_last_of( '.' );
+		if ( n != std::string::npos ) {
+			std::string ext = str.substr( n + 1 );
+			if ( ext.find_last_of( "/\\" ) != std::string::npos ) // check if not part of folder
+				return ext;
+		}
+		return std::string(); // no extension found
+	}
+
+	/// Get file without extension (without dot)
+	string get_filename_stem( const string& str )
+	{ return str.substr( 0, str.size() - get_filename_ext( str ).size() ); }
+
+	/// convert any streamable type to string
+	template< typename T >
+	string to_string( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+
+	/// convert string to any streamable type
+	template< typename T >
+	T from_string( const std::string& s ) { T value; std::istringstream ostr( s ); str << value; return str.str(); }
+	template<> string from_string< std::string >( const std::string& s ) { return s; }
+
+	/// get a string between quotes
+	inline string quoted( const std::string& s ) { return '\"' + s + '\"'; }
 }
