@@ -9,9 +9,6 @@ namespace flut
 		{
 			frame() {}
 			virtual ~frame() {}
-
-			std::vector
-			
 		};
 	}
 }
