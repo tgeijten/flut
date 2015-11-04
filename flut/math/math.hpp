@@ -12,9 +12,9 @@ namespace flut
 		{
 			static T pi() { return T( 3.14159265358979 ); }
 			static T half_pi() { return T( 0.5 * 3.14159265358979 ); }
-			static T two_pi() { return T( 2.0 * 3.14159265358979 ); }
+			static T two_pi() { return T( 2 * 3.14159265358979 ); }
 			static T epsilon() { return std::numeric_limits< T >::epsilon(); }
-			static T relaxed_epsilon() { return 4 * std::numeric_limits< T >::epsilon(); }
+			static T relaxed_epsilon() { return T( 4 * std::numeric_limits< T >::epsilon() ); }
 			static T one() { return T( 1 ); }
 			static T zero() { return T( 0 ); }
 		};
@@ -26,20 +26,32 @@ namespace flut
 		template< typename T > T inv( T v ) { return T( 1 ) / v; }
 		template< typename T > T invsqrt( T v ) { return T( 1 ) / sqrt( v ); }
 
+		/// number struct
+		template< typename T > struct number_
+		{
+			T value;
+			number_<T> operator*( number_<T> o ) const { return value * o.value; }
+			number_<T> operator/( number_<T> o ) const { return value / o.value; }
+		protected: // constructor is protected and should only by used by derived types
+			number_( T v ) : value( v ) {}
+		};
+
 		/// degrees and radians
 		struct degree;
-		struct radian
+		struct radian : public number_<real_t>
 		{
-			explicit radian( real_t v = 0.0 ) : value( v ) {}
+			explicit radian( real_t v = 0.0 ) : number_<real_t>( v ) {}
 			explicit radian( degree v );
-			real_t value;
+			radian operator+( radian o ) const { return radian( value + o.value ); }
+			radian operator-( radian o ) const { return radian( value - o.value ); }
 		};
-		struct degree
+		struct degree : public number_<real_t>
 		{
-			explicit degree( real_t v = 0.0 ) : value( v ) {}
-			explicit degree( const radian& v ) : value( rad_to_deg( v.value ) ) {}
-			real_t value;
+			explicit degree( real_t v = 0.0 ) : number_<real_t>( v ) {}
+			explicit degree( const radian& v ) : number_<real_t>( rad_to_deg( v.value ) ) {}
+			degree operator+( degree o ) const { return degree( value + o.value ); }
+			degree operator-( degree o ) const { return degree( value - o.value ); }
 		};
-		radian::radian( degree v ) : value( deg_to_rad( v.value ) ) {}
+		inline radian::radian( degree v ) : number_<real_t>( deg_to_rad( v.value ) ) {}
 	}
 }

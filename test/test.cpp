@@ -40,6 +40,10 @@ int main( int argc, char* argv[] )
 	flut_logvar2( constants<double>::epsilon(), constants<double>::relaxed_epsilon() );
 	flut_logvar2( constants<float>::epsilon(), constants<float>::relaxed_epsilon() );
 
+	auto ang1 = degree( 45 );
+	auto ang2 = radian( ang1 );
+	auto ang3 = ang1 + degree( 180 );
+
 	std::default_random_engine re( 123 );
 	std::uniform_real_distribution<> rd( -10, 10 );
 

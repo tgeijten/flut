@@ -4,17 +4,20 @@
 #include <sstream>
 #include <vector>
 #include <stdarg.h>
+#include <algorithm>
 
 namespace flut
 {
 	/// get left n characters
-	string left_str( const string& str, size_t n ) { return str.substr( 0, n ); }
+	string left_str( const string& str, int i )
+	{ if ( i >= 0 ) return str.substr( 0, size_t( i ) ); else return str.substr( 0, size_t( std::max( 0, int(str.size()) + i ) ) ); }
 
 	/// get middle n characters, starting from pos
 	string mid_str( const string& str, index_t pos, size_t n = string::npos ) { return str.substr( pos, n ); }
 
 	/// get middle n characters, starting from pos
-	string right_str( const string& str, size_t n ) { return str.substr( str.size() - n, string::npos ); }
+	string right_str( const string& str, int i )
+	{ if ( i >= 0 ) return str.substr( str.size() - i, string::npos ); else return str.substr( size_t( -i ), string::npos ); }
 
 	/// get middle n characters, starting from pos
 	index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
@@ -58,7 +61,7 @@ namespace flut
 
 	/// convert any streamable type to string
 	template< typename T >
-	string to_string( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+	string make_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
 
 	/// convert string to any streamable type
 	template< typename T >
