@@ -14,11 +14,15 @@ namespace flut
 		template< typename T > vec3_<T> operator-( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return vec3_<T>( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z ); }
 
+		/// Negation
+		template< typename T > vec3_<T> operator-( vec3_<T> v )
+		{ v.x = -v.x; v.y = -v.y; v.z = -v.z; return v; }
+
 		/// Scalar multiplication
-		template< typename T > vec3_<T> operator*( T s, const vec3_<T>& v )
-		{ return vec3_<T>( s * v.x, s * v.y, s * v.z ); }
-		template< typename T > vec3_<T> operator*( const vec3_<T>& v, T s )
-		{ return vec3_<T>( s * v.x, s * v.y, s * v.z ); }
+		template< typename T > vec3_<T> operator*( T s, vec3_<T> v )
+		{ v.x *= s; v.y *= s; v.z *= s; return v; }
+		template< typename T > vec3_<T> operator*( vec3_<T> v, T s )
+		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 		template< typename T > vec3_<T> operator*=( vec3_<T>& v, T s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
