@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\flut\math\mat33.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\mat33_type.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\math.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\quat.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\quat_tmp.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\quat_type.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\random.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\vec3.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\vec3_tmp.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\math\vec3_type.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\storage\buffer_info.hpp">
+      <Filter>storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\storage\frame.hpp">
+      <Filter>storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\storage\ring_buffer.hpp">
+      <Filter>storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\system\assert.hpp">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\system\log.hpp">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\flut\string_tools.hpp" />
+    <ClInclude Include="..\..\flut\types.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{b025da50-7239-4964-ba5c-bbd5a99163fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="storage">
+      <UniqueIdentifier>{26e5f6b4-e73d-4dc6-8417-0b411d3c880e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{089f07e1-002e-46f8-a943-32af209ea7c6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

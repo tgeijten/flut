@@ -1,83 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="math">
-      <UniqueIdentifier>{af445d50-eac3-42db-93f0-22c044753d0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="test">
-      <UniqueIdentifier>{2fe2d74e-89e1-49e0-892b-0c48bfb12c14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="system">
-      <UniqueIdentifier>{c1a09d3e-73ea-4ff5-9223-eec197e4afd0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="test\scone">
+    <Filter Include="scone">
       <UniqueIdentifier>{2699a03c-bdf1-414a-b732-e5ef20b82353}</UniqueIdentifier>
     </Filter>
-    <Filter Include="storage">
-      <UniqueIdentifier>{d1540012-2086-4fc3-93f6-391c5da14e9f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\flut\math\quat.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\vec3.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\quat_type.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\vec3_type.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\system\assert.hpp">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\system\log.hpp">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\random.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\test\scone\core.h">
-      <Filter>test\scone</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\scone\Quat.h">
-      <Filter>test\scone</Filter>
+      <Filter>scone</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\scone\Vec3.h">
-      <Filter>test\scone</Filter>
+      <Filter>scone</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\flut\string_tools.hpp" />
-    <ClInclude Include="..\..\flut\types.hpp" />
-    <ClInclude Include="..\..\flut\math\math.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\mat33.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\math\mat33_type.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\storage\buffer_info.hpp">
-      <Filter>storage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\storage\frame.hpp">
-      <Filter>storage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\flut\storage\ring_buffer.hpp">
-      <Filter>storage</Filter>
+    <ClInclude Include="..\..\test\scone\core.h">
+      <Filter>scone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\test\test.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\test\test.cpp" />
     <ClCompile Include="..\..\test\scone\Quat.cpp">
-      <Filter>test\scone</Filter>
+      <Filter>scone</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\scone\Vec3.cpp">
-      <Filter>test\scone</Filter>
+      <Filter>scone</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

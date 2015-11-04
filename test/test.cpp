@@ -37,10 +37,11 @@ void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::rel
 
 int main( int argc, char* argv[] )
 {
-	cout << "eps_dbl=" << constants< double >::epsilon() << " eps_flt=" << constants< float >::epsilon() << endl;
+	flut_logvar2( constants<double>::epsilon(), constants<double>::relaxed_epsilon() );
+	flut_logvar2( constants<float>::epsilon(), constants<float>::relaxed_epsilon() );
 
 	std::default_random_engine re( 123 );
-	std::uniform_real_distribution<> rd( -constants<>::pi(), constants<>::pi() );
+	std::uniform_real_distribution<> rd( -10, 10 );
 
 	for ( size_t experiment = 0; experiment < 10; ++experiment )
 	{
@@ -52,14 +53,12 @@ int main( int argc, char* argv[] )
 		auto flut_x = normalized( flut_v2 - flut_v1 );
 		auto flut_y = normalized( cross_product( flut_x, normalized( flut_v2 ) ) );
 		auto flut_z = cross_product( flut_x, flut_y );
-		cout << flut_nvp( flut_x.length() ) << flut_nvp( flut_y.length() ) << flut_nvp( flut_z.length() ) << endl;
+		flut_logvar3( flut_x.length(), flut_y.length(), flut_z.length() );
 		auto flut_q1 = make_quat_from_axes( flut_x, flut_y, flut_z );
 		auto flut_q2 = make_quat_from_axis_angle( normalized( vec3( rv[6], rv[7], rv[8] ) ), radian( rv[9] ) );
 		auto flut_q3 = flut_q1 * flut_q2;
 		auto flut_q4 = normalized( flut_q3 );
-		cout << "flut_q1 length=" << length( flut_q1 ) << endl;
-		cout << "flut_q2 length=" << length( flut_q2 ) << endl;
-		cout << "flut_q3 length=" << length( flut_q3 ) << endl;
+		flut_logvar3( length(flut_q1), length(flut_q2), length(flut_q3) );
 		auto flut_v4 = flut_q4 * flut_v1;
 		auto flut_v5 = make_rotation_vector( flut_q4 );
 

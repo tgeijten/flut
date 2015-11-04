@@ -137,7 +137,6 @@ namespace flut
 				if ( m[2][2] > m[i][i] ) i = 2;
 				size_t j = ( i + 1 ) % 3;
 				size_t k = ( j + 1 ) % 3;
-
 				T root = sqrt( m[i][i] - m[j][j] - m[k][k] + T( 1 ) );
 				T* q_xyz = &q.x;
 				q_xyz[i] = T( 0.5 ) * root;

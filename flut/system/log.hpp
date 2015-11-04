@@ -17,7 +17,10 @@
 #define FLUC_LOG_OUTPUT_STREAM std::cout
 #endif
 
-#define flut_nvp( variable_ ) ( #variable_"=" + to_string( variable_ ) + ' ' )
+#define flut_logvar( var_ ) std::cout << #var_"=" + var_ << std::endl
+#define flut_logvar2( var1_, var2_ ) std::cout << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << std::endl
+#define flut_logvar3( var1_, var2_, var3_ ) std::cout << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << std::endl
+#define flut_logvar4( var1_, var2_, var3_, var4_ ) std::cout << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << "\t" << #var4_"=" << var4_ << std::endl
 
 namespace fluc
 {
