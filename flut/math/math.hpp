@@ -25,6 +25,7 @@ namespace flut
 		template< typename T > bool equals( T v1, T v2, T e = constants<T>::relaxed_epsilon() ) { return abs( v1 - v2 ) <= abs( v1 ) * e; }
 		template< typename T > T inv( T v ) { return T( 1 ) / v; }
 		template< typename T > T invsqrt( T v ) { return T( 1 ) / sqrt( v ); }
+		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }
 
 		/// number struct
 		template< typename T > struct number_

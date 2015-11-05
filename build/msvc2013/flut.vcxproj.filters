@@ -48,6 +48,9 @@
     </ClInclude>
     <ClInclude Include="..\..\flut\string_tools.hpp" />
     <ClInclude Include="..\..\flut\types.hpp" />
+    <ClInclude Include="..\..\flut\math\average.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

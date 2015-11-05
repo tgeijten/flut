@@ -35,8 +35,8 @@ namespace flut
 		}
 
 		/** Negation (conjugate). */
-		template< typename T > quat_<T> operator-( const quat_<T>& q )
-		{ return quat_<T>( q.w, -q.x, -q.y, -q.z ); }
+		template< typename T > quat_<T> operator-( quat_<T> q )
+		{ q.x = -q.x; q.y = -q.y; q.z = -q.z; return q; }
 
 		/// get length of a quat
 		template< typename T > T length( quat_<T> v )
