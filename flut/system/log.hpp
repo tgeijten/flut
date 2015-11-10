@@ -24,10 +24,10 @@
 #define FLUT_LOG_OUTPUT_STREAM std::cout
 #endif
 
-#define flut_logvar( var_ ) std::cout << #var_"=" << var_ << std::endl
-#define flut_logvar2( var1_, var2_ ) std::cout << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << std::endl
-#define flut_logvar3( var1_, var2_, var3_ ) std::cout << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << std::endl
-#define flut_logvar4( var1_, var2_, var3_, var4_ ) std::cout << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << "\t" << #var4_"=" << var4_ << std::endl
+#define flut_logvar( var_ ) FLUT_LOG_OUTPUT_STREAM << #var_"=" << var_ << std::endl
+#define flut_logvar2( var1_, var2_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << std::endl
+#define flut_logvar3( var1_, var2_, var3_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << std::endl
+#define flut_logvar4( var1_, var2_, var3_, var4_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << "\t" << #var4_"=" << var4_ << std::endl
 
 namespace flut
 {
@@ -37,20 +37,7 @@ namespace flut
 
 		template < typename T, typename... Args >
 		void log_output( T var, const Args&... args )
-		{ std::cerr << var; log_output( args... ); }
-
-		struct stream_ignore_wrapper {
-			template< typename T >
-			stream_ignore_wrapper& operator<<( T& value ) const { return *this; }
-		};
-
-		struct stream_output_wrapper {
-			template< typename T >
-			stream_output_wrapper& operator<<( T& value ) const { std::cout << T; return *this; }
-		};
-
-		const stream_ignore_wrapper ignore_stream;
-		const stream_output_wrapper output_stream;
+		{ FLUT_LOG_OUTPUT_STREAM << var; log_output( args... ); }
 	}
 }
 
