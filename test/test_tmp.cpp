@@ -1,5 +1,5 @@
 #include "../flut/math/vec3.hpp"
-#include "../flut/math/quat.hpp"
+#include "../flut/math/quat_tmp.hpp"
 
 using namespace flut::math;
 namespace flut 

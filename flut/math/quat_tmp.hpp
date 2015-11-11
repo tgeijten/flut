@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vec3_type.hpp"
+#include "vec3_tmp.hpp"
 #include "quat_type.hpp"
 
 namespace flut

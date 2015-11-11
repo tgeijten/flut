@@ -1,13 +1,13 @@
 #include "scone/Vec3.h"
 #include "scone/Quat.h"
-#include "../flut/math/vec3.hpp"
-#include "../flut/math/quat.hpp"
-#include "../flut/math/random.hpp"
-#include "../flut/types.hpp"
+#include "flut/math/vec3.hpp"
+#include "flut/math/quat.hpp"
+#include "flut/math/random.hpp"
+#include "flut/types.hpp"
 #include <conio.h>
 #include <random>
 #include <algorithm>
-#include "../flut/system/log.hpp"
+#include "flut/system/log.hpp"
 
 using namespace flut;
 using namespace flut::math;
