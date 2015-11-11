@@ -1,2 +1,2 @@
 syntax: glob
-build/msvc2013/Debug/*
+build/*
