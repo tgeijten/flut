@@ -4,6 +4,7 @@
 #include "../string_tools.hpp"
 #include <string>
 #include <iostream>
+#include "build_config.hpp"
 
 #define flut_do_periodic( interval_, statement_ ) { static local_count_ = 0; if ( local_count_++ % interval_ == 0 ) { statement_; } }
 
@@ -38,6 +39,9 @@ namespace flut
 		template < typename T, typename... Args >
 		void log_output( T var, const Args&... args )
 		{ FLUT_LOG_OUTPUT_STREAM << var; log_output( args... ); }
+
+		void FLUT_API set_dynamic_log_level( int level );
+		int FLUT_API get_dynamic_log_level();
 	}
 }
 
@@ -47,37 +51,37 @@ namespace flut
 	{
 		template< typename... Args > void trace( const Args&... args ) {
 #if ( FLUT_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )
-			log_output( args... );
+			if ( get_dynamic_log_level() <= FLUT_LOG_LEVEL_TRACE ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void debug( const Args&... args ) {
 #if ( FLUT_LOG_LEVEL <= FLUT_LOG_LEVEL_DEBUG )
-			log_output( args... );
+			if ( get_dynamic_log_level() <= FLUT_LOG_LEVEL_DEBUG ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void info( const Args&... args ) {
 #if ( FLUT_LOG_LEVEL <= FLUT_LOG_LEVEL_INFO )
-			log_output( args... );
+			if ( get_dynamic_log_level() <= FLUT_LOG_LEVEL_INFO ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void warning( const Args&... args ) {
 #if ( FLUT_LOG_LEVEL <= FLUT_LOG_LEVEL_WARNING )
-			log_output( args... );
+			if ( get_dynamic_log_level() <= FLUT_LOG_LEVEL_WARNING ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void error( const Args&... args ) {
 #if ( FLUT_LOG_LEVEL <= FLUT_LOG_LEVEL_ERROR )
-			log_output( args... );
+			if ( get_dynamic_log_level() <= FLUT_LOG_LEVEL_ERROR ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void critical( const Args&... args ) {
 #if ( FLUT_LOG_LEVEL <= FLUT_LOG_LEVEL_CRITICAL )
-			log_output( args... );
+			if ( get_dynamic_log_level() <= FLUT_LOG_LEVEL_CRITICAL ) log_output( args... );
 #endif
 		}
 	}

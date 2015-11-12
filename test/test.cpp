@@ -20,9 +20,8 @@ void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = constants<T>::rel
 {
 	bool eq = equals( v1.x, v2.x, e ) && equals( v1.y, v2.y, e ) && equals( v1.z, v2.z, e );
 	auto diff = abs( v1.x - v2.x ) + abs( v1.y - v2.y ) + abs( v1.z - v2.z );
-	if ( eq ) cout << "OK, ";
-	else cout << "ERROR!";
-	cout << "diff=" << diff << " v1=" << v1 << " v2=" << v2 << endl;
+	if ( eq ) log::info( "OK! diff=", diff, "v1=", v1, "v2=", v2 );
+	else log::error( "ERROR! diff=", diff, "v1=", v1, "v2=", v2 );
 }
 
 template< typename T >
@@ -30,13 +29,14 @@ void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::rel
 {
 	bool eq = equals( q1.w, q2.W(), e ) && equals( q1.x, q2.X(), e ) && equals( q1.y, q2.Y(), e ) && equals( q1.z, q2.Z(), e );
 	auto diff = abs( q1.w - q2.W() ) + abs( q1.x - q2.X() ) + abs( q1.y - q2.Y() ) + abs( q1.z - q2.Z() );
-	if ( eq ) cout << "OK, ";
-	else cout << "ERROR!";
-	cout << "diff=" << diff << " q1=" << q1 << " q2=" << q2 << endl;
+	if ( eq ) log::info( "OK! diff=", diff, "q1=", q1, "q2=", q2 );
+	else log::error( "ERROR! diff=", diff, "q1=", q1, "q2=", q2 );
 }
 
 int main( int argc, char* argv[] )
 {
+	log::set_dynamic_log_level( FLUT_LOG_LEVEL_INFO );
+
 	flut_logvar2( constants<double>::epsilon(), constants<double>::relaxed_epsilon() );
 	flut_logvar2( constants<float>::epsilon(), constants<float>::relaxed_epsilon() );
 
