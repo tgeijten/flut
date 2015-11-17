@@ -9,19 +9,22 @@ namespace flut
 	namespace math
 	{
 		// angles with units
-		enum angle_unit { degrees, radians };
-		template< angle_unit U, typename T >
-		struct angle
-		{
-			T value;
-			explicit angle( T v ) : value( v ) {}
-			T rad() const;
-			T deg() const;
-		};
+		//template< angle_unit U, typename T >
+		//struct angle
+		//{
+		//	T value;
+		//	explicit angle( T v ) : value( v ) {}
+		//	T rad() const;
+		//	T deg() const;
+		//};
 
-		template< angle_unit U, typename T1, typename T2 >
-		angle< U, flut_result( T1, T2 ) > operator+( const angle< U, T1 >& a1, const angle< U, T2 >& a2 )
-		{ return angle< U, flut_result( T1, T2 ) >( a1.value + a2.value ); }
+
+		//enum angle_unit { degrees, radians };
+		//template< angle_unit U, typename T > using angle = unit_value< angle_unit, U, T >; 
+
+		//template< angle_unit U, typename T1, typename T2 >
+		//angle< U, flut_result( T1, T2 ) > operator+( const angle< U, T1 >& a1, const angle< U, T2 >& a2 )
+		//{ return angle< U, flut_result( T1, T2 ) >( a1.value + a2.value ); }
 
 		// angles that are actually always radians
 		template< typename T >

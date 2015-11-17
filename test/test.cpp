@@ -47,7 +47,7 @@ int main( int argc, char* argv[] )
 	//auto ang3 = ang1 + degree( 180 );
 
 	auto a1 = rad_< float >( constants< float >::half_pi() );
-	auto a2 = deg_< int >( 180 );
+	auto a2 = deg_< double >( 180 );
 	auto a3 = a1 + to_rad( a2 );
 	
 	flut_logvar3( a1.value, a2.value, a3.value );
