@@ -8,6 +8,8 @@
 #include <random>
 #include <algorithm>
 #include "flut/system/log.hpp"
+#include "flut/math/angle.hpp"
+#include "flut/math/unit_value.hpp"
 
 using namespace flut;
 using namespace flut::math;
@@ -40,9 +42,16 @@ int main( int argc, char* argv[] )
 	flut_logvar2( constants<double>::epsilon(), constants<double>::relaxed_epsilon() );
 	flut_logvar2( constants<float>::epsilon(), constants<float>::relaxed_epsilon() );
 
-	auto ang1 = degree( 45 );
-	auto ang2 = radian( ang1 );
-	auto ang3 = ang1 + degree( 180 );
+	//auto ang1 = degree( 45 );
+	//auto ang2 = radian( ang1 );
+	//auto ang3 = ang1 + degree( 180 );
+
+	auto a1 = rad_< float >( constants< float >::half_pi() );
+	auto a2 = deg_< int >( 180 );
+	auto a3 = a1 + to_rad( a2 );
+	
+	flut_logvar3( a1.value, a2.value, a3.value );
+	flut_logvar3( sizeof( a1 ), sizeof( a2 ), sizeof( a3 ) );
 
 	std::default_random_engine re( 123 );
 	std::uniform_real_distribution<> rd( -10, 10 );
