@@ -6,14 +6,6 @@ project(flut)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Compiler flags.
-# ---------------
-# Must compile with C++11 with gcc/clang.
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
-        ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
-endif()
-
 # Place build products (libraries, executables) in root
 # binary (build) directory. Otherwise, they get scattered around
 # the build directory and so the dll's aren't next to the executables.
@@ -22,7 +14,6 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 # Process source code.
-# --------------------
 add_subdirectory(test)
 add_subdirectory(flut)
 

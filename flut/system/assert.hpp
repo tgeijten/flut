@@ -22,6 +22,11 @@ if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string
 #define flut_debug_assert_msg( expression_, message_ ) \
 if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
 
+#else
+
+#define flut_debug_assert( expression_ )
+#define flut_debug_assert_msg( expression_, message_ )
+
 #endif
 
 #define flut_assert( expression_ ) \
