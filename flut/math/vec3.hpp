@@ -19,7 +19,7 @@ namespace flut
 		{ v.x = -v.x; v.y = -v.y; v.z = -v.z; return v; }
 
 		/// Scalar multiplication
-		template< typename T > vec3_<T> operator*( int s, vec3_<T> v )
+		template< typename T > vec3_<T> operator*( T s, vec3_<T> v )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
 		template< typename T > vec3_<T> operator*( vec3_<T> v, T s )
