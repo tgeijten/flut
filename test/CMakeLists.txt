@@ -1,4 +1,4 @@
-set (TEST_FILES test.cpp)
+file (GLOB TEST_FILES "*.h" "*.cpp")
 file (GLOB SCONE_FILES "scone/*.h" "scone/*.cpp")
 
 source_group("" FILES ${TEST_FILES})

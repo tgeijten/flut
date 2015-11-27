@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../flut/math/vec3.hpp"
 #include "../flut/math/quat_tmp.hpp"
 
@@ -23,7 +25,7 @@ namespace flut
 	}
 }
 
-int main(int argc, char* argv[])
+void math_tmp_test()
 {
 	auto v1 = vec3( 1, 2, 3 );
 	auto v2 = vec3( 4, 5, 6 );
@@ -33,6 +35,4 @@ int main(int argc, char* argv[])
 	quatf qf = make_from_axes< quatf >( v1, v2, v3 );
 	auto v5 = qf * v1;
 	auto qda = make_from_quat< dbl4 >( qf );
-
-	return 0;
 }
