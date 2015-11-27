@@ -8,7 +8,6 @@ namespace flut
 	template< typename T > struct buffer_access
 	{
 		const static bool value = false; // SFINAE value
-		const static bool no_value = true; // SFINAE value
 	};
 
 	// specialization for std::vector< std::pair< key, value > >
@@ -24,10 +23,8 @@ namespace flut
 			return std::upper_bound( buf.cbegin(), buf.cend(), key,
 				[&]( key_t lhs, const std::pair< key_t, value_t >& rhs ) { return lhs < rhs.first; } );
 		}
-
 		static const value_t& value_ref( const_iter_t iter ) { return iter->second; }
 		const static bool value = true;
-		const static bool no_value = false; // SFINAE value
 	};
 
 	//// specialization for std::vector< value >
