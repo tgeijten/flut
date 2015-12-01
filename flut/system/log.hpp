@@ -17,21 +17,6 @@
 #define FLUT_LOG_LEVEL_CRITICAL 6
 #define FLUT_LOG_LEVEL_NONE 7
 
-/// dynamic log levels are disabled in header only version
-#ifdef FLUT_HEADER_ONLY
-#define FLUT_ENABLE_DYNAMIC_LOG_LEVEL 0
-#else
-#define FLUT_ENABLE_DYNAMIC_LOG_LEVEL 1
-#endif
-
-#ifndef FLUT_LOG_LEVEL
-#define FLUT_LOG_LEVEL FLUT_LOG_LEVEL_INFO
-#endif
-
-#ifndef FLUT_LOG_OUTPUT_STREAM
-#define FLUT_LOG_OUTPUT_STREAM std::cout
-#endif
-
 #define flut_logvar( var_ ) FLUT_LOG_OUTPUT_STREAM << #var_"=" << var_ << std::endl
 #define flut_logvar2( var1_, var2_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << std::endl
 #define flut_logvar3( var1_, var2_, var3_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << std::endl

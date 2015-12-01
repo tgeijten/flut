@@ -1,26 +1,26 @@
 #pragma once
 
+#include "build_config.hpp"
+
 #include <stdexcept>
 #include <cstdlib>
 
 namespace flut
 {
-	struct Exception : public std::runtime_error { Exception( const std::string& msg ) : runtime_error( msg ) {} };
+	struct exception : public std::runtime_error { exception( const std::string& msg ) : runtime_error( msg ) {} };
 }
-
-#define FLUT_USE_EXCEPTIONS 1
 
 #if FLUT_USE_EXCEPTIONS
 
-#define FLUT_CRITICAL_ERROR( message_ ) throw flut::Exception( message_ );
+#define FLUT_CRITICAL_ERROR( message_ ) throw flut::exception( message_ );
 
 #ifdef _DEBUG
 
 #define flut_debug_assert( expression_ ) \
-if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_ );
+if (!(expression_)) throw flut::exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_ );
 
 #define flut_debug_assert_msg( expression_, message_ ) \
-if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
+if (!(expression_)) throw flut::exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
 
 #else
 
@@ -30,16 +30,16 @@ if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string
 #endif
 
 #define flut_assert( expression_ ) \
-if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_ );
+if (!(expression_)) throw flut::exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_ );
 
 #define flut_assert_msg( expression_, message_ ) \
-if (!(expression_)) throw flut::Exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
+if (!(expression_)) throw flut::exception( "Assertion Failure in " + std::string( __FUNCTION__ ) + "(): "#expression_" (" + std::string( message_ ) + ")" );
 
 #define flut_throw( message_ ) \
-throw flut::Exception( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) )
+throw flut::exception( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) )
 
 #define flut_throw_if( condition_, message_ ) \
-{ if ( condition_ ) throw flut::Exception( std::string( __func__ ) + "(): " + std::string( message_ ) ); }
+{ if ( condition_ ) throw flut::exception( std::string( __func__ ) + "(): " + std::string( message_ ) ); }
 
 #else
 
