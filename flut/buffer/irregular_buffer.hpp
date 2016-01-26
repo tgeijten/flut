@@ -2,11 +2,11 @@
 
 namespace flut
 {
-	class variable_interval_buffer 
+	class irregular_buffer 
 	{
 	public:
-		variable_interval_buffer() {}
-		virtual ~variable_interval_buffer() {}
+		irregular_buffer() {}
+		virtual ~irregular_buffer() {}
 		
 	protected:
 	private:

@@ -7,10 +7,10 @@
 namespace flut
 {
 	template< typename T >
-	struct buffer_channel_info
+	struct buffer_info
 	{
-		buffer_channel_info() {}
-		~buffer_channel_info() {}
+		buffer_info() {}
+		~buffer_info() {}
 
 		index_t add_channel( const T& label ) {
 			index_t idx = find_channel( label );
@@ -33,7 +33,7 @@ namespace flut
 	};
 
 	template<>
-	struct buffer_channel_info< void >
+	struct buffer_info< void >
 	{
 		index_t add_channel() { return count++; }
 		index_t count;

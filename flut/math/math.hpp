@@ -27,6 +27,9 @@ namespace flut
 		template< typename T > T invsqrt( T v ) { return T( 1 ) / sqrt( v ); }
 		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }
 
+		/// check if an integer value is a power of two
+		template< typename T > T is_power_of_two( T v ) { return v != 0 || !( v & ( v - 1 ) ); }
+
 		/// number struct
 		template< typename T > struct number_
 		{
