@@ -12,6 +12,7 @@
 #include "flut/system/log.hpp"
 #include "flut/math/angle.hpp"
 #include "flut/math/unit_value.hpp"
+#include "flut/flags.hpp"
 
 using namespace flut;
 using namespace flut::math;
@@ -39,6 +40,19 @@ void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::rel
 
 void math_test()
 {
+	for ( size_t x = 0; x < 2000; ++x )
+		if ( is_power_of_two( x ) )
+			log::info( x, " is a power of 2" );
+
+	enum TestEnum { Apple, Pear, Banana, Orange };
+	flags< TestEnum > flg;
+	flg.set( Apple, true );
+	flg.set( Banana, true );
+	flut_logvar4( flg.get( Apple ), flg.get( Pear ), flg.get( Banana ), flg.get( Orange ) );
+	flg.set( Banana, false );
+	flg.set( Orange, true );
+	flut_logvar4( flg.get<Apple>(), flg.get( Pear ), flg.get( Banana ), flg.get( Orange ) );
+
 	//auto ang1 = degree( 45 );
 	//auto ang2 = radian( ang1 );
 	//auto ang3 = ang1 + degree( 180 );

@@ -3,8 +3,8 @@
 #include <vector>
 #include "flut/math/vec3.hpp"
 #include "flut/system/log.hpp"
-#include "flut/storage/interpolation.hpp"
-#include "flut/storage/buffer_channel_info.hpp"
+#include "flut/buffer/interpolation.hpp"
+#include "flut/buffer/buffer_info.hpp"
 
 namespace flut
 {
@@ -26,8 +26,8 @@ namespace flut
 		for ( int d = -10; d < 40; ++d )
 			log::trace( 0.1 * d, ": ", interpolated_value( buf_test2, 0.1 * d ) );
 
-		buffer_channel_info< string > bci1;
-		buffer_channel_info< void > bci2;
+		buffer_info< string > bci1;
+		buffer_info< void > bci2;
 
 		bci1.add_channel( "test" );
 		bci2.add_channel();
