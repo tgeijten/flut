@@ -12,7 +12,7 @@ namespace flut
 	template< typename T >
 	typename buffer_access<T>::value_t interpolated_value( const T& cont, typename buffer_access<T>::key_t key )
 	{
-		flut_debug_assert( !cont.empty() );
+		flut_assert( !cont.empty() );
 
 		auto ub = buffer_access<T>::upper_bound( cont, key );
 		if ( ub == cont.cend() )
@@ -31,7 +31,7 @@ namespace flut
 	template< typename T, typename K >
 	T interpolated_value( const std::vector< T >& cont, K key, typename std::enable_if< !buffer_access< std::vector< T > >::value >::type* = 0 ) 
 	{
-		flut_debug_assert( !cont.empty() );
+		flut_assert( !cont.empty() );
 
 		if ( key < K(0) )
 			return cont.front();

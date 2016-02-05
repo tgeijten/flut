@@ -67,7 +67,7 @@ namespace flut
 		/** Get quaternion using an axis and an angle. */
 		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, radian angle )
 		{
-			flut_debug_assert( is_normalized( axis ) );
+			flut_assert( is_normalized( axis ) );
 			T ha = T( 0.5 ) * angle.value;
 			T hs = sin( ha );
 			return quat_<T>( cos( ha ), hs * axis.x, hs * axis.y, hs * axis.z );
@@ -103,7 +103,7 @@ namespace flut
 		/** Get quaternion from rotation vector. */
 		template< typename T > vec3_<T> make_rotation_vector( const quat_<T>& q )
 		{
-			flut_debug_assert( is_normalized( q ) );
+			flut_assert( is_normalized( q ) );
 			T len = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
 			if ( len > constants<T>::epsilon() )
 			{
@@ -116,7 +116,7 @@ namespace flut
 		/** Get quaternion using three axis vectors. */
 		template< typename T > quat_<T> make_quat_from_axes( const vec3_<T>& x, const vec3_<T>& y, const vec3_<T>& z )
 		{
-			flut_debug_assert( is_normalized( x ) && is_normalized( y ) && is_normalized( z ) );
+			flut_assert( is_normalized( x ) && is_normalized( y ) && is_normalized( z ) );
 			quat_<T> q;
 			mat33_<T> m = mat33_from_axes( x, y, z );
 
