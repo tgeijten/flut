@@ -42,7 +42,7 @@ void math_test()
 {
 	for ( size_t x = 0; x < 2000; ++x )
 		if ( is_power_of_two( x ) )
-			log::info( x, " is a power of 2" );
+			log::debug( x, " is a power of 2" );
 
 	enum TestEnum { Apple, Pear, Banana, Orange };
 	flags< TestEnum > flg;

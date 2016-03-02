@@ -33,6 +33,5 @@ namespace flut
 		bci2.add_channel();
 
 		flut_logvar2( sizeof(bci1), sizeof(bci2) );
-		
 	}
 }

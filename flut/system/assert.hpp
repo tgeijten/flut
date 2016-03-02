@@ -30,7 +30,7 @@ namespace flut
 
 /// throw exception
 #define flut_throw( message_ ) \
-throw FLUT_EXCEPTION( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) )
+FLUT_EXCEPTION( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) )
 
 /// conditional throw exception
 #define flut_throw_if( condition_, message_ ) \
