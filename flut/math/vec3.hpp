@@ -22,9 +22,11 @@ namespace flut
 		template< typename T > vec3_<T> operator*( T s, vec3_<T> v )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
+		/// Scalar multiplication
 		template< typename T > vec3_<T> operator*( vec3_<T> v, T s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
+		/// Scalar multiplication
 		template< typename T > vec3_<T> operator*=( vec3_<T>& v, T s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
