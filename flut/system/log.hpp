@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ostream>
-#include "../string_tools.hpp"
+#include "flut/string_tools.hpp"
 #include <string>
 #include <iostream>
 #include "build_config.hpp"

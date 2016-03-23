@@ -3,7 +3,7 @@
 #include "math.hpp"
 #include "quat_type.hpp"
 #include "mat33.hpp"
-#include "../system/assert.hpp"
+#include "flut/system/assert.hpp"
 #include <ostream>
 
 namespace flut

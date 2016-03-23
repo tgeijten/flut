@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../math/vec3_type.hpp"
+#include "flut/math/vec3_type.hpp"
 #include <utility>
 #include <vector>
 #include "buffer_access.hpp"
-#include "../system/assert.hpp"
+#include "flut/system/assert.hpp"
 #include <xtr1common>
 
 namespace flut
