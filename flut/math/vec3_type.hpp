@@ -20,7 +20,7 @@ namespace flut
 			// const properties
 			T length() const { return sqrt( x * x + y * y + z * z ); }
 			T squared_length() const { return x * x + y * y + z * z; }
-			bool is_null() { return x == T(0) && y == T(0) && z == T(0); }
+			bool is_null() const { return x == T(0) && y == T(0) && z == T(0); }
 
 			// static initializers
 			static vec3_<T> make_zero() { return vec3_<T>( T(0), T(0), T(0) ); }

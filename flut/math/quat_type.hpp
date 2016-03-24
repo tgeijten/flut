@@ -18,6 +18,5 @@ namespace flut
 		typedef quat_< real_t > quat;
 		typedef quat_< float > quatf;
 		typedef quat_< double > quatd;
-	
 	}
 }
