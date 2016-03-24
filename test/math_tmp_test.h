@@ -3,7 +3,10 @@
 #include "flut/math/vec3.hpp"
 #include "flut/math/quat_tmp.hpp"
 
-using namespace flut::math;
+using flut::math::vec3;
+using flut::math::quat;
+using flut::math::quatf;
+
 namespace flut 
 {
 	namespace math
@@ -30,9 +33,9 @@ void math_tmp_test()
 	auto v1 = vec3( 1, 2, 3 );
 	auto v2 = vec3( 4, 5, 6 );
 	auto v3 = v2 - v1;
-	auto q1 = make_from_axes< quat >( v1, v2, v3 );
+	auto q1 = flut::math::make_from_axes< quat >( v1, v2, v3 );
 	auto v4 = q1 * v1;
-	quatf qf = make_from_axes< quatf >( v1, v2, v3 );
+	quatf qf = flut::math::make_from_axes< quatf >( v1, v2, v3 );
 	auto v5 = qf * v1;
-	auto qda = make_from_quat< dbl4 >( qf );
+	auto qda = flut::math::make_from_quat< dbl4 >( qf );
 }

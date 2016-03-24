@@ -14,12 +14,14 @@
 #include "flut/math/unit_value.hpp"
 #include "flut/flags.hpp"
 
-using namespace flut;
-using namespace flut::math;
 using std::cout;
 using std::endl;
 using scone::Radian;
 
+namespace flut
+{
+namespace math
+{
 template< typename T >
 void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = constants<T>::relaxed_epsilon() )
 {
@@ -120,4 +122,6 @@ void math_test()
 			compare( flut_qeo, scone_qeo );
 		}
 	}
+}
+}
 }
