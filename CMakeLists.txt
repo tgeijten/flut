@@ -6,6 +6,10 @@ project(flut)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+find_path(FLUT_INCLUDE_DIR
+    NAMES "flut/types.h"
+    )
+
 # Place build products (libraries, executables) in root
 # binary (build) directory. Otherwise, they get scattered around
 # the build directory and so the dll's aren't next to the executables.

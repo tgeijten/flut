@@ -5,14 +5,14 @@
 namespace flut
 {
 	template< typename KeyT = string, typename ValueT = string >
-	class prop_node
+	class propnode
 	{
 	public:
-		prop_node() {}
-		virtual ~prop_node() {}
+		propnode() {}
+		virtual ~propnode() {}
 		
 	private:
 		ValueT value;
-		std::vector< std::pair< KeyT, prop_node > > children;
+		std::vector< std::pair< KeyT, propnode > > children;
 	};
 }
