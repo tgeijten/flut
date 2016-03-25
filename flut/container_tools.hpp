@@ -11,5 +11,4 @@ namespace flut
 			return no_index;
 		else return it - vec.begin();
 	}
-
 }

@@ -23,10 +23,10 @@ namespace flut
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
 	/// split a string into a vector of strings
-	inline std::vector< string > split_str( const std::string& s, const std::string& sep_chars ) {
-		std::vector< std::string > strings;
+	inline std::vector< string > split_str( const string& s, const string& sep_chars ) {
+		std::vector< string > strings;
 		size_t ofs = s.find_first_not_of( sep_chars.c_str(), 0 );
-		while ( ofs != std::string::npos ) {
+		while ( ofs != string::npos ) {
 			size_t ofsend = s.find_first_of( sep_chars.c_str(), ofs );
 			strings.push_back( s.substr( ofs, ofsend - ofs ) );
 			ofs = s.find_first_not_of( sep_chars.c_str(), ofsend );
@@ -41,18 +41,18 @@ namespace flut
 		char buf[ 256 ];
 		vsprintf_s( buf, sizeof( buf ), format, args );
 		va_end( args );
-		return std::string( buf );
+		return string( buf );
 	}
 
 	/// Get file extension (without dot)
 	inline string get_filename_ext( const string& str ) {
 		size_t n = str.find_last_of( '.' );
-		if ( n != std::string::npos ) {
-			std::string ext = str.substr( n + 1 );
-			if ( ext.find_last_of( "/\\" ) != std::string::npos ) // check if not part of folder
+		if ( n != string::npos ) {
+			string ext = str.substr( n + 1 );
+			if ( ext.find_last_of( "/\\" ) != string::npos ) // check if not part of folder
 				return ext;
 		}
-		return std::string(); // no extension found
+		return string(); // no extension found
 	}
 
 	/// Get file without extension (without dot)
@@ -60,12 +60,13 @@ namespace flut
 	{ return str.substr( 0, str.size() - get_filename_ext( str ).size() ); }
 
 	/// convert any streamable type to string
-	template< typename T > string make_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+	template< typename T > string to_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+	template<> inline string to_str < string >( const string& s ) { return s; }
 
 	/// convert string to any streamable type
-	template< typename T > T from_string( const std::string& s ) { T value; std::istringstream ostr( s ); str << value; return str.str(); }
-	template<> inline string from_string< std::string >( const std::string& s ) { return s; }
+	template< typename T > T from_str( const string& s ) { T value; std::stringstream str( s ); str >> value; return value; }
+	template<> inline string from_str< string >( const string& s ) { return s; }
 
 	/// get a string between quotes
-	inline string quoted( const std::string& s ) { return '\"' + s + '\"'; }
+	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
 }
