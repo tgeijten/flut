@@ -5,7 +5,6 @@
 #include "flut/math/vec3.hpp"
 #include "flut/math/quat.hpp"
 #include "flut/math/random.hpp"
-#include "flut/types.hpp"
 #include <conio.h>
 #include <random>
 #include <algorithm>
