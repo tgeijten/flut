@@ -9,11 +9,3 @@
 #else
 	#define FLUT_API
 #endif
-
-#ifdef WIN32
-	#define NOMINMAX
-	#define WIN32_LEAN_AND_MEAN
-	#include <shlwapi.h> // used by glob_match
-	#undef small
-	#pragma comment( lib, "shlwapi.lib" )
-#endif

@@ -1,11 +1,18 @@
 #pragma once
 
-#include "flut/system/prerequisites.hpp"
+#include "flut/system/types.hpp"
 
 #include <sstream>
-#include <vector>
 #include <stdarg.h>
 #include <algorithm>
+
+#ifdef WIN32
+	#define NOMINMAX
+	#define WIN32_LEAN_AND_MEAN
+	#include <shlwapi.h> // used by glob_match
+	#undef small
+	#pragma comment( lib, "shlwapi.lib" )
+#endif
 
 namespace flut
 {
