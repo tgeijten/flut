@@ -30,32 +30,32 @@ namespace flut
 		/// check if an integer value is a power of two
 		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
 
-		/// number struct
-		template< typename T > struct number_
-		{
-			T value;
-			number_<T> operator*( number_<T> o ) const { return value * o.value; }
-			number_<T> operator/( number_<T> o ) const { return value / o.value; }
-		protected: // constructor is protected and should only by used by derived types
-			number_( T v ) : value( v ) {}
-		};
+		///// number struct
+		//template< typename T > struct number_
+		//{
+		//	T value;
+		//	number_<T> operator*( number_<T> o ) const { return value * o.value; }
+		//	number_<T> operator/( number_<T> o ) const { return value / o.value; }
+		//protected: // constructor is protected and should only by used by derived types
+		//	number_( T v ) : value( v ) {}
+		//};
 
-		/// degrees and radians
-		struct degree;
-		struct radian : public number_<real_t>
-		{
-			explicit radian( real_t v = 0.0 ) : number_<real_t>( v ) {}
-			explicit radian( degree v );
-			radian operator+( radian o ) const { return radian( value + o.value ); }
-			radian operator-( radian o ) const { return radian( value - o.value ); }
-		};
-		struct degree : public number_<real_t>
-		{
-			explicit degree( real_t v = 0.0 ) : number_<real_t>( v ) {}
-			explicit degree( const radian& v ) : number_<real_t>( rad_to_deg( v.value ) ) {}
-			degree operator+( degree o ) const { return degree( value + o.value ); }
-			degree operator-( degree o ) const { return degree( value - o.value ); }
-		};
-		inline radian::radian( degree v ) : number_<real_t>( deg_to_rad( v.value ) ) {}
+		///// degrees and radians
+		//struct degree;
+		//struct radian : public number_<real_t>
+		//{
+		//	explicit radian( real_t v = 0.0 ) : number_<real_t>( v ) {}
+		//	explicit radian( degree v );
+		//	radian operator+( radian o ) const { return radian( value + o.value ); }
+		//	radian operator-( radian o ) const { return radian( value - o.value ); }
+		//};
+		//struct degree : public number_<real_t>
+		//{
+		//	explicit degree( real_t v = 0.0 ) : number_<real_t>( v ) {}
+		//	explicit degree( const radian& v ) : number_<real_t>( rad_to_deg( v.value ) ) {}
+		//	degree operator+( degree o ) const { return degree( value + o.value ); }
+		//	degree operator-( degree o ) const { return degree( value - o.value ); }
+		//};
+		//inline radian::radian( degree v ) : number_<real_t>( deg_to_rad( v.value ) ) {}
 	}
 }
