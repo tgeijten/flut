@@ -4,6 +4,7 @@
 #include "quat_type.hpp"
 #include "mat33.hpp"
 #include "flut/system/assert.hpp"
+#include "flut/math/angle.hpp"
 #include <ostream>
 
 namespace flut
@@ -64,22 +65,22 @@ namespace flut
 			return q;
 		}
 
-		/** Get quaternion using an axis and an angle. */
-		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, radian angle )
+		/// make quaternion from axis and angle
+		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, const angle& ang )
 		{
 			flut_assert( is_normalized( axis ) );
-			T ha = T( 0.5 ) * angle.value;
+			auto ha = T( 0.5 ) * ang;
 			T hs = sin( ha );
 			return quat_<T>( cos( ha ), hs * axis.x, hs * axis.y, hs * axis.z );
 		}
 
-		/** Get quaternion using Euler angles. */
-		template< typename T > quat_<T> make_quat_from_euler( radian x, radian y, radian z, euler_order eo = euler_order::xyz )
+		/// make quaternion from Euler angles
+		template< typename T > quat_<T> make_quat_from_euler( angle x, angle y, angle z, euler_order eo = euler_order::xyz )
 		{
-			T hxa = T( 0.5 ) * x.value, hya = T( 0.5 ) * y.value, hza = T( 0.5 ) * z.value;
-			quat_<T> qx = quat_<T>( cos( hxa ), sin( hxa ), T( 0 ), T( 0 ) );
-			quat_<T> qy = quat_<T>( cos( hya ), T( 0 ), sin( hya ), T( 0 ) );
-			quat_<T> qz = quat_<T>( cos( hza ), T( 0 ), T( 0 ), sin( hza ) );
+			T hxa = T( 0.5 ) * x.rad(), hya = T( 0.5 ) * y.rad(), hza = T( 0.5 ) * z.rad();
+			quat_<T> qx = quat_<T>( std::cos( hxa ), std::sin( hxa ), T( 0 ), T( 0 ) );
+			quat_<T> qy = quat_<T>( std::cos( hya ), T( 0 ), std::sin( hya ), T( 0 ) );
+			quat_<T> qz = quat_<T>( std::cos( hza ), T( 0 ), T( 0 ), std::sin( hza ) );
 			switch ( eo )
 			{
 			case flut::math::euler_order::xyz: return qx * ( qy * qz );
@@ -107,7 +108,7 @@ namespace flut
 			T len = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
 			if ( len > constants<T>::epsilon() )
 			{
-				T f = T(2) * acos( q.w ) / len;
+				T f = T(2) * std::acos( q.w ) / len;
 				return vec3_<T>( f * q.x, f * q.y, f * q.z );
 			}
 			else return vec3_<T>::make_zero();

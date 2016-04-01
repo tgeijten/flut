@@ -1,5 +1,7 @@
 #pragma once
 
+#include "flut/system/build_config.hpp"
+
 #include <string>
 #include <vector>
 #include <memory>

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <limits>
-#include "flut/types.hpp"
+
+#include "flut/system/types.hpp"
 
 namespace flut
 {

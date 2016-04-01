@@ -1,10 +1,18 @@
 #pragma once
 
-#include "flut/types.hpp"
+#include "flut/system/types.hpp"
+
 #include <sstream>
-#include <vector>
 #include <stdarg.h>
 #include <algorithm>
+
+#ifdef WIN32
+	#define NOMINMAX
+	#define WIN32_LEAN_AND_MEAN
+	#include <shlwapi.h> // used by glob_match
+	#undef small
+	#pragma comment( lib, "shlwapi.lib" )
+#endif
 
 namespace flut
 {
@@ -56,8 +64,20 @@ namespace flut
 	}
 
 	/// Get file without extension (without dot)
-	inline string get_filename_stem( const string& str )
-	{ return str.substr( 0, str.size() - get_filename_ext( str ).size() ); }
+	inline string get_filename_without_ext( const string& str ) {
+		auto ext_len = get_filename_ext( str ).size();
+		if ( ext_len > 0 ) ++ext_len; // add dot
+		return str.substr( 0, str.size() - ext_len );
+	}
+
+	/// match pattern (glob, i.e. name* or name?)
+	inline bool glob_match( const string& str, const string& pattern, bool use_multiple_patterns = false ) {
+#ifdef WIN32
+		return PathMatchSpecEx( str.c_str(), pattern.c_str(), use_multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;
+#else
+		FLUT_NOT_IMPLEMENTED;
+#endif
+	}
 
 	/// convert any streamable type to string
 	template< typename T > string to_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
