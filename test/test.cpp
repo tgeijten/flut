@@ -2,7 +2,6 @@
 #include "math_test.h"
 #include "buffer_test.h"
 #include "flut/prop_node.hpp"
-#include "flut/types.hpp"
 
 using flut::string;
 
