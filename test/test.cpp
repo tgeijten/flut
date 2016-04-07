@@ -20,7 +20,7 @@ int main( int argc, char* argv[] )
 	pn.add( "test", 1.2 );
 	auto a = pn.get< float >();
 
-	_getch();
+	flut::wait_for_key();
 
 	return 0;
 }
