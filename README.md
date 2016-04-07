@@ -15,4 +15,4 @@ FLUT is a lightweight header only C++ library for various useful stuf!
 
 ### Contribution guidelines ###
 
-* Not sure yet...
+* Not sure yet...!
