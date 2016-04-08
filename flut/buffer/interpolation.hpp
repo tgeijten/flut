@@ -5,7 +5,7 @@
 #include <vector>
 #include "buffer_access.hpp"
 #include "flut/system/assert.hpp"
-#include <xtr1common>
+// TODO not on UNIX #include <xtr1common>
 
 namespace flut
 {
@@ -23,8 +23,8 @@ namespace flut
 		{
 			// interpolate between two samples (lb and ub)
 			auto lb = ub - 1;
-			buffer_access<T>::key_t uw = ( key - lb->first ) / ( ub->first - lb->first );
-			return ( buffer_access<T>::key_t(1) - uw ) * buffer_access<T>::value_ref( lb ) + uw * buffer_access<T>::value_ref( ub );
+			typename buffer_access<T>::key_t uw = ( key - lb->first ) / ( ub->first - lb->first );
+			return ( typename buffer_access<T>::key_t(1) - uw ) * buffer_access<T>::value_ref( lb ) + uw * buffer_access<T>::value_ref( ub );
 		}
 	}
 

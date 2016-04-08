@@ -19,7 +19,11 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 # Process source code.
 add_subdirectory(test)
-add_subdirectory(flut)
+if(MSVC)
+    # Create a project for the header-only library (doesn't work outside
+    # of MSVC).
+    add_subdirectory(flut)
+endif()
 
 enable_testing()
 add_test(flut_test "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}/test.exe")

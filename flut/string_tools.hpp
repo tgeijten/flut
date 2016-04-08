@@ -1,6 +1,7 @@
 #pragma once
 
 #include "flut/system/types.hpp"
+#include "flut/system/assert.hpp"
 
 #include <sstream>
 #include <stdarg.h>
@@ -47,7 +48,7 @@ namespace flut
 		va_list args;
 		va_start( args, format );
 		char buf[ 256 ];
-		vsprintf_s( buf, sizeof( buf ), format, args );
+		vsnprintf( buf, sizeof( buf ), format, args );
 		va_end( args );
 		return string( buf );
 	}
