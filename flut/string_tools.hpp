@@ -7,27 +7,31 @@
 #include <algorithm>
 
 #ifdef WIN32
-	#define NOMINMAX
-	#define WIN32_LEAN_AND_MEAN
-	#include <shlwapi.h> // used by glob_match
-	#undef small
-	#pragma comment( lib, "shlwapi.lib" )
+#	define NOMINMAX
+#	define WIN32_LEAN_AND_MEAN
+#	include <shlwapi.h> // used by glob_match
+#	undef small // windows defines small :-S
+#	pragma comment( lib, "shlwapi.lib" )
+#else
+#	include <fnmatch.h>
 #endif
 
 namespace flut
 {
 	/// get left n characters
-	inline string left_str( const string& str, int i )
-	{ if ( i >= 0 ) return str.substr( 0, size_t( i ) ); else return str.substr( 0, size_t( std::max( 0, int(str.size()) + i ) ) ); }
+	/// when n < 0: get string WITHOUT the left n characters
+	inline string left_str( const string& str, int n )
+	{ if ( n >= 0 ) return str.substr( 0, size_t( n ) ); else return str.substr( 0, size_t( std::max( 0, int(str.size()) + n ) ) ); }
 
 	/// get middle n characters, starting from pos
 	inline string mid_str( const string& str, index_t pos, size_t n = string::npos ) { return str.substr( pos, n ); }
 
-	/// get middle n characters, starting from pos
-	inline string right_str( const string& str, int i )
-	{ if ( i >= 0 ) return str.substr( str.size() - i, string::npos ); else return str.substr( size_t( -i ), string::npos ); }
+	/// get right n characters
+	/// when n < 0: get string WITHOUT the right n characters
+	inline string right_str( const string& str, int n )
+	{ if ( n >= 0 ) return str.substr( str.size() - n, string::npos ); else return str.substr( size_t( -n ), string::npos ); }
 
-	/// get middle n characters, starting from pos
+	/// get index of a substring in a string
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
 	/// split a string into a vector of strings
@@ -52,7 +56,7 @@ namespace flut
 		return string( buf );
 	}
 
-	/// Get file extension (without dot)
+	/// Get filename extension (without dot)
 	inline string get_filename_ext( const string& str ) {
 		size_t n = str.find_last_of( '.' );
 		if ( n != string::npos ) {
@@ -63,19 +67,38 @@ namespace flut
 		return string(); // no extension found
 	}
 
-	/// Get file without extension (without dot)
+	/// Get filename without extension (without dot)
 	inline string get_filename_without_ext( const string& str ) {
 		auto ext_len = get_filename_ext( str ).size();
 		if ( ext_len > 0 ) ++ext_len; // add dot
 		return str.substr( 0, str.size() - ext_len );
 	}
 
-	/// match pattern (glob, i.e. name* or name?)
-	inline bool glob_match( const string& str, const string& pattern, bool use_multiple_patterns = false ) {
+	/// Get folder of filename (including slash, if any)
+	inline string get_filename_folder( const string& str ) {
+		size_t n = str.find_last_of( "/\\" );
+		if ( n != string::npos ) return str.substr( 0, n + 1 );
+		else return str;
+	}
+
+	/// Get filename without folder
+	inline string get_filename_without_folder( const string& str ) {
+		size_t n = str.find_last_of( "/\\" );
+		if ( n != string::npos ) return str.substr( n + 1, string::npos );
+		else return str;
+	}
+
+	/// match pattern (glob, i.e. name* or name?), uses multiple patterns delimeted by ';'
+	inline bool matches_pattern( const string& str, const string& pattern, bool use_multiple_patterns = false ) {
 #ifdef WIN32
 		return PathMatchSpecEx( str.c_str(), pattern.c_str(), use_multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;
 #else
-		FLUT_NOT_IMPLEMENTED;
+		std::vector<std::string> patterns = split_str( pattern, ";" );
+		for ( auto p : patterns ) {
+			if ( fnmatch( p.c_str(), str.c_str(), FNM_NOESCAPE ) == 0 )
+				return true;
+		}
+		return false;
 #endif
 	}
 
