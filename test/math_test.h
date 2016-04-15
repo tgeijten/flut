@@ -5,7 +5,7 @@
 #include "flut/math/vec3.hpp"
 #include "flut/math/quat.hpp"
 #include "flut/math/random.hpp"
-#include <conio.h>
+// TODO not on UNIX #include <conio.h>
 #include <random>
 #include <algorithm>
 #include "flut/system/log.hpp"
@@ -25,7 +25,7 @@ template< typename T >
 void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = constants<T>::relaxed_epsilon() )
 {
 	bool eq = equals( v1.x, v2.x, e ) && equals( v1.y, v2.y, e ) && equals( v1.z, v2.z, e );
-	auto diff = abs( v1.x - v2.x ) + abs( v1.y - v2.y ) + abs( v1.z - v2.z );
+	auto diff = std::abs( v1.x - v2.x ) + std::abs( v1.y - v2.y ) + std::abs( v1.z - v2.z );
 	if ( eq ) log::info( "OK! diff=", diff, "v1=", v1, "v2=", v2 );
 	else log::error( "ERROR! diff=", diff, "v1=", v1, "v2=", v2 );
 }
@@ -34,7 +34,7 @@ template< typename T >
 void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::relaxed_epsilon() )
 {
 	bool eq = equals( q1.w, q2.W(), e ) && equals( q1.x, q2.X(), e ) && equals( q1.y, q2.Y(), e ) && equals( q1.z, q2.Z(), e );
-	auto diff = abs( q1.w - q2.W() ) + abs( q1.x - q2.X() ) + abs( q1.y - q2.Y() ) + abs( q1.z - q2.Z() );
+	auto diff = std::abs( q1.w - q2.W() ) + std::abs( q1.x - q2.X() ) + std::abs( q1.y - q2.Y() ) + std::abs( q1.z - q2.Z() );
 	if ( eq ) log::info( "OK! diff=", diff, "q1=", q1, "q2=", q2 );
 	else log::error( "ERROR! diff=", diff, "q1=", q1, "q2=", q2 );
 }

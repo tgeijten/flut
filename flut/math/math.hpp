@@ -22,7 +22,7 @@ namespace flut
 		/// handy functions
 		template< typename T > T rad_to_deg( T rad_value ) { return ( T( 180 ) / constants<T>::pi() ) * rad_value; }
 		template< typename T > T deg_to_rad( T deg_value ) { return ( constants<T>::pi() / T( 180 ) ) * deg_value; }
-		template< typename T > bool equals( T v1, T v2, T e = constants<T>::relaxed_epsilon() ) { return abs( v1 - v2 ) <= abs( v1 ) * e; }
+		template< typename T > bool equals( T v1, T v2, T e = constants<T>::relaxed_epsilon() ) { return std::abs( v1 - v2 ) <= std::abs( v1 ) * e; }
 		template< typename T > T inv( T v ) { return T( 1 ) / v; }
 		template< typename T > T invsqrt( T v ) { return T( 1 ) / sqrt( v ); }
 		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }

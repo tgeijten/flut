@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vec3_type.hpp"
+#include "math.hpp"
 
 namespace flut
 {

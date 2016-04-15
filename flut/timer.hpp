@@ -1,6 +1,6 @@
 #pragma once
 
-#if ( _MSC_VER <= 1800 ) // MSVC 2013 and lower do not have proper chrono support
+#if defined(_MSC_VER) && ( _MSC_VER <= 1800 ) // MSVC 2013 and lower do not have proper chrono support
 #	define FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 #	include <profileapi.h>
 #else
