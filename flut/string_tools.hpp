@@ -13,6 +13,8 @@
 #	include <shlwapi.h> // used by glob_match
 #	undef small // windows defines small :-S
 #	pragma comment( lib, "shlwapi.lib" )
+#	pragma warning( push )
+#	pragma warning( disable: 4996 ) // disable warning for vsnprintf
 #else
 #	include <fnmatch.h>
 #endif
@@ -114,3 +116,7 @@ namespace flut
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
 }
+
+#ifdef WIN32
+#	pragma warning( pop )
+#endif
