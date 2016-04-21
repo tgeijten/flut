@@ -7,8 +7,9 @@ project(flut)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 find_path(FLUT_INCLUDE_DIR
-    NAMES "flut/types.h"
-    )
+    NAMES flut/system/types.hpp
+	PATHS ${CMAKE_SOURCE_DIR}
+	)
 
 # Place build products (libraries, executables) in root
 # binary (build) directory. Otherwise, they get scattered around
