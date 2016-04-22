@@ -47,4 +47,4 @@ if(MSVC)
 endif()
 
 enable_testing()
-add_test(flut_test "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}/test.exe")
+add_test(flut_test "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}/flut_test")
