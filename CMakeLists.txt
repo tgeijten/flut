@@ -7,9 +7,30 @@ project(flut)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 find_path(FLUT_INCLUDE_DIR
-    NAMES "flut/types.h"
-    )
+    NAMES flut/system/types.hpp
+	PATHS ${CMAKE_SOURCE_DIR}
+	)
 
+# Compiler flags.
+# ---------------
+# Must compile with C++11 with gcc/clang.
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
+   ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    if(APPLE)
+        if(XCODE)
+            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
+            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+        else()
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+            if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+            endif()
+        endif()
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    endif()
+endif()
+	
 # Place build products (libraries, executables) in root
 # binary (build) directory. Otherwise, they get scattered around
 # the build directory and so the dll's aren't next to the executables.
@@ -26,4 +47,4 @@ if(MSVC)
 endif()
 
 enable_testing()
-add_test(flut_test "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}/test.exe")
+add_test(flut_test "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}/flut_test")
