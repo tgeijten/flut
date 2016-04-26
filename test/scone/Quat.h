@@ -19,7 +19,7 @@ namespace scone
 	};
 
 	/** Class representing a Quaternion. */
-	class CORE_API Quat
+	class Quat
 	{
 	public:
 
@@ -123,20 +123,20 @@ namespace scone
 	};
 
 	/** Get quaternion using an axis and an angle. */
-	Quat CORE_API QuatFromAxisAngle( const Vec3& axis, const Radian& angle );
+	Quat QuatFromAxisAngle( const Vec3& axis, const Radian& angle );
 
 	/** Get quaternion using three axis vectors. */
-	Quat CORE_API QuatFromAxes( const Vec3& x, const Vec3& y, const Vec3& z );
+	Quat QuatFromAxes( const Vec3& x, const Vec3& y, const Vec3& z );
 
 	/** Get quaternion using Euler angles. */
-	Quat CORE_API QuatFromEuler( const Radian& xAngle, const Radian& yAngle, const Radian& zAngle, EulerOrder eulerOrder = EULER_ORDER_XYZ );
+	Quat QuatFromEuler( const Radian& xAngle, const Radian& yAngle, const Radian& zAngle, EulerOrder eulerOrder = EULER_ORDER_XYZ );
 
 	/** Get quaternion to represent the rotation from source to target vector. */
-	Quat CORE_API QuatFromSourceToTarget( const Vec3& source, const Vec3& target );
+	Quat QuatFromSourceToTarget( const Vec3& source, const Vec3& target );
 
 	/** Get quaternion to represent the rotation from source to target quaternion. */
-	Quat CORE_API QuatFromSourceToTarget( const Quat& source, const Quat& target );
+	Quat QuatFromSourceToTarget( const Quat& source, const Quat& target );
 
 	/** Get quaternion from exponential map. */
-	Quat CORE_API QuatFromExponentialMap(const Vec3& v);
+	Quat QuatFromExponentialMap(const Vec3& v);
 };

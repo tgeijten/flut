@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	class CORE_API Vec3
+	class Vec3
 	{
 	public:
 		Vec3() : x( Real( 0 ) ), y( Real( 0 ) ), z( Real( 0 ) ) { };
@@ -64,7 +64,7 @@ namespace scone
 		Vec3 operator*( Real s ) const;
 
 		/** Multiply vector by scalar. */
-		friend CORE_API Vec3 operator*( Real s, const Vec3& vec );
+		friend Vec3 operator*( Real s, const Vec3& vec );
 
 		/** Multiply (scale) vectors. */
 		Vec3 operator*( const Vec3& vec ) const;
@@ -150,5 +150,5 @@ namespace scone
 		Real z;
 	};
 
-	CORE_API Real GetDotProduct( const Vec3& v1, const Vec3& v2 );
+	Real GetDotProduct( const Vec3& v1, const Vec3& v2 );
 };
