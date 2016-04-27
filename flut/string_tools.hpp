@@ -91,18 +91,19 @@ namespace flut
 		else return str;
 	}
 
-	/// match pattern (glob, i.e. name* or name?), uses multiple patterns delimeted by ';'
-	inline bool matches_pattern( const string& str, const string& pattern, bool use_multiple_patterns = false ) {
-#ifdef WIN32
-		return PathMatchSpecEx( str.c_str(), pattern.c_str(), use_multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;
-#else
-		std::vector<std::string> patterns = split_str( pattern, ";" );
+	/// match pattern (glob, i.e. name* or name?), can use multiple delimited patterns, default delimiter = ';'
+	inline bool matches_pattern( const string& str, const string& pattern, const char* pattern_delim_chars = ";" ) {
+		std::vector<std::string> patterns = split_str( pattern, pattern_delim_chars );
 		for ( auto p : patterns ) {
+#ifdef WIN32
+			if ( PathMatchSpecEx( str.c_str(), pattern.c_str(), PMSF_NORMAL ) == S_OK )
+				return true;
+#else
 			if ( fnmatch( p.c_str(), str.c_str(), FNM_NOESCAPE ) == 0 )
 				return true;
+#endif
 		}
 		return false;
-#endif
 	}
 
 	/// convert any streamable type to string
