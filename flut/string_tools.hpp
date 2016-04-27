@@ -96,7 +96,7 @@ namespace flut
 		std::vector<std::string> patterns = split_str( pattern, pattern_delim_chars );
 		for ( auto p : patterns ) {
 #ifdef WIN32
-			if ( PathMatchSpecEx( str.c_str(), pattern.c_str(), PMSF_NORMAL ) == S_OK )
+			if ( PathMatchSpecEx( str.c_str(), p.c_str(), PMSF_NORMAL ) == S_OK )
 				return true;
 #else
 			if ( fnmatch( p.c_str(), str.c_str(), FNM_NOESCAPE ) == 0 )
