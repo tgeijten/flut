@@ -17,8 +17,8 @@ namespace flut
 		struct degree_
 		{
 			typedef T value_t;
+			degree_( const radian_< T >& v ) : value( rad_to_deg( v.value ) ) {}
 			explicit degree_( const T& v ) : value( v ) {}
-			explicit degree_( const radian_< T >& v ) : value( rad_to_deg( v.value ) ) {}
 			T value;
 		};
 
@@ -26,8 +26,8 @@ namespace flut
 		struct radian_
 		{
 			typedef T value_t;
+			radian_( const degree_<T>& v ) : value( deg_to_rad( v.value ) ) {}
 			explicit radian_( const T& v ) : value( v ) {}
-			explicit radian_( const degree_< T >& v ) : value( deg_to_rad( v.value ) ) {}
 			T value;
 		};
 

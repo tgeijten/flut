@@ -70,7 +70,7 @@ void math_test()
 	auto sin4 = sin( a4 );
 	
 	//auto qtest = make_quat_from_euler( deg( 10.0 ), deg( 10.0 ), deg( 10.0 ), euler_order::xyz );
-	auto qtest2 = make_quat_from_axis_angle( vec3_< float >::make_unit_x(), radian_< float >( 90 ) );
+	auto qtest2 = make_quat_from_axis_angle( vec3_< float >::make_unit_x(), a2 );
 
 	//flut_logvar4( a1.value, a2.value, a3.value, a4.value );
 	flut_logvar4( sizeof( a1 ), sizeof( a2 ), sizeof( a3 ), sizeof( a4 ) );
