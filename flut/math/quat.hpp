@@ -66,7 +66,7 @@ namespace flut
 		}
 
 		/// make quaternion from axis and angle
-		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, const angle& ang )
+		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, const radian_<T>& ang )
 		{
 			flut_assert( is_normalized( axis ) );
 			auto ha = T( 0.5 ) * ang;
@@ -75,9 +75,9 @@ namespace flut
 		}
 
 		/// make quaternion from Euler angles
-		template< typename T > quat_<T> make_quat_from_euler( angle x, angle y, angle z, euler_order eo = euler_order::xyz )
+		template< typename T > quat_<T> make_quat_from_euler( const radian_<T>& x, const radian_<T>& y, const radian_<T>& z, euler_order eo = euler_order::xyz )
 		{
-			T hxa = T( 0.5 ) * x.rad(), hya = T( 0.5 ) * y.rad(), hza = T( 0.5 ) * z.rad();
+			T hxa = T( 0.5 ) * x.value, hya = T( 0.5 ) * y.value, hza = T( 0.5 ) * z.value;
 			quat_<T> qx = quat_<T>( std::cos( hxa ), std::sin( hxa ), T( 0 ), T( 0 ) );
 			quat_<T> qy = quat_<T>( std::cos( hya ), T( 0 ), std::sin( hya ), T( 0 ) );
 			quat_<T> qz = quat_<T>( std::cos( hza ), T( 0 ), T( 0 ), std::sin( hza ) );

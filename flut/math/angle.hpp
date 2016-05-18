@@ -3,49 +3,73 @@
 #include <cmath>
 #include "math.hpp"
 #include "result_type.hpp"
+#include "flut/system/assert.hpp"
 
 namespace flut
 {
 	namespace math
 	{
+		// degree and radian structs;
+		template< typename T > struct degree_;
+		template< typename T > struct radian_;
+
 		template< typename T >
-		struct angle_
+		struct degree_
 		{
-			const T& rad() const { return value; }
-			T deg() const { return rad_to_deg( value ); }
-
-			static angle_<T> make_from_rad( const T& value ) { return angle_<T>( value ); }
-			static angle_<T> make_from_deg( const T& value ) { return angle_<T>( deg_to_rad( value ) ); }
-
-		private:
-			explicit angle_( T v ) : value( v ) {}
+			typedef T value_t;
+			explicit degree_( const T& v ) : value( v ) {}
+			explicit degree_( const radian_< T >& v ) : value( rad_to_deg( v.value ) ) {}
 			T value;
 		};
 
-		using angle = angle_< real_t >;
-		using anglef = angle_< float >;
-		using angled = angle_< double >;
+		template< typename T >
+		struct radian_
+		{
+			typedef T value_t;
+			explicit radian_( const T& v ) : value( v ) {}
+			explicit radian_( const degree_< T >& v ) : value( deg_to_rad( v.value ) ) {}
+			T value;
+		};
 
-		template< typename T > angle_<T> rad( T rad ) { return angle_<T>::make_from_rad( rad ); }
-		template< typename T > angle_<T> deg( T deg ) { return angle_<T>::make_from_deg( deg ); }
+		// SFINAE class
+		template< typename C > struct is_angle_type { const static bool value = false; };
+		template<> struct is_angle_type< radian_< float > > { const static bool value = true; };
+		template<> struct is_angle_type< radian_< double > > { const static bool value = true; };
+		template<> struct is_angle_type< degree_< float > > { const static bool value = true; };
+		template<> struct is_angle_type< degree_< double > > { const static bool value = true; };
+
+		// easy construction
+		template< typename T > radian_<T> rad( T rad ) { return radian_<T>( rad ); }
+		template< typename T > degree_<T> deg( T deg ) { return degree_<T>( deg ); }
 
 		/// scalar multiplication
-		template< typename T > angle_<T> operator*( const T& s, const angle_<T>& a )
-		{ return angle_<T>::make_from_rad( s * a.rad() ); }
-		template< typename T > angle_<T> operator*( const angle_<T>& a, const T& s )
-		{ return angle_<T>::make_from_rad( s * a.rad() ); }
+		template< typename T > typename std::enable_if< is_angle_type< T >::value, T >::type
+		operator*( typename const T::value_t& s, const T& a ) { return T( s * a.value ); }
 
-		template< typename T > angle_<T> operator+( const angle_<T>& a1, const angle_<T>& a2 )
-		{ return angle_<T>::make_from_rad( a1.rad() + a2.rad() ); }
+		// addition
+		// TODO: make it work with different types of value_t?
+		template< typename T > typename std::enable_if< is_angle_type< T >::value, T >::type
+		operator+( const T& a1, const T& a2 ) { return T( a1.value + a2.value ); }
 
-		template< typename T > angle_<T> operator-( const angle_<T>& a1, const angle_<T>& a2 )
-		{ return angle_<T>::make_from_rad( a1.rad() - a2.rad() ); }
+		//template< typename T > radian_<T> operator+( const radian_<T>& a1, const radian_<T>& a2 )
+		//{ return radian_<T>( a1.value + a2.value ); }
+		//template< typename T > degree_<T> operator+( const degree_<T>& a1, const degree_<T>& a2 )
+		//{ return degree_<T>( a1.value + a2.value ); }
 
-		template< typename T > T sin( const angle_< T >& a ) { return std::sin( a.rad() ); }
-		template< typename T > T cos( const angle_< T >& a ) { return std::cos( a.rad() ); }
-		template< typename T > T tan( const angle_< T >& a ) { return std::tan( a.rad() ); }
-		template< typename T > T asin( const angle_< T >& a ) { return std::asin( a.rad() ); }
-		template< typename T > T acos( const angle_< T >& a ) { return std::acos( a.rad() ); }
-		template< typename T > T atan( const angle_< T >& a ) { return std::atan( a.rad() ); }
+		//template< angle_unit U, typename T > angle_<U, T> operator*( const angle_<U, T>& a, const T& s )
+		//{ return angle_<U, T>::make( s * a.value ); }
+
+		//template< angle_unit U, typename T > angle_<U, T> operator-( const angle_<U, T>& a1, const angle_<U, T>& a2 )
+		//{ return angle_<U, T>::make( a1.value - a2.value ); }
+
+		template< typename T > T rad_value( const radian_<T>& a ) { return a.value; }
+		template< typename T > T rad_value( const degree_<T>& a ) { return deg_to_rad( a.value ); }
+
+		template< typename T > typename T::value_t sin( const T& a ) { return std::sin( rad_value( a ) ); }
+		template< typename T > typename T::value_t cos( const T& a ) { return std::cos( rad_value( a ) ); }
+		template< typename T > typename T::value_t tan( const T& a ) { return std::tan( rad_value( a ) ); }
+		//template< angle_unit U, typename T > T asin( const angle_<U, T>& a ) { return std::asin( rad_value( a ) ); }
+		//template< angle_unit U, typename T > T acos( const angle_<U, T>& a ) { return std::acos( rad_value( a ) ); }
+		//template< angle_unit U, typename T > T atan( const angle_<U, T>& a ) { return std::atan( rad_value( a ) ); }
 	}
 }
