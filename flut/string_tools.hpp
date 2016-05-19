@@ -10,8 +10,6 @@
 #ifdef WIN32
 #	pragma warning( push )
 #	pragma warning( disable: 4996 ) // disable warning for vsnprintf
-#else
-#	include <fnmatch.h>
 #endif
 
 namespace flut
