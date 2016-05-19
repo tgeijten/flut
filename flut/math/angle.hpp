@@ -23,6 +23,9 @@ namespace flut
 		template< angle_unit U, typename T >
 		struct angle_
 		{
+			/// default constructor
+			explicit angle_() : value( T(0) ) {}
+
 			/// explicit constructor
 			explicit angle_( const T& v ) : value( v ) {}
 
@@ -38,6 +41,10 @@ namespace flut
 			/// return degree copy
 			angle_< angle_unit::degrees, T > degree() const { return angle_< angle_unit::degrees, T >( angle_converter< U, angle_unit::degrees >::convert( value ) ); }
 			angle_< angle_unit::radians, T > radian() const { return angle_< angle_unit::radians, T >( angle_converter< U, angle_unit::radians >::convert( value ) ); }
+
+			/// get rad / deg value
+			T deg_value() const { return angle_converter< U, angle_unit::degrees >::convert( value ); }
+			T rad_value() const { return angle_converter< U, angle_unit::radians >::convert( value ); }
 
 			/// scalar multiplication and division
 			template< typename TS > angle_& operator*=( const TS& s ) { value *= T(s); return *this; }
@@ -91,12 +98,19 @@ namespace flut
 		auto operator-( const angle_<U, T1>& a1, const angle_<U, T2>& a2 ) -> angle_<U, decltype( a1.value - a2.value )>
 		{ return angle_<U, decltype( a1.value - a2.value )>( a1.value - a2.value ); }
 
-		/// comparison (greater than), requires matching value types
+		/// sin/cos/tan
 		template< typename T > T sin( const radian_<T>& a ) { return std::sin( a.value ); }
 		template< typename T > T cos( const radian_<T>& a ) { return std::cos( a.value ); }
 		template< typename T > T tan( const radian_<T>& a ) { return std::tan( a.value ); }
 		template< typename T > T asin( const radian_<T>& a ) { return std::asin( a.value ); }
 		template< typename T > T acos( const radian_<T>& a ) { return std::acos( a.value ); }
 		template< typename T > T atan( const radian_<T>& a ) { return std::atan( a.value ); }
+
+		/// streaming
+		template< angle_unit U, typename T > std::ostream& operator<<( std::ostream& str, const angle_<U, T>& a )
+		{ return ( str << a.value ); }
+
+		template< angle_unit U, typename T > std::istream& operator>>( std::istream& str, angle_<U, T>& a )
+		{ return ( str >> a.value ); }
 	}
 }
