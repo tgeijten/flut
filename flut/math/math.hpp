@@ -19,6 +19,8 @@ namespace flut
 			static T zero() { return T( 0 ); }
 		};
 
+		const real_t real_pi = constants< real_t >::pi();
+
 		/// handy functions
 		template< typename T > T rad_to_deg( T rad_value ) { return ( T( 180 ) / constants<T>::pi() ) * rad_value; }
 		template< typename T > T deg_to_rad( T deg_value ) { return ( constants<T>::pi() / T( 180 ) ) * deg_value; }

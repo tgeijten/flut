@@ -12,6 +12,8 @@
 #include "flut/math/angle.hpp"
 #include "flut/math/unit_value.hpp"
 #include "flut/flags.hpp"
+#include "flut/math/regular_piecewise_linear_function.hpp"
+#include <fstream>
 
 using std::cout;
 using std::endl;
@@ -37,6 +39,17 @@ void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::rel
 	auto diff = std::abs( q1.w - q2.W() ) + std::abs( q1.x - q2.X() ) + std::abs( q1.y - q2.Y() ) + std::abs( q1.z - q2.Z() );
 	if ( eq ) log::info( "OK! diff=", diff, "q1=", q1, "q2=", q2 );
 	else log::error( "ERROR! diff=", diff, "q1=", q1, "q2=", q2 );
+}
+
+double sin_func( double x ) { return std::sin( x ); }
+
+void function_test()
+{
+	regular_piecewise_linear_function< real_t > func( -real_pi, real_pi, 16, sin_func );
+
+	std::ofstream ostr( "test.txt" );
+	for ( real_t x = -2 * real_pi; x < 2 * real_pi; x += 0.1 )
+		ostr << x << "\t" << func.eval( x ) << endl;
 }
 
 void angle_test()
