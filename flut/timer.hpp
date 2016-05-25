@@ -2,6 +2,9 @@
 
 #if defined(_MSC_VER) && ( _MSC_VER <= 1800 ) // MSVC 2013 and lower do not have proper chrono support
 #	define FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+#	define NOMINMAX
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 #	include <profileapi.h>
 #else
 #	include <chrono>

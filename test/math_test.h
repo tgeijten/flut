@@ -14,6 +14,8 @@
 #include "flut/flags.hpp"
 #include "flut/math/regular_piecewise_linear_function.hpp"
 #include <fstream>
+#include "flut/timer.hpp"
+#include "flut/system_tools.hpp"
 
 using std::cout;
 using std::endl;
@@ -50,6 +52,17 @@ void function_test()
 	std::ofstream ostr( "test.txt" );
 	for ( real_t x = -2 * real_pi; x < 2 * real_pi; x += 0.1 )
 		ostr << x << "\t" << func.eval( x ) << endl;
+
+	timer t;
+	real_t result = 0.0;
+	for ( int i = 0; i < 10000; ++i )
+	{
+		for ( real_t x = -real_pi; x <= real_pi; x += 0.001 )
+			result += func.eval( x );
+	}
+	auto duration = t.seconds();
+	cout << duration << " result = " << result << endl;
+	wait_for_key();
 }
 
 void angle_test()
