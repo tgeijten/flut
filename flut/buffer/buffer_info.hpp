@@ -9,7 +9,7 @@ namespace flut
 	template< typename T >
 	struct buffer_info
 	{
-		buffer_info() {}
+		buffer_info( size_t channels = 0 ) : headers( channels ) {}
 		~buffer_info() {}
 
 		index_t add_channel( const T& label ) {
@@ -22,7 +22,7 @@ namespace flut
 			else return idx;
 		}
 		size_t channel_count() const { return headers.size(); }
-		index_t find_channel(const T& label) const {
+		index_t find_channel( const T& label ) const {
 			auto it = header_indices.find( label );
 			return ( it != header_indices.end() ) ? it->second : no_index;
 		}
@@ -35,7 +35,11 @@ namespace flut
 	template<>
 	struct buffer_info< void >
 	{
+		buffer_info( size_t channels = 0 ) : count( channels ) { }
 		index_t add_channel() { return count++; }
+		size_t channel_count() const { return count; }
+
+	private:
 		index_t count;
 	};
 }

@@ -30,7 +30,7 @@ namespace flut
 				if ( xlb < 0 ) xlb = 0;
 				if ( xlb > points - 2 ) xlb = points - 2;
 				T wub = x_idx - xlb;
-				return ( T(1) - wub ) * data[ xlb ] + wub * data[ xlb + 1];
+				return ( T(1) - wub ) * data[ xlb ] + wub * data[ xlb + 1 ];
 			}
 
 			~regular_piecewise_linear_function() {}
