@@ -4,7 +4,7 @@
 #include "flut/math/vec3.hpp"
 #include "flut/system/log.hpp"
 #include "flut/buffer/interpolation.hpp"
-#include "flut/buffer/buffer_info.hpp"
+#include "flut/buffer/buffer_base.hpp"
 #include "flut/buffer/regular_buffer.hpp"
 #include "flut/buffer/regular_ring_buffer.hpp"
 
@@ -13,12 +13,8 @@ namespace flut
 	void buffer_test()
 	{
 		// regular buffer test
-		buffer_info< string > bufinf1( 10 );
-		buffer_info< void > bufinf2( 10 );
-		flut_logvar2( sizeof(bufinf1), sizeof(bufinf2) );
-
 		regular_buffer< double, string > regbuf( 0 );
-		regular_ring_buffer< double, 100, void > ringbuf( 20 );
+		//regular_ring_buffer< double, 100, void > ringbuf( 20 );
 		for ( int i = 0; i < 10; ++i )
 			regbuf.add_channel( stringf( "channel%d", i ) );
 

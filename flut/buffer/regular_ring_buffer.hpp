@@ -1,6 +1,6 @@
 #pragma once
 
-#include "buffer_info.hpp"
+#include "buffer_base.hpp"
 #include "flut/system/assert.hpp"
 
 namespace flut
@@ -11,8 +11,6 @@ namespace flut
 	public:
 		regular_ring_buffer( size_t channels ) : data( F * channels ), curframe( 0 ), bufinf( channels ) {}
 		~regular_ring_buffer() {}
-
-		buffer_info< L >& header() { return bufinf; }
 
 		index_t add_frame() { return ++curframe; }
 		size_t frame_count() { return curframe + 1; }
@@ -38,7 +36,6 @@ namespace flut
 		}
 
 	private:
-		buffer_info< L > bufinf;
 		std::vector< T > data;
 		index_t curframe;
 	};
