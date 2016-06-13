@@ -8,7 +8,7 @@ namespace flut
 	class regular_buffer : public buffer_base< regular_buffer< T, L >, L >
 	{
 	public:
-		regular_buffer( size_t channels ) : buffer_base( channels ) { resize_buffer(); }
+		regular_buffer( size_t channels ) : buffer_base( channels ), data( channels ) {}
 		~regular_buffer() {}
 
 		/// add empty frame to the buffer
