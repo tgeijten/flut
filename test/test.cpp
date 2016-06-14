@@ -13,6 +13,9 @@ int main( int argc, char* argv[] )
 	flut_logvar2( flut::math::constants<double>::epsilon(), flut::math::constants<double>::relaxed_epsilon() );
 	flut_logvar2( flut::math::constants<float>::epsilon(), flut::math::constants<float>::relaxed_epsilon() );
 
+	flut::buffer_test();
+
+	flut::math::function_test();
 	flut::math::angle_test();
 	flut::math::vec_quat_test();
 	flut::buffer_test();

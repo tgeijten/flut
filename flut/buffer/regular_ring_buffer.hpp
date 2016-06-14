@@ -1,29 +1,41 @@
 #pragma once
 
-#include "buffer_info.hpp"
+#include "buffer_base.hpp"
+#include "flut/system/assert.hpp"
 
-namespace 
+namespace flut
 {
-	template< typename T >
+	template< typename T, size_t F, typename L = void >
 	class regular_ring_buffer 
 	{
 	public:
-		regular_ring_buffer( const buffer_info& bi, size_t frames ) : data( frames * bi.channel_count() ) {}
+		regular_ring_buffer( size_t channels ) : data( F * channels ), curframe( 0 ), bufinf( channels ) {}
 		~regular_ring_buffer() {}
 
-		void add_frame( const std::vector< T >& frame ) {
-			flut_assert( frame.size() == bufinf.channel_count() );
-			data.insert( data.end(), frame.begin(), frame.end() );
+		index_t add_frame() { return ++curframe; }
+		size_t frame_count() { return curframe + 1; }
+		size_t channel_count() { return bufinf.channel_count(); }
+
+		void set_value( index_t channel, const T& value ) { data[ curframe * channel_count() + channel_count() ] = value; }
+
+		const T* get_frame( index_t frame ) {
+			flut_assert( frame >= frame_count() - F && frame < frame_count() );
+			return data[ ( frame % F ) * channel_count() ];
 		}
 
-		index_t add_frame( T value = T( 0 ) ) { return ++curframe; }
-		void set_value( index_t channel, const T& value ) { data[ data.size() - bufinf.channel_count() + channel ] = value; }
-		const T* get_frame( index_t frame ) { flut_assert( frame < frame_count() ); }
-		size_t frame_count() { return data.size() / bufinf.channel_count(); }
+		T get_value( index_t frame, index_t channel ) {
+			flut_assert( frame >= frame_count() - F && frame < frame_count() && channel < channel_count() );
+			return data[ ( frame % F ) * channel_count() + channel ];
+		}
 
+		T get_interpolated_value( index_t frame0, index_t channel, T pos ) {
+			flut_assert( frame0 >= frame_count() - F && frame0 < frame_count() && channel < channel_count() );
+			index_t ofs0 = ( frame0 % F ) * channel_count() + channel;
+			index_t ofs1 = ( ( frame0 + 1 ) % F ) * channel_count() + channel;
+			return ( T(1) - pos ) * data[ ofs0 ] + pos * data[ ofs1 ];
+		}
 
 	private:
-		const buffer_info& bufinf;
 		std::vector< T > data;
 		index_t curframe;
 	};
