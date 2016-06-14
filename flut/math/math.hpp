@@ -26,6 +26,13 @@ namespace flut
 		template< typename T > T inv( T v ) { return T( 1 ) / v; }
 		template< typename T > T invsqrt( T v ) { return T( 1 ) / sqrt( v ); }
 		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }
+		template< typename T > T between( T v, T min, T max ) { if ( v < min ) return min; else if ( v > max ) return max; else return v; }
+		template< typename T > void limit( T& v, const T& min, const T& max ) {
+			/// TODO: use efficient instructions instead of relying on the compiler for optimization
+			if ( v < min ) v = min;
+			else if ( v > max ) v = max;
+			return v;
+		}
 
 		/// check if an integer value is a power of two
 		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }

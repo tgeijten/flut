@@ -52,6 +52,10 @@ namespace flut
 			template< typename TS > angle_& operator/=( const TS& s ) { value /= T(s); return *this; }
 			template< typename TS > angle_ operator/( const TS& s ) const { return angle_( value / T(s) ); }
 
+			/// addition / subtraction of an angle with the same units
+			angle_& operator+=( const angle_& other ) { value += other.value; return *this; }
+			angle_& operator-=( const angle_& other ) { value -= other.value; return *this; }
+
 			/// negation
 			angle_ operator-() const { return angle_( -value ); }
 
