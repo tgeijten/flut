@@ -2,9 +2,6 @@
 
 #if defined(_MSC_VER) && ( _MSC_VER <= 1800 ) // MSVC 2013 and lower do not have proper chrono support
 #	define FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-#	define NOMINMAX
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
 #	include <profileapi.h>
 #else
 #	include <chrono>
@@ -15,6 +12,9 @@ namespace flut
 	class timer
 	{
 	public:
+		typedef long long clock_ticks_t;
+		typedef double seconds_t;
+
 		/// constructor, resets timer
 		timer() {
 #			ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
@@ -35,7 +35,7 @@ namespace flut
 		}
 
 		/// get elapsed time in seconds
-		double seconds() {
+		seconds_t seconds() {
 #			ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 				return ticks() * ticks_to_seconds;
 #			else
@@ -44,7 +44,7 @@ namespace flut
 		}
 
 		/// get elapsed number of CPU ticks
-		long long ticks() {
+		clock_ticks_t ticks() {
 #			ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 				LARGE_INTEGER now;
 				::QueryPerformanceCounter( &now );
