@@ -1,3 +1,4 @@
+#include "test.h"
 #include "flut_test_config.h"
 #include "math_test.h"
 #include "buffer_test.h"

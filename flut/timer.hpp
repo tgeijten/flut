@@ -15,6 +15,9 @@ namespace flut
 	class timer
 	{
 	public:
+		typedef long long clock_ticks_t;
+		typedef double seconds_t;
+
 		/// constructor, resets timer
 		timer() {
 #			ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
