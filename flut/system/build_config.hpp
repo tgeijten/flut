@@ -10,10 +10,6 @@
 	#endif
 #endif
 
-#ifndef FLUT_STATIC_LOG_LEVEL
-	#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_INFO
-#endif
-
 #ifndef FLUT_LOG_OUTPUT_STREAM
 	#define FLUT_LOG_OUTPUT_STREAM std::cout
 #endif

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <ostream>
-#include "flut/string_tools.hpp"
-#include <string>
+#ifndef FLUT_STATIC_LOG_LEVEL
+#	define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_INFO
+#endif
+
 #include <iostream>
-#include "build_config.hpp"
+#include "flut/string_tools.hpp"
 
 #define FLUT_LOG_LEVEL_ALL 1
 #define FLUT_LOG_LEVEL_TRACE 1
