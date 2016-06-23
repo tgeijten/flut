@@ -125,8 +125,8 @@ namespace flut
 			if ( t > 0.0 )
 			{
 				T root = sqrt( t + T( 1 ) );
-				q.w = 0.5f * root;
-				root = 0.5f / root;
+				q.w = T( 0.5 ) * root;
+				root = T( 0.5 ) / root;
 				q.x = ( m.e21 - m.e12 ) * root;
 				q.y = ( m[0][2] - m[2][0] ) * root;
 				q.z = ( m[1][0] - m[0][1] ) * root;

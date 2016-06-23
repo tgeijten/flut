@@ -2,7 +2,7 @@
 
 #include "flut/system/types.hpp"
 
-#ifdef WIN32
+#ifdef FLUT_COMP_MSVC
 	#include <conio.h>
 	#include <shlobj.h>
 #endif
@@ -10,7 +10,7 @@
 namespace flut
 {
 	char wait_for_key() {
-#ifdef WIN32
+#ifdef FLUT_COMP_MSVC
 		return _getch();
 #else
 		return 0;
@@ -19,7 +19,7 @@ namespace flut
 
 	string get_config_folder()
 	{
-#ifdef WIN32
+#ifdef FLUT_COMP_MSVC
 		// get the string, convert to single byte string, then free the original string (ugh)
 		wchar_t* wcsLocalAppData = 0;
 		SHGetKnownFolderPath( FOLDERID_LocalAppData, 0, NULL, &wcsLocalAppData );

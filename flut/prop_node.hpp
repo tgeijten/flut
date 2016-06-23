@@ -79,5 +79,5 @@ namespace flut
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node().set( value ); }
 
 	/// load the contents of an xml file into a prop_node
-	prop_node load_xml( const string& filename );
+	prop_node FLUT_API load_xml( const string& filename );
 }

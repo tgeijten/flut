@@ -1,16 +1,12 @@
 #pragma once
 
+#include "flut/system/platform.hpp"
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
 
 #include <sstream>
 #include <stdarg.h>
 #include <algorithm>
-
-#ifdef WIN32
-#	pragma warning( push )
-#	pragma warning( disable: 4996 ) // disable warning for vsnprintf
-#endif
 
 namespace flut
 {
@@ -31,58 +27,13 @@ namespace flut
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
 	/// split a string into a vector of strings
-	inline std::vector< string > split_str( const string& s, const string& sep_chars ) {
-		std::vector< string > strings;
-		size_t ofs = s.find_first_not_of( sep_chars.c_str(), 0 );
-		while ( ofs != string::npos ) {
-			size_t ofsend = s.find_first_of( sep_chars.c_str(), ofs );
-			strings.push_back( s.substr( ofs, ofsend - ofs ) );
-			ofs = s.find_first_not_of( sep_chars.c_str(), ofsend );
-		}
-		return strings;
-	}
+	vector< string > FLUT_API split_str( const string& s, const string& sep_chars );
 
 	/// get formatted string (printf style)
-	inline string stringf( const char* format, ... ) {
-		va_list args;
-		va_start( args, format );
-		char buf[ 256 ];
-		vsnprintf( buf, sizeof( buf ), format, args );
-		va_end( args );
-		return string( buf );
-	}
+	string FLUT_API stringf( const char* format, ... );
 
-	/// Get filename extension (without dot)
-	inline string get_filename_ext( const string& str ) {
-		size_t n = str.find_last_of( '.' );
-		if ( n != string::npos ) {
-			string ext = str.substr( n + 1 );
-			if ( ext.find_last_of( "/\\" ) != string::npos ) // check if not part of folder
-				return ext;
-		}
-		return string(); // no extension found
-	}
-
-	/// Get filename without extension (without dot)
-	inline string get_filename_without_ext( const string& str ) {
-		auto ext_len = get_filename_ext( str ).size();
-		if ( ext_len > 0 ) ++ext_len; // add dot
-		return str.substr( 0, str.size() - ext_len );
-	}
-
-	/// Get folder of filename (including slash, if any)
-	inline string get_filename_folder( const string& str ) {
-		size_t n = str.find_last_of( "/\\" );
-		if ( n != string::npos ) return str.substr( 0, n + 1 );
-		else return str;
-	}
-
-	/// Get filename without folder
-	inline string get_filename_without_folder( const string& str ) {
-		size_t n = str.find_last_of( "/\\" );
-		if ( n != string::npos ) return str.substr( n + 1, string::npos );
-		else return str;
-	}
+	/// match pattern (glob, i.e. name* or name?), can use multiple delimited patterns, default delimiter = ';'
+	bool FLUT_API matches_pattern( const string& str, const string& pattern, const char* pattern_delim_chars = ";" );
 
 	/// convert any streamable type to string
 	template< typename T > string to_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
@@ -94,8 +45,17 @@ namespace flut
 
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
-}
 
-#ifdef WIN32
-#	pragma warning( pop )
-#endif
+	/// Get filename extension (without dot)
+	string FLUT_API get_filename_ext( const string& str );
+
+	/// Get filename without extension (without dot)
+	string FLUT_API get_filename_without_ext( const string& str );
+
+	/// Get folder of filename (including slash, if any)
+	string FLUT_API get_filename_folder( const string& str );
+
+	/// Get filename without folder
+	string FLUT_API get_filename_without_folder( const string& str );
+
+}

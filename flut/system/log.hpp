@@ -27,69 +27,46 @@ namespace flut
 {
 	namespace log
 	{
-		inline void log_output() { FLUT_LOG_OUTPUT_STREAM << std::endl; }
+		void FLUT_API set_level( int level );
+		int FLUT_API get_level();
 
-		template < typename T, typename... Args >
-		void log_output( T var, const Args&... args )
+		inline void log_output() { FLUT_LOG_OUTPUT_STREAM << std::endl; }
+		template< typename T, typename... Args > void log_output( T var, const Args&... args )
 		{ FLUT_LOG_OUTPUT_STREAM << var; log_output( args... ); }
 
 		template< typename... Args > void trace( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )
-#	ifdef FLUT_DYNAMIC_LOG_LEVEL_FUNC
-			if ( FLUT_DYNAMIC_LOG_LEVEL_FUNC() <= FLUT_LOG_LEVEL_TRACE ) log_output( args... );
-#	else
-			log_output( args... );
-#	endif
+			if ( get_level() <= FLUT_LOG_LEVEL_TRACE ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void debug( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_DEBUG )
-#	ifdef FLUT_DYNAMIC_LOG_LEVEL_FUNC
-			if ( FLUT_DYNAMIC_LOG_LEVEL_FUNC() <= FLUT_LOG_LEVEL_DEBUG ) log_output( args... );
-#	else
-			log_output( args... );
-#	endif
+			if ( get_level() <= FLUT_LOG_LEVEL_DEBUG ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void info( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_INFO )
-#	ifdef FLUT_DYNAMIC_LOG_LEVEL_FUNC
-			if ( FLUT_DYNAMIC_LOG_LEVEL_FUNC() <= FLUT_LOG_LEVEL_INFO ) log_output( args... );
-#	else
-			log_output( args... );
-#	endif
+			if ( get_level() <= FLUT_LOG_LEVEL_INFO ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void warning( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_WARNING )
-#	ifdef FLUT_DYNAMIC_LOG_LEVEL_FUNC
-			if ( FLUT_DYNAMIC_LOG_LEVEL_FUNC() <= FLUT_LOG_LEVEL_WARNING ) log_output( args... );
-#	else
-			log_output( args... );
-#	endif
+			if ( get_level() <= FLUT_LOG_LEVEL_WARNING ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void error( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_ERROR )
-#	ifdef FLUT_DYNAMIC_LOG_LEVEL_FUNC
-			if ( FLUT_DYNAMIC_LOG_LEVEL_FUNC() <= FLUT_LOG_LEVEL_ERROR ) log_output( args... );
-#	else
-			log_output( args... );
-#	endif
+			if ( get_level() <= FLUT_LOG_LEVEL_ERROR ) log_output( args... );
 #endif
 		}
 
 		template< typename... Args > void critical( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_CRITICAL )
-#	ifdef FLUT_DYNAMIC_LOG_LEVEL_FUNC
-			if ( FLUT_DYNAMIC_LOG_LEVEL_FUNC() <= FLUT_LOG_LEVEL_CRITICAL ) log_output( args... );
-#	else
-			log_output( args... );
-#	endif
+			if ( get_level() <= FLUT_LOG_LEVEL_CRITICAL ) log_output( args... );
 #endif
 		}
 	}

@@ -2,6 +2,7 @@
 
 namespace flut
 {
+	/// class for defining flags in a bitset
 	template< typename EnumT, typename StorageT = unsigned int >
 	struct flags
 	{

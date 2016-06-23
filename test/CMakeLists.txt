@@ -7,10 +7,9 @@ source_group("scone" FILES ${SCONE_FILES})
 include_directories("../")
 
 add_executable(flut_test ${TEST_FILES} ${SCONE_FILES})
+target_link_libraries(flut_test flut)
 
 include_directories(${FLUT_INCLUDE_DIR})
-
-#target_link_libraries(flut_test flut)
 
 set_target_properties(flut_test	PROPERTIES
 	PROJECT_LABEL "flut_test"
