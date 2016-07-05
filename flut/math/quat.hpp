@@ -94,8 +94,26 @@ namespace flut
 		}
 
 		/** Get quaternion to represent the rotation from source to target vector. */
-		template< typename T > quat_<T> quat_from_directions( const vec3_<T>& source, const vec3_<T>& target )
-		{ FLUT_NOT_IMPLEMENTED; }
+		template< typename T > quat_<T> make_quat_from_directions( const vec3_<T>& source, const vec3_<T>& target )
+		{
+			vec3_<T> s = normalized( source );
+			vec3_<T> t = normalized( target );
+			vec3_<T> c = cross_product( s, t );
+			T d = dot_product( s, t );
+
+			if ( equals( d, T(1) ) ) // check if vectors are the same
+				return quat_<T>::make_zero();
+
+			auto clen = length( c );
+			if ( equals( clen, T(0) ) ) // check if vectors are 180 deg apart
+				return quat_<T>( 0, 1, 0, 0 ); // this doesn't work if source is unit_x
+
+			c /= clen;
+			auto a = std::acos( d ) * T(0.5);
+			auto sa = std::sin( a );
+
+			return quat_<T>( std::cos( a ), c.x * sa, c.y * sa, c.z * sa );
+		}
 
 		/** Get quaternion to represent the rotation from source to target quaternion. */
 		template< typename T > quat_<T> quat_from_quats( const quat_<T>& source, const quat_<T>& target )

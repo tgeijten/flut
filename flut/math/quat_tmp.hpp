@@ -71,7 +71,7 @@ namespace flut
 		//template< typename T > quat<T> quat_from_euler( const Radian& xAngle, const Radian& yAngle, const Radian& zAngle, EulerOrder eulerOrder = EULER_ORDER_XYZ );
 
 		/** Get quaternion to represent the rotation from source to target vector. */
-		template< typename T > quat_<T> quat_from_directions( const vec3_<T>& source, const vec3_<T>& target );
+		template< typename T > quat_<T> make_quat_from_directions( const vec3_<T>& source, const vec3_<T>& target );
 
 		/** Get quaternion to represent the rotation from source to target quaternion. */
 		template< typename T > quat_<T> quat_from_quats( const quat_<T>& source, const quat_<T>& target );
