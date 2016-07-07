@@ -12,11 +12,7 @@ namespace flut
 		{
 			vec3_() {}
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
-
-			/// copy constructor that takes any vec3_ type
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
-
-			/// assignment operator that takes any vec3_ type
 			template< typename T2 > vec3_<T>& operator=( const vec3_<T2>& o ) { x = T(o.x); y = T(o.y); z = T(o.z); return *this; }
 
 			/// element access

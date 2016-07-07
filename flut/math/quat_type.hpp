@@ -13,6 +13,7 @@ namespace flut
 			quat_() {}
 			quat_( T w, T x, T y, T z ) : w( w ), x( x ), y( y ), z( z ) {}
 			template< typename T2 > quat_( const quat_<T2>& o ) : w( T(o.w) ), x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
+			template< typename T2 > quat_<T>& operator=( const quat_<T2>& o ) { w = T(o.w); x = T(o.x); y = T(o.y); z = T(o.z); return *this; }
 
 			T w, x, y, z;
 
