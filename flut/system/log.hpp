@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef FLUT_STATIC_LOG_LEVEL
-#	define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_INFO
+#	define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE
 #endif
 
 #include <iostream>
