@@ -10,6 +10,8 @@
 #	include <fnmatch.h>
 #endif
 
+#include <stdarg.h>
+
 namespace flut
 {
 	vector< string > split_str( const string& s, const string& sep_chars )

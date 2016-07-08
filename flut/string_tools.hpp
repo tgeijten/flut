@@ -5,7 +5,6 @@
 #include "flut/system/assert.hpp"
 
 #include <sstream>
-#include <stdarg.h>
 #include <algorithm>
 
 namespace flut
