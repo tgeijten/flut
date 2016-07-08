@@ -62,7 +62,7 @@ namespace flut
 		size_t n = str.find_last_of( '.' );
 		if ( n != string::npos ) {
 			string ext = str.substr( n + 1 );
-			if ( ext.find_last_of( "/\\" ) != string::npos ) // check if not part of folder
+			if ( ext.find_last_of( "/\\" ) == string::npos ) // check if not part of folder
 				return ext;
 		}
 		return string(); // no extension found
