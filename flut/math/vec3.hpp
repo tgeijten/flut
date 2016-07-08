@@ -10,17 +10,15 @@ namespace flut
 		/// Addition
 		template< typename T > vec3_<T> operator+( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return vec3_<T>( v1.x + v2.x, v1.y + v2.y, v1.z + v2.z ); }
-
 		/// Addition
-		template< typename T > vec3_<T> operator+=( vec3_<T>& v1, const vec3_<T>& v2 )
+		template< typename T > vec3_<T>& operator+=( vec3_<T>& v1, const vec3_<T>& v2 )
 		{ v1.x += v2.x; v1.y += v2.y; v1.z += v2.z; return v1; }
 
 		/// Subtraction
 		template< typename T > vec3_<T> operator-( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return vec3_<T>( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z ); }
-
 		/// Subtraction
-		template< typename T > vec3_<T> operator-=( vec3_<T>& v1, const vec3_<T>& v2 )
+		template< typename T > vec3_<T>& operator-=( vec3_<T>& v1, const vec3_<T>& v2 )
 		{ v1.x -= v2.x; v1.y -= v2.y; v1.z -= v2.z; return v1; }
 
 		/// Negation
@@ -30,14 +28,19 @@ namespace flut
 		/// Scalar multiplication
 		template< typename T > vec3_<T> operator*( T s, vec3_<T> v )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
-
 		/// Scalar multiplication
 		template< typename T > vec3_<T> operator*( vec3_<T> v, T s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
-
 		/// Scalar multiplication
-		template< typename T > vec3_<T> operator*=( vec3_<T>& v, T s )
+		template< typename T > vec3_<T>& operator*=( vec3_<T>& v, T s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
+
+		/// Scalar division
+		template< typename T > vec3_<T> operator/( vec3_<T> v, T s )
+		{ T ms = inv( s ); v.x *= ms; v.y *= ms; v.z *= ms; return v; }
+		/// Scalar division
+		template< typename T > vec3_<T>& operator/=( vec3_<T>& v, T s )
+		{ T ms = inv( s ); v.x *= ms; v.y *= ms; v.z *= ms; return v; }
 
 		/// Get length of a vec3
 		template< typename T > T length( vec3_<T> v )

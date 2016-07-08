@@ -38,13 +38,13 @@ namespace flut
 		/// sign of v: 1 or -1
 		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }
 
-		/// return clamped value that is >= min and <= max
+		/// return clamped value that is between min and max
 		template< typename T > T clamped( T v, T min, T max )
 		{ if ( v < min ) return min; else if ( v > max ) return max; else return v; }
 
-		/// clamp a value so that min <= v <= max
+		/// clamp a value so that it is between min and max
 		template< typename T > void clamp( T& v, const T& min, const T& max )
-		{ if ( v < min ) v = min; else if ( v > max ) v = max; return v; } /// TODO: use efficient instructions instead of relying on the compiler for optimization
+		{ if ( v < min ) v = min; else if ( v > max ) v = max; } /// TODO: use efficient instructions instead of relying on the compiler for optimization
 
 		/// check if an integer value is a power of two
 		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }

@@ -37,6 +37,7 @@ namespace flut
 
 	/// convert any streamable type to string
 	template< typename T > string to_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+	template< typename T > string to_str( const T& value, int decimals ) { std::ostringstream str; str << std::fixed << std::setprecision( decimals ) << value; return str.str(); }
 	template<> inline string to_str < string >( const string& s ) { return s; }
 
 	/// convert string to any streamable type
