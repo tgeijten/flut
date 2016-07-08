@@ -48,7 +48,7 @@ namespace flut
 		std::vector<std::string> patterns = split_str( pattern, pattern_delim_chars );
 		for ( auto p : patterns ) {
 #ifdef FLUT_COMP_MSVC
-			flut_assert_msg( strcmp( pattern_delim_chars, ";" ), "Pattern delimiter must be ';' for MSVC" );
+			flut_assert_msg( strcmp( pattern_delim_chars, ";" ) == 0, "Pattern delimiter must be ';' for MSVC" );
 			if ( PathMatchSpecEx( str.c_str(), p.c_str(), PMSF_NORMAL ) == S_OK )
 				return true;
 #else
