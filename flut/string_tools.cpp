@@ -11,6 +11,7 @@
 #endif
 
 #include <stdarg.h>
+#include <memory>
 
 namespace flut
 {
@@ -57,6 +58,21 @@ namespace flut
 #endif
 		}
 		return false;
+	}
+
+	string FLUT_API read_str( const string& filename )
+	{
+		// read file contents into char array
+		FILE* f = fopen( filename.c_str(),"rb" );
+		flut_assert_msg( f, "Could not open file: " + filename );
+
+		fseek( f, 0, SEEK_END );
+		auto file_len = ftell( f );
+		rewind( f );
+		auto file_buf = std::unique_ptr< char[] >( new char[ file_len ] );
+		fread( reinterpret_cast< void* >( file_buf.get() ), sizeof( char ), file_len, f );
+
+		return string( file_buf.get(), file_len );
 	}
 
 	flut::string get_filename_ext( const string& str )

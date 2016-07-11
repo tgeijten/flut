@@ -1,14 +1,20 @@
 #pragma once
 
+#include "flut/system/platform.hpp"
 #include "flut/system/types.hpp"
 #include "flut/string_tools.hpp"
+
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( push )
+#	pragma warning( disable: 4251 )
+#endif
 
 namespace flut
 {
 	class prop_node;
 	template< typename T > prop_node make_prop_node( const T& value );
 
-	class prop_node
+	class FLUT_API prop_node
 	{
 	public:
 		typedef string key_t;
@@ -40,23 +46,38 @@ namespace flut
 		template< typename T > T get( const key_t& key, const T& def ) const
 		{ const auto it = find( key ); if ( it != end() ) return it->second.get< T >(); else return def; }
 
+		/// see if this has a value
+		bool has_value() const { return !value.empty(); }
+		const value_t& get_value() const { return value; }
+
 		/// add a node with a value
 		template< typename T > prop_node& add( const key_t& key, const T& value )
 		{ children.push_back( std::make_pair( key, make_prop_node( value ) ) ); return children.back().second; }
+
+		/// add a child node
+		prop_node& add_child( const key_t& key, const prop_node& pn )
+		{ children.push_back( std::make_pair( key, pn ) ); return children.back().second; }
+		prop_node& add_child( const key_t& key, prop_node&& pn )
+		{ children.push_back( std::make_pair( key, std::move( pn ) ) ); return children.back().second; }
+
+		/// reserve children
+		void reserve( size_t n ) { children.reserve( n ); }
 
 		/// set the value of this node
 		template< typename T > prop_node& set( const T& v ) { value = to_str( v ); return *this; }
 
 		/// set the value of a child node, the node is created if not existing
 		template< typename T > prop_node& set( const key_t& key, const T& v )
-		{ auto it = find( key ); if ( it == end() ) add( key, value ); else it->second.set( value ); }
+		{ auto it = find( key ); if ( it == end() ) add_child( key, value ); else it->second.set( value ); }
 
 		/// get a child node, throws exception if not existing
-		const prop_node& get_child( const key_t& key ) const {
-			auto it = find( key );
-			flut_assert_msg( it != end(), "Could not find key: " + key );
-			return it->second;
-		}
+		const prop_node& get_child( const key_t& key ) const
+		{ auto it = find( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+		prop_node& get_child( const key_t& key )
+		{ auto it = find( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+
+		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }
+		prop_node& operator[]( const key_t& key ) { return get_child( key ); }
 
 		/// find a child node
 		iterator find( const key_t& key ) { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
@@ -70,7 +91,12 @@ namespace flut
 		iterator end() { return children.end(); }
 		const_iterator end() const { return children.end(); }
 
+		/// output node and children to stream (nicely aligned)
+		std::ostream& to_stream( std::ostream& str, int depth = 0, int key_align = 0 ) const;
+
 	private:
+		int get_align_width( int depth ) const;
+
 		value_t value;
 		container_t children;
 	};
@@ -78,6 +104,14 @@ namespace flut
 	/// make a prop_node with a value
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node().set( value ); }
 
+	/// stream operator
+	inline std::ostream& operator<<( std::ostream& str, const prop_node& pn )
+	{ pn.to_stream( str ); return str; }
+
 	/// load the contents of an xml file into a prop_node
-	prop_node FLUT_API load_xml( const string& filename );
+	prop_node FLUT_API read_xml( const string& filename );
 }
+
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( pop )
+#endif

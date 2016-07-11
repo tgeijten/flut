@@ -46,6 +46,9 @@ namespace flut
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
 
+	/// make string with contents of a file
+	string FLUT_API read_str( const string& filename );
+
 	/// Get filename extension (without dot)
 	string FLUT_API get_filename_ext( const string& str );
 
