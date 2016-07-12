@@ -76,8 +76,14 @@ namespace flut
 		prop_node& get_child( const key_t& key )
 		{ auto it = find( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
 
+		/// access child by name
 		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }
 		prop_node& operator[]( const key_t& key ) { return get_child( key ); }
+
+		/// access child by index
+		const prop_node& operator[]( index_t idx ) const { flut_assert( idx < size() ); return children[ idx ].second; }
+		prop_node& operator[]( index_t idx ) { flut_assert( idx < size() ); return children[ idx ].second; }
+		size_t size() const { return children.size(); }
 
 		/// find a child node
 		iterator find( const key_t& key ) { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }

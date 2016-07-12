@@ -43,6 +43,15 @@ namespace flut
 	template< typename T > T from_str( const string& s ) { T value; std::stringstream str( s ); str >> value; return value; }
 	template<> inline string from_str< string >( const string& s ) { return s; }
 
+	/// convert space-delimited string to vector of elements
+	template< typename T > vector< T > from_vec_str( const string& s, size_t size = no_index ) {
+		std::stringstream str( s );
+		vector< T > vec;
+		if ( size != no_index ) vec.reserve( size );
+		while ( str.good() ) { T elem; str >> elem; if ( str.good() ) vec.push_back( elem ); }
+		return vec;
+	}
+
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
 
