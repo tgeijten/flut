@@ -103,12 +103,12 @@ namespace flut
 		{ return angle_<U, decltype( a1.value - a2.value )>( a1.value - a2.value ); }
 
 		/// sin/cos/tan
-		template< typename T > T sin( const radian_<T>& a ) { return std::sin( a.value ); }
-		template< typename T > T cos( const radian_<T>& a ) { return std::cos( a.value ); }
-		template< typename T > T tan( const radian_<T>& a ) { return std::tan( a.value ); }
-		template< typename T > T asin( const radian_<T>& a ) { return std::asin( a.value ); }
-		template< typename T > T acos( const radian_<T>& a ) { return std::acos( a.value ); }
-		template< typename T > T atan( const radian_<T>& a ) { return std::atan( a.value ); }
+		template< angle_unit U, typename T > T sin( const angle_<U, T>& a ) { return std::sin( a.rad_value() ); }
+		template< angle_unit U, typename T > T cos( const angle_<U, T>& a ) { return std::cos( a.rad_value() ); }
+		template< angle_unit U, typename T > T tan( const angle_<U, T>& a ) { return std::tan( a.rad_value() ); }
+		template< angle_unit U, typename T > T asin( const angle_<U, T>& a ) { return std::asin( a.rad_value() ); }
+		template< angle_unit U, typename T > T acos( const angle_<U, T>& a ) { return std::acos( a.rad_value() ); }
+		template< angle_unit U, typename T > T atan( const angle_<U, T>& a ) { return std::atan( a.rad_value() ); }
 
 		/// streaming
 		template< angle_unit U, typename T > std::ostream& operator<<( std::ostream& str, const angle_<U, T>& a )
