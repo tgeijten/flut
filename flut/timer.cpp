@@ -17,7 +17,7 @@ namespace flut
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 		LARGE_INTEGER freq;
 		::QueryPerformanceFrequency( &freq );
-		ticks_to_seconds = 1.0 / double( freq.QuadPart );
+		frequency = freq.QuadPart;
 #endif
 		reset();
 	}
@@ -33,10 +33,10 @@ namespace flut
 #endif
 	}
 
-	double timer::seconds()
+	timer::seconds_t timer::seconds()
 	{
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return ticks() * ticks_to_seconds;
+		return seconds_t( ticks() ) / frequency;
 #else
 		return std::chrono::duration< double >( std::chrono::high_resolution_clock::now() - epoch ).count();
 #endif
@@ -53,4 +53,21 @@ namespace flut
 #endif
 	}
 
+	flut::timer::clock_ticks_t timer::milliseconds()
+	{
+#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+		return ticks() / ( frequency / 1000 );
+#else
+		return std::chrono::milliseconds( std::chrono::high_resolution_clock::now() - epoch ).count();
+#endif
+	}
+
+	flut::timer::clock_ticks_t timer::nanoseconds()
+	{
+#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+		return ticks() / ( frequency / 1000000 );
+#else
+		return std::chrono::nanoseconds( std::chrono::high_resolution_clock::now() - epoch ).count();
+#endif
+	}
 }

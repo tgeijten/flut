@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <stdlib.h>
 
 namespace flut
 {
@@ -26,48 +27,52 @@ namespace flut
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
 	/// split a string into a vector of strings
-	vector< string > FLUT_API split_str( const string& s, const string& sep_chars );
+	FLUT_API vector< string > split_str( const string& s, const string& sep_chars );
 
 	/// get formatted string (printf style)
-	string FLUT_API stringf( const char* format, ... );
+	FLUT_API string stringf( const char* format, ... );
 
 	/// match pattern (glob, i.e. name* or name?), can use multiple delimited patterns, default delimiter = ';'
-	bool FLUT_API matches_pattern( const string& str, const string& pattern, const char* pattern_delim_chars = ";" );
+	FLUT_API bool matches_pattern( const string& str, const string& pattern, const char* pattern_delim_chars = ";" );
 
 	/// convert any streamable type to string
 	template< typename T > string to_str( const T& value ) { std::ostringstream str; str << value; return str.str(); }
 	template< typename T > string to_str( const T& value, int decimals ) { std::ostringstream str; str << std::fixed << std::setprecision( decimals ) << value; return str.str(); }
-	template<> inline string to_str < string >( const string& s ) { return s; }
+	template<> inline string to_str< string >( const string& s ) { return s; }
 
 	/// convert string to any streamable type
 	template< typename T > T from_str( const string& s ) { T value; std::stringstream str( s ); str >> value; return value; }
 	template<> inline string from_str< string >( const string& s ) { return s; }
 
 	/// convert space-delimited string to vector of elements
-	template< typename T > vector< T > from_vec_str( const string& s, size_t size = no_index ) {
+	template< typename T >  vector< T > from_vec_str( const string& s, size_t size ) {
 		std::stringstream str( s );
-		vector< T > vec;
-		if ( size != no_index ) vec.reserve( size );
+		vector< T > vec; if ( size != no_index ) vec.reserve( size );
 		while ( str.good() ) { T elem; str >> elem; if ( str.good() ) vec.push_back( elem ); }
 		return vec;
 	}
+
+	/// convert space-delimited string to vector of elements (super-fast float specialization)
+	template<> FLUT_API vector< float > from_vec_str< float >( const string& s, size_t size );
+
+	/// convert space-delimited string to vector of elements (super-fast int specialization)
+	template<> FLUT_API vector< int > from_vec_str< int >( const string& s, size_t size );
 
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
 
 	/// make string with contents of a file
-	string FLUT_API read_str( const string& filename );
+	FLUT_API string read_str( const string& filename );
 
 	/// Get filename extension (without dot)
-	string FLUT_API get_filename_ext( const string& str );
+	FLUT_API string get_filename_ext( const string& str );
 
 	/// Get filename without extension (without dot)
-	string FLUT_API get_filename_without_ext( const string& str );
+	FLUT_API string get_filename_without_ext( const string& str );
 
 	/// Get folder of filename (including slash, if any)
-	string FLUT_API get_filename_folder( const string& str );
+	FLUT_API string get_filename_folder( const string& str );
 
 	/// Get filename without folder
-	string FLUT_API get_filename_without_folder( const string& str );
-
+	FLUT_API string get_filename_without_folder( const string& str );
 }

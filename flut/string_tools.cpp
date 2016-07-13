@@ -60,7 +60,7 @@ namespace flut
 		return false;
 	}
 
-	string FLUT_API read_str( const string& filename )
+	string read_str( const string& filename )
 	{
 		// read file contents into char array
 		FILE* f = fopen( filename.c_str(),"rb" );
@@ -73,6 +73,32 @@ namespace flut
 		fread( reinterpret_cast< void* >( file_buf.get() ), sizeof( char ), file_len, f );
 
 		return string( file_buf.get(), file_len );
+	}
+
+	template<> vector< float > from_vec_str( const string& s, size_t size )
+	{
+		vector< float > vec; if ( size != no_index ) vec.reserve( size );
+		for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
+		{
+			char *e;
+			vec.emplace_back( strtof( c, &e ) );
+			flut_error_if( c == e, "Error reading string of floats" );
+			for ( c = e; isspace( *c ); ++c ); // move to next char
+		}
+		return vec;
+	}
+
+	template<> vector< int > from_vec_str( const string& s, size_t size )
+	{
+		vector< int > vec; if ( size != no_index ) vec.reserve( size );
+		for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
+		{
+			char *e;
+			vec.emplace_back( strtol( c, &e, 10 ) );
+			flut_error_if( c == e, "Error reading string of floats" );
+			for ( c = e; isspace( *c ); ++c ); // move to next char
+		}
+		return vec;
 	}
 
 	flut::string get_filename_ext( const string& str )

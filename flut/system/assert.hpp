@@ -29,11 +29,11 @@ namespace flut
 #endif
 
 /// throw exception
-#define flut_throw( message_ ) \
+#define flut_error( message_ ) \
 FLUT_EXCEPTION( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) )
 
 /// conditional throw exception
-#define flut_throw_if( condition_, message_ ) \
+#define flut_error_if( condition_, message_ ) \
 { if ( condition_ ) FLUT_EXCEPTION( std::string( __FUNCTION__ ) + "(): " + std::string( message_ ) ); }
 
 /// not implemented exception

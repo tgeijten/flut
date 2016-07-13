@@ -89,7 +89,7 @@ namespace flut
 			case flut::math::euler_order::yzx: return qy * ( qz * qx );
 			case flut::math::euler_order::zxy: return qz * ( qx * qy );
 			case flut::math::euler_order::zyx: return qz * ( qy * qx );
-			default: flut_throw( "Unsupported euler_order" );
+			default: flut_error( "Unsupported euler_order" );
 			}
 		}
 

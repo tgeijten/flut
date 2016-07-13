@@ -22,16 +22,22 @@ namespace flut
 		/// reset timer
 		void reset();
 
-		/// get elapsed time in seconds
-		double seconds();
-
 		/// get elapsed number of CPU ticks
 		clock_ticks_t ticks();
+
+		/// get elapsed time in seconds
+		seconds_t seconds();
+
+		/// get elapsed number of nanoseconds
+		clock_ticks_t milliseconds();
+
+		/// get elapsed number of nanoseconds
+		clock_ticks_t nanoseconds();
 
 	private:
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 		clock_ticks_t epoch;
-		seconds_t ticks_to_seconds;
+		clock_ticks_t frequency;
 #else
 		std::chrono::time_point< std::chrono::high_resolution_clock, std::chrono::high_resolution_clock::duration > epoch;
 #endif
