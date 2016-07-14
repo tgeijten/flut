@@ -16,8 +16,13 @@ namespace flut
 	class FLUT_API char_stream
 	{
 	public:
+		/// construct empty char_stream
 		char_stream();
+
+		/// construct char_stream using given zero terminated char buffer
 		char_stream( const char* buf );
+
+		/// construct char_stream from rvalue string
 		char_stream( string&& other );
 		~char_stream() {}
 
@@ -35,6 +40,7 @@ namespace flut
 		char_stream& operator>>( unsigned short& v ) { v = (unsigned short)strtoul( cur_pos, &end_pos, radix ); process_end_pos(); return *this; }
 
 		string get_line();
+		char getc() { char c = *cur_pos; if ( c == '\0' ) flags.set< eof_flag >(); else ++cur_pos; return c; }
 
 		bool good() { return !flags.any(); }
 		bool eof() { return flags.get< eof_flag >(); }
