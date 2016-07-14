@@ -4,6 +4,7 @@
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
 
+#include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <stdlib.h>
