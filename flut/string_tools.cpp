@@ -60,46 +60,47 @@ namespace flut
 		return false;
 	}
 
-	string read_str( const string& filename )
+	string load_string( const string& filename )
 	{
 		// read file contents into char array
 		FILE* f = fopen( filename.c_str(),"rb" );
 		flut_assert_msg( f, "Could not open file: " + filename );
 
 		fseek( f, 0, SEEK_END );
-		auto file_len = ftell( f );
+		int file_len = ftell( f );
 		rewind( f );
-		auto file_buf = std::unique_ptr< char[] >( new char[ file_len ] );
-		fread( reinterpret_cast< void* >( file_buf.get() ), sizeof( char ), file_len, f );
 
-		return string( file_buf.get(), file_len );
+		string s( file_len, '\0' );
+		fread( reinterpret_cast< void* >( &s[ 0 ] ), sizeof( char ), file_len, f );
+
+		return s;
 	}
 
-	template<> vector< float > from_vec_str( const string& s, size_t size )
-	{
-		vector< float > vec; if ( size != no_index ) vec.reserve( size );
-		for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
-		{
-			char *e;
-			vec.emplace_back( strtof( c, &e ) );
-			flut_error_if( c == e, "Error reading string of floats" );
-			for ( c = e; isspace( *c ); ++c ); // move to next char
-		}
-		return vec;
-	}
+	//template<> vector< float > from_vec_str( const string& s, size_t size )
+	//{
+	//	vector< float > vec; if ( size != no_index ) vec.reserve( size );
+	//	for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
+	//	{
+	//		char *e;
+	//		vec.emplace_back( strtof( c, &e ) );
+	//		flut_error_if( c == e, "Error reading string of floats" );
+	//		for ( c = e; isspace( *c ); ++c ); // move to next char
+	//	}
+	//	return vec;
+	//}
 
-	template<> vector< int > from_vec_str( const string& s, size_t size )
-	{
-		vector< int > vec; if ( size != no_index ) vec.reserve( size );
-		for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
-		{
-			char *e;
-			vec.emplace_back( strtol( c, &e, 10 ) );
-			flut_error_if( c == e, "Error reading string of floats" );
-			for ( c = e; isspace( *c ); ++c ); // move to next char
-		}
-		return vec;
-	}
+	//template<> vector< int > from_vec_str( const string& s, size_t size )
+	//{
+	//	vector< int > vec; if ( size != no_index ) vec.reserve( size );
+	//	for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
+	//	{
+	//		char *e;
+	//		vec.emplace_back( strtol( c, &e, 10 ) );
+	//		flut_error_if( c == e, "Error reading string of floats" );
+	//		for ( c = e; isspace( *c ); ++c ); // move to next char
+	//	}
+	//	return vec;
+	//}
 
 	flut::string get_filename_ext( const string& str )
 	{

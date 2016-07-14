@@ -28,7 +28,7 @@ namespace flut
 
 	prop_node FLUT_API read_xml( const string& filename )
 	{
-		string file_contents = read_str( filename );
+		string file_contents = load_string( filename );
 		rapidxml::xml_document<> doc;
 		doc.parse< 0 >( &file_contents[ 0 ] ); // not officially supported but probably safe
 

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <algorithm>
 #include <stdlib.h>
+#include "char_stream.hpp"
 
 namespace flut
 {
@@ -46,23 +47,17 @@ namespace flut
 
 	/// convert space-delimited string to vector of elements
 	template< typename T >  vector< T > from_vec_str( const string& s, size_t size ) {
-		std::stringstream str( s );
+		char_stream str( s.c_str() );
 		vector< T > vec; if ( size != no_index ) vec.reserve( size );
-		while ( str.good() ) { T elem; str >> elem; if ( str.good() ) vec.push_back( elem ); }
+		while ( str.good() ) { T elem; str >> elem; if ( !str.fail() ) vec.push_back( elem ); }
 		return vec;
 	}
 
-	/// convert space-delimited string to vector of elements (super-fast float specialization)
-	template<> FLUT_API vector< float > from_vec_str< float >( const string& s, size_t size );
-
-	/// convert space-delimited string to vector of elements (super-fast int specialization)
-	template<> FLUT_API vector< int > from_vec_str< int >( const string& s, size_t size );
+	/// make string with contents of a file
+	FLUT_API string load_string( const string& filename );
 
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
-
-	/// make string with contents of a file
-	FLUT_API string read_str( const string& filename );
 
 	/// Get filename extension (without dot)
 	FLUT_API string get_filename_ext( const string& str );
