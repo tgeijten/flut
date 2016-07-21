@@ -58,7 +58,7 @@ namespace flut
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 		return ticks() / ( frequency / 1000 );
 #else
-		return std::chrono::milliseconds( std::chrono::high_resolution_clock::now() - epoch ).count();
+		return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
 #endif
 	}
 
@@ -67,7 +67,7 @@ namespace flut
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 		return ticks() / ( frequency / 1000000 );
 #else
-		return std::chrono::nanoseconds( std::chrono::high_resolution_clock::now() - epoch ).count();
+		return std::chrono::duration_cast<std::chrono::nanoseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
 #endif
 	}
 }

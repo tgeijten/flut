@@ -68,7 +68,7 @@ namespace flut
 
 		/// set the value of a child node, the node is created if not existing
 		template< typename T > prop_node& set( const key_t& key, const T& v )
-		{ auto it = find( key ); if ( it == end() ) add_child( key, value ); else it->second.set( value ); }
+		{ auto it = find( key ); if ( it == end() ) add_child( key, make_prop_node( value ) ); else it->second.set( value ); }
 
 		/// get a child node, throws exception if not existing
 		const prop_node& get_child( const key_t& key ) const

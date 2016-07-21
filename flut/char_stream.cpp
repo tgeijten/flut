@@ -1,5 +1,6 @@
 #include "char_stream.hpp"
 #include "string_tools.hpp"
+#include <cstring>
 
 namespace flut
 {

@@ -40,20 +40,20 @@ namespace flut
 		char_stream& operator>>( unsigned short& v ) { v = (unsigned short)strtoul( cur_pos, &end_pos, radix ); process_end_pos(); return *this; }
 
 		string get_line();
-		char getc() { char c = *cur_pos; if ( c == '\0' ) flags.set< eof_flag >(); else ++cur_pos; return c; }
+		char getc() { char c = *cur_pos; if ( c == '\0' ) buffer_flags.set< eof_flag >(); else ++cur_pos; return c; }
 
-		bool good() { return !flags.any(); }
-		bool eof() { return flags.get< eof_flag >(); }
-		bool fail() { return flags.get< fail_flag >(); }
+		bool good() { return !buffer_flags.any(); }
+		bool eof() { return buffer_flags.get< eof_flag >(); }
+		bool fail() { return buffer_flags.get< fail_flag >(); }
 
 	private:
 		void init_buffer( const char* b );
 
 		void skip_whitespace()
-		{ for( ; isspace( *cur_pos ); ++cur_pos ); if ( *cur_pos == '\0' ) flags.set< eof_flag >(); }
+		{ for( ; isspace( *cur_pos ); ++cur_pos ); if ( *cur_pos == '\0' ) buffer_flags.set< eof_flag >(); }
 
 		void process_end_pos()
-		{ if ( cur_pos == end_pos ) flags.set< fail_flag >(); cur_pos = end_pos; skip_whitespace(); }
+		{ if ( cur_pos == end_pos ) buffer_flags.set< fail_flag >(); cur_pos = end_pos; skip_whitespace(); }
 
 		int radix = 10;
 		string str_buffer;
@@ -62,7 +62,7 @@ namespace flut
 		char* end_pos;
 
 		enum buffer_flag { fail_flag, eof_flag };
-		flags< buffer_flag > flags;
+		flags< buffer_flag > buffer_flags;
 	};
 
 	/// load file into char buffer
