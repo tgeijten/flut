@@ -8,7 +8,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 find_path(FLUT_INCLUDE_DIR
     NAMES flut/system/types.hpp
-	PATHS ${CMAKE_SOURCE_DIR}
+	PATHS ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
 # Compiler flags.

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "math.hpp"
-#include "quat_type.hpp"
-#include "mat33.hpp"
+#include "flut/math/math.hpp"
+#include "flut/math/quat_type.hpp"
+#include "flut/math/vec3.hpp"
+#include "flut/math/mat33.hpp"
 #include "flut/system/assert.hpp"
 #include "flut/math/angle.hpp"
 #include <ostream>
@@ -68,7 +69,7 @@ namespace flut
 		/// make quaternion from axis and angle
 		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, const radian_<T>& ang )
 		{
-			flut_assert( is_normalized( axis ) );
+			flut_assert( is_normalized<T>( axis ) );
 			auto ha = T( 0.5 ) * ang;
 			T hs = sin( ha );
 			return quat_<T>( cos( ha ), hs * axis.x, hs * axis.y, hs * axis.z );
