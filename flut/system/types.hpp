@@ -8,6 +8,7 @@
 namespace flut
 {
 	typedef double real_t;
+	typedef real_t seconds_t;
 
 	typedef size_t index_t;
 	const index_t no_index = index_t( std::string::npos );
