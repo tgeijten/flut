@@ -38,13 +38,16 @@ get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
+# Gather flut sources.
+file (GLOB FLUT_SOURCES "flut/*.hpp" "flut/*.cpp")
+file (GLOB FLUT_MATH_SOURCES "flut/math/*.hpp" "flut/math/*.cpp")
+file (GLOB FLUT_BUFFER_SOURCES "buffer/*.hpp" "flut/buffer/*.cpp")
+file (GLOB FLUT_SYSTEM_SOURCES "flut/system/*.hpp" "flut/system/*.cpp")
+add_library(flut SHARED ${FLUT_SOURCES} ${FLUT_MATH_SOURCES} ${FLUT_BUFFER_SOURCES} ${FLUT_SYSTEM_SOURCES})
+
 # Process source code.
 add_subdirectory(test)
-if(MSVC)
-    # Create a project for the header-only library (doesn't work outside
-    # of MSVC).
-    add_subdirectory(flut)
-endif()
+add_subdirectory(flut)
 
 enable_testing()
 add_test(flut_test "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}/flut_test")
