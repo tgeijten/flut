@@ -1,3 +1,11 @@
+# Gather flut sources.
+file (GLOB FLUT_SOURCES "*.hpp" "*.cpp")
+file (GLOB FLUT_MATH_SOURCES "math/*.hpp" "math/*.cpp")
+file (GLOB FLUT_BUFFER_SOURCES "buffer/*.hpp" "buffer/*.cpp")
+file (GLOB FLUT_SYSTEM_SOURCES "system/*.hpp" "system/*.cpp")
+
+add_library(flut SHARED ${FLUT_SOURCES} ${FLUT_MATH_SOURCES} ${FLUT_BUFFER_SOURCES} ${FLUT_SYSTEM_SOURCES})
+
 if (MSVC)
 source_group("flut" FILES ${FLUT_SOURCES})
 source_group("flut\\math" FILES ${FLUT_MATH_SOURCES})
@@ -6,6 +14,7 @@ source_group("flut\\system" FILES ${FLUT_SYSTEM_SOURCES})
 endif()
 
 include_directories(${FLUT_INCLUDE_DIR})
+
 target_compile_definitions( flut PRIVATE FLUT_EXPORTS )
 
 set_target_properties(flut PROPERTIES 
