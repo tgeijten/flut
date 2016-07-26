@@ -12,6 +12,25 @@
 namespace flut
 {
 	class prop_node;
+
+	template< typename T > struct prop_node_converter {
+		static T get( const prop_node& pn ) { return from_str< T >( pn.get_value() ); }
+		static void set( prop_node& pn, const T& value ) { pn.set_value( to_str< T >( value ) ); }
+	};
+
+	template< typename T > struct prop_node_converter< vector< T > > {
+		static vector< T > get( const prop_node& pn ) {
+			vector< T > vec;
+			for ( auto& p : pn )
+				vec.push_back( p.second.get< T >() );
+			return vec;
+		}
+		static void set( prop_node& pn, const vector< T >& vec ) {
+			for ( size_t i = 0; i < vec.size(); ++i )
+				pn.add_child( stringf( "e%d", i ), make_prop_node( vec[ i ] ) );
+		}
+	};
+
 	template< typename T > prop_node make_prop_node( const T& value );
 
 	class FLUT_API prop_node
@@ -37,10 +56,10 @@ namespace flut
 		prop_node& operator=( prop_node&& other ) { value = std::move( other.value ); children = std::move( other.children ); return *this; }
 
 		/// get the value of this node
-		template< typename T > T get() const { return from_str< T >( value ); }
+		template< typename T > T get() const { return prop_node_converter< T >::get( *this ); }
 
 		/// get the value of a child node
-		template< typename T > T get( const key_t& key ) const { return get_child( key ).get< T >(); }
+		template< typename T > T get( const key_t& key ) const { return prop_node_converter< T >::get( get_child( key ) ); }
 
 		/// get the value of a child node, or a default value if it doesn't exist
 		template< typename T > T get( const key_t& key, const T& def ) const
@@ -48,7 +67,11 @@ namespace flut
 
 		/// see if this has a value
 		bool has_value() const { return !value.empty(); }
+
+		/// access value_t value
 		const value_t& get_value() const { return value; }
+		void set_value( value_t&& val ) { value = std::move( val ); }
+		void set_value( const value_t& val ) { value = val; }
 
 		/// add a node with a value
 		template< typename T > prop_node& add( const key_t& key, const T& value )
@@ -64,11 +87,11 @@ namespace flut
 		void reserve( size_t n ) { children.reserve( n ); }
 
 		/// set the value of this node
-		template< typename T > prop_node& set( const T& v ) { value = to_str( v ); return *this; }
+		template< typename T > prop_node& set( const T& v ) { prop_node_converter< T >::set( *this, v ); return *this; }
 
 		/// set the value of a child node, the node is created if not existing
 		template< typename T > prop_node& set( const key_t& key, const T& v )
-		{ auto it = find( key ); if ( it == end() ) add_child( key, make_prop_node( value ) ); else it->second.set( value ); }
+		{ auto it = find( key ); if ( it == end() ) add_child( key, make_prop_node( v ) ); else it->second.set( v ); return *this; }
 
 		/// get a child node, throws exception if not existing
 		const prop_node& get_child( const key_t& key ) const
@@ -113,9 +136,6 @@ namespace flut
 	/// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const prop_node& pn )
 	{ pn.to_stream( str ); return str; }
-
-	/// load the contents of an xml file into a prop_node
-	prop_node FLUT_API read_xml( const string& filename );
 }
 
 #ifdef FLUT_COMP_MSVC
