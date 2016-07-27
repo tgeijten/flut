@@ -5,37 +5,45 @@
 
 namespace flut
 {
-	template< typename T, size_t F, typename L = void >
-	class regular_ring_buffer : public buffer_base< regular_ring_buffer< T, F, L >, L > 
+	template< typename T, typename L = void >
+	class regular_ring_buffer : public buffer_base< regular_ring_buffer< T, L >, L > 
 	{
 	public:
-		regular_ring_buffer( size_t channels ) : data( F * channels ), curframe( 0 ), buffer_base< regular_ring_buffer< T, F, L >, L >( channels ) {}
+		regular_ring_buffer( size_t channels, size_t frames ) : data( frames * channels ), num_frames( frames), cur_frame( 0 ), buffer_base< regular_ring_buffer< T, L >, L >( channels ) {}
 		~regular_ring_buffer() {}
 
-		index_t add_frame() { return ++curframe; }
-		size_t frame_count() { return curframe + 1; }
+		index_t add_frame() { return ++cur_frame; }
+		size_t frame_count() { return cur_frame + 1; }
 
-		void set_value( index_t channel, const T& value ) { data[ curframe * this->channel_count() + this->channel_count() ] = value; }
+		void set_buffer_size( size_t frames ) { num_frames = frames; resize_buffer(); }
+
+		void resize_buffer() {
+			flut_assert_msg( cur_frame == 0, "regular_ring_buffer can only be resized when empty" );
+			data.resize( num_frames * this->channel_count() );
+		}
+
+		void set_value( index_t channel, const T& value ) { data[ cur_frame * this->channel_count() + this->channel_count() ] = value; }
 
 		const T* get_frame( index_t frame ) {
-			flut_assert( frame >= frame_count() - F && frame < frame_count() );
-			return data[ ( frame % F ) * this->channel_count() ];
+			flut_assert( frame >= frame_count() - num_frames && frame < frame_count() );
+			return data[ ( frame % num_frames ) * this->channel_count() ];
 		}
 
 		T get_value( index_t frame, index_t channel ) {
-			flut_assert( frame >= frame_count() - F && frame < frame_count() && channel < this->channel_count() );
-			return data[ ( frame % F ) * this->channel_count() + channel ];
+			flut_assert( frame >= frame_count() - num_frames && frame < frame_count() && channel < this->channel_count() );
+			return data[ ( frame % num_frames ) * this->channel_count() + channel ];
 		}
 
 		T get_interpolated_value( index_t frame0, index_t channel, T pos ) {
-			flut_assert( frame0 >= frame_count() - F && frame0 < frame_count() && channel < this->channel_count() );
-			index_t ofs0 = ( frame0 % F ) * this->channel_count() + channel;
-			index_t ofs1 = ( ( frame0 + 1 ) % F ) * this->channel_count() + channel;
+			flut_assert( frame0 >= frame_count() - num_frames && frame0 < frame_count() && channel < this->channel_count() );
+			index_t ofs0 = ( frame0 % num_frames ) * this->channel_count() + channel;
+			index_t ofs1 = ( ( frame0 + 1 ) % num_frames ) * this->channel_count() + channel;
 			return ( T(1) - pos ) * data[ ofs0 ] + pos * data[ ofs1 ];
 		}
 
 	private:
         std::vector< T > data;
-		index_t curframe;
+		size_t num_frames;
+		index_t cur_frame;
 	};
 }

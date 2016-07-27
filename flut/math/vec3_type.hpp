@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cmath>
-
 #include "flut/system/types.hpp"
+#include "flut/prop_node.hpp"
 
 namespace flut
 {
@@ -11,9 +11,13 @@ namespace flut
 		template< typename T > struct vec3_
 		{
 			vec3_() {}
+			vec3_( const prop_node& pn ) : x( pn.get<T>( "x" ) ), y( pn.get<T>( "y" ) ), z( pn.get<T>( "z" ) ) {}
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
 			template< typename T2 > vec3_<T>& operator=( const vec3_<T2>& o ) { x = T(o.x); y = T(o.y); z = T(o.z); return *this; }
+
+			/// convert to prop_node
+			explicit operator prop_node() const { return prop_node().set( "x", x ).set( "y", y ).set( "z", z ); }
 
 			/// element access
 			const T& operator[]( index_t idx ) const { return (&x)[idx]; }
@@ -37,4 +41,9 @@ namespace flut
 		typedef vec3_< float > vec3f;
 		typedef vec3_< double > vec3d;
 	}
+
+	template< typename T > struct prop_node_converter< math::vec3_<T> > {
+		static math::vec3_<T> get( const prop_node& pn ) { return math::vec3_<T>( pn ); }
+		static void set( prop_node& pn, const math::vec3_<T>& vec ) { pn = static_cast< prop_node >( vec ); }
+	};
 }

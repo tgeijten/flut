@@ -2,6 +2,7 @@
 
 #include "flut/prop_node_tools.hpp"
 #include <iostream>
+#include "flut/math/vec3_type.hpp"
 
 namespace flut
 {
@@ -33,14 +34,20 @@ namespace flut
 		auto a = pn.get< float >();
 
 		std::vector< custom_struct > vec;
-		for ( int i = 0; i < 10; ++i ) vec.push_back( custom_struct( stringf( "name%d", i ), i * 1.5 ) );
+		for ( int i = 1; i <= 3; ++i ) vec.push_back( custom_struct( stringf( "name%d", i ), i * 1.5 ) );
 		pn.add( "vec_test", vec );
+
+		std::vector< math::vec3f > vec2;
+		for ( int i = 1; i <= 3; ++i ) vec2.push_back( math::vec3d( i, i * 1.1, i * 1.11 ) );
+		pn.add( "vec2_test", vec2 );
+
 		std::cout << pn << std::endl;
 
-		auto vec2 = pn.get< std::vector< custom_struct > >( "vec_test" );
+		auto vec1b = pn.get< std::vector< custom_struct > >( "vec_test" );
+		auto vec2b = pn.get< std::vector< math::vec3f > >( "vec2_test" );
 
 		// TODO: add a proper test
-		auto props = read_xml( "../../../config/f0914_walk_GH.xml" );
-		std::cout << props;
+		//auto props = read_xml( "../../../config/f0914_walk_GH.xml" );
+		//std::cout << props;
 	}
 }

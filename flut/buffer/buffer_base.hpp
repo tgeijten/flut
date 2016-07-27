@@ -36,11 +36,11 @@ namespace flut
 	template< class C >
 	struct buffer_base< C, void >
 	{
-		buffer_base( size_t channels = 0 ) : count( channels ) { }
-		index_t add_channel() { ++count; static_cast< C* >( this )->resize_buffer(); return count - 1; }
-		size_t channel_count() const { return count; }
+		buffer_base( size_t channels = 0 ) : num_channels( channels ) { }
+		index_t add_channel() { ++num_channels; static_cast< C* >( this )->resize_buffer(); return num_channels - 1; }
+		size_t channel_count() const { return num_channels; }
 
 	private:
-		index_t count;
+		index_t num_channels;
 	};
 }

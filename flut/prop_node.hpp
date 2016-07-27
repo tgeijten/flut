@@ -18,21 +18,17 @@ namespace flut
 		static void set( prop_node& pn, const T& value ) { pn.set_value( to_str< T >( value ) ); }
 	};
 
-	template< typename T > struct prop_node_converter< vector< T > > {
-		static vector< T > get( const prop_node& pn ) {
-			vector< T > vec;
-			for ( auto& p : pn )
-				vec.push_back( p.second.get< T >() );
-			return vec;
-		}
-		static void set( prop_node& pn, const vector< T >& vec ) {
-			for ( size_t i = 0; i < vec.size(); ++i )
-				pn.add_child( stringf( "e%d", i ), make_prop_node( vec[ i ] ) );
-		}
+	template< typename T > struct prop_node_converter< vector<T> > {
+		static vector<T> get( const prop_node& pn )
+		{ vector<T> vec; for ( auto& p : pn ) vec.push_back( p.second.get<T>() ); return vec; }
+		static void set( prop_node& pn, const vector<T>& vec )
+		{ for ( size_t i = 0; i < vec.size(); ++i ) pn.add_child( stringf( "item%d", i ), make_prop_node( vec[ i ] ) ); }
 	};
 
+	/// make a prop_node with a value
 	template< typename T > prop_node make_prop_node( const T& value );
 
+	/// prop_node class
 	class FLUT_API prop_node
 	{
 	public:
@@ -130,7 +126,6 @@ namespace flut
 		container_t children;
 	};
 
-	/// make a prop_node with a value
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node().set( value ); }
 
 	/// stream operator
