@@ -45,9 +45,5 @@ namespace flut
 
 		auto vec1b = pn.get< std::vector< custom_struct > >( "vec_test" );
 		auto vec2b = pn.get< std::vector< math::vec3f > >( "vec2_test" );
-
-		// TODO: add a proper test
-		//auto props = read_xml( "../../../config/f0914_walk_GH.xml" );
-		//std::cout << props;
 	}
 }
