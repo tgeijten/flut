@@ -14,6 +14,7 @@ namespace flut
 	{
 		// regular buffer test
 		regular_buffer< double, string > regbuf( 0 );
+
 		//regular_ring_buffer< double, 100, void > ringbuf( 20 );
 		for ( int i = 0; i < 10; ++i )
 			regbuf.add_channel( stringf( "channel%d", i ) );
