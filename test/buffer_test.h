@@ -33,6 +33,5 @@ namespace flut
 		buf_test2.push_back( math::vec3( 0, 1, 2 ) );
 		for ( int d = -10; d < 40; ++d )
 			log::trace( 0.1 * d, ": ", interpolated_value( buf_test2, 0.1 * d ) );
-
 	}
 }
