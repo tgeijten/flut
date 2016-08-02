@@ -15,6 +15,8 @@
 
 namespace flut
 {
+	int to_str_precision_value = 4;
+
 	vector< string > split_str( const string& s, const string& sep_chars )
 	{
 		std::vector< string > strings;
@@ -60,6 +62,12 @@ namespace flut
 		return false;
 	}
 
+	FLUT_API int set_to_str_precision( int p )
+	{ int old = to_str_precision_value; to_str_precision_value = p; return old; }
+
+	FLUT_API int to_str_precision()
+	{ return to_str_precision_value; }
+
 	string load_string( const string& filename )
 	{
 		// read file contents into char array
@@ -75,32 +83,6 @@ namespace flut
 
 		return s;
 	}
-
-	//template<> vector< float > from_vec_str( const string& s, size_t size )
-	//{
-	//	vector< float > vec; if ( size != no_index ) vec.reserve( size );
-	//	for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
-	//	{
-	//		char *e;
-	//		vec.emplace_back( strtof( c, &e ) );
-	//		flut_error_if( c == e, "Error reading string of floats" );
-	//		for ( c = e; isspace( *c ); ++c ); // move to next char
-	//	}
-	//	return vec;
-	//}
-
-	//template<> vector< int > from_vec_str( const string& s, size_t size )
-	//{
-	//	vector< int > vec; if ( size != no_index ) vec.reserve( size );
-	//	for ( const char* c = s.c_str(); *c != 0 && vec.size() < size; )
-	//	{
-	//		char *e;
-	//		vec.emplace_back( strtol( c, &e, 10 ) );
-	//		flut_error_if( c == e, "Error reading string of floats" );
-	//		for ( c = e; isspace( *c ); ++c ); // move to next char
-	//	}
-	//	return vec;
-	//}
 
 	flut::string get_filename_ext( const string& str )
 	{

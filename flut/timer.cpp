@@ -33,15 +33,6 @@ namespace flut
 #endif
 	}
 
-	timer::seconds_t timer::seconds()
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return seconds_t( ticks() ) / frequency;
-#else
-		return std::chrono::duration< double >( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
-
 	long long timer::ticks()
 	{
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
@@ -50,6 +41,15 @@ namespace flut
 		return now.QuadPart - epoch;
 #else
 		return ( std::chrono::high_resolution_clock::now() - epoch ).count();
+#endif
+	}
+
+	timer::seconds_t timer::seconds()
+	{
+#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+		return seconds_t( ticks() ) / frequency;
+#else
+		return std::chrono::duration< double >( std::chrono::high_resolution_clock::now() - epoch ).count();
 #endif
 	}
 
@@ -66,6 +66,33 @@ namespace flut
 	{
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 		return ticks() / ( frequency / 1000000 );
+#else
+		return std::chrono::duration_cast<std::chrono::nanoseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
+#endif
+	}
+
+	timer::seconds_t timer::ticks_to_seconds( clock_ticks_t ticks )
+	{
+#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+		return seconds_t( ticks ) / frequency;
+#else
+		return std::chrono::duration< double >( std::chrono::high_resolution_clock::now() - epoch ).count();
+#endif
+	}
+
+	timer::clock_ticks_t timer::ticks_to_milliseconds( clock_ticks_t ticks )
+	{
+#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+		return ticks / ( frequency / 1000 );
+#else
+		return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
+#endif
+	}
+
+	timer::clock_ticks_t timer::ticks_to_nanoseconds( clock_ticks_t ticks )
+	{
+#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+		return ticks / ( frequency / 1000000 );
 #else
 		return std::chrono::duration_cast<std::chrono::nanoseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
 #endif

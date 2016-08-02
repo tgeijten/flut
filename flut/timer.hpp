@@ -34,6 +34,11 @@ namespace flut
 		/// get elapsed number of nanoseconds
 		clock_ticks_t nanoseconds();
 
+		clock_ticks_t ticks_to_nanoseconds( clock_ticks_t ticks );
+		clock_ticks_t ticks_to_milliseconds( clock_ticks_t ticks );
+		seconds_t ticks_to_seconds( clock_ticks_t ticks );
+
+
 	private:
 #ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 		clock_ticks_t epoch;
