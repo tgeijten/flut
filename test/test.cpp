@@ -33,7 +33,7 @@ int main( int argc, char* argv[] )
 		flut::math::vec_quat_test();
 		sw.add_measure( "math" );
 
-		flut::log::info( std::fixed, sw.get_report() );
+		flut::log::info( sw.get_report() );
 	}
 	catch ( std::exception& e )
 	{
