@@ -9,13 +9,13 @@ namespace flut
 	class regular_ring_buffer : public buffer_base< regular_ring_buffer< T, L >, L > 
 	{
 	public:
-		regular_ring_buffer( size_t channels, size_t frames ) : data( frames * channels ), num_frames( frames), cur_frame( 0 ), buffer_base< regular_ring_buffer< T, L >, L >( channels ) {}
+		regular_ring_buffer( size_t channels = 0, size_t frames = 0 ) : data( frames * channels ), num_frames( frames), cur_frame( 0 ), buffer_base< regular_ring_buffer< T, L >, L >( channels ) {}
 		~regular_ring_buffer() {}
 
 		index_t add_frame() { return ++cur_frame; }
 		size_t frame_count() { return cur_frame + 1; }
 
-		void set_buffer_size( size_t frames ) { num_frames = frames; resize_buffer(); }
+		void set_frame_size( size_t frames ) { num_frames = frames; resize_buffer(); }
 
 		void resize_buffer() {
 			flut_assert_msg( cur_frame == 0, "regular_ring_buffer can only be resized when empty" );

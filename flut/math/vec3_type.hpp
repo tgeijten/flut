@@ -11,10 +11,10 @@ namespace flut
 		template< typename T > struct vec3_
 		{
 			vec3_() {}
-			vec3_( const prop_node& pn ) : x( pn.get<T>( "x" ) ), y( pn.get<T>( "y" ) ), z( pn.get<T>( "z" ) ) {}
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
 			template< typename T2 > vec3_<T>& operator=( const vec3_<T2>& o ) { x = T(o.x); y = T(o.y); z = T(o.z); return *this; }
+			vec3_( const prop_node& pn ) : x( pn.get<T>( "x" ) ), y( pn.get<T>( "y" ) ), z( pn.get<T>( "z" ) ) {}
 
 			/// convert to prop_node
 			explicit operator prop_node() const { return prop_node().set( "x", x ).set( "y", y ).set( "z", z ); }

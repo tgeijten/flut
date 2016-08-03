@@ -46,6 +46,8 @@ namespace flut
 
 		/// constructors
 		prop_node() {}
+		prop_node( const value_t& v ) : value( v ) {}
+		prop_node( value_t&& v ) : value( std::move( v ) ) {}
 		prop_node( const prop_node& other ) : value( other.value ), children( other.children ) {}
 		prop_node( prop_node&& other ) : value( std::move( other.value ) ), children( std::move( other.children ) ) {}
 
@@ -80,9 +82,11 @@ namespace flut
 
 		/// add a child node
 		prop_node& add_child( const key_t& key, const prop_node& pn )
-		{ children.push_back( std::make_pair( key, pn ) ); return children.back().second; }
+		{ children.emplace_back( std::make_pair( key, pn ) ); return children.back().second; }
 		prop_node& add_child( const key_t& key, prop_node&& pn )
-		{ children.push_back( std::make_pair( key, std::move( pn ) ) ); return children.back().second; }
+		{ children.emplace_back( std::make_pair( key, std::move( pn ) ) ); return children.back().second; }
+		prop_node& add_child( const key_t& key )
+		{ children.emplace_back( std::make_pair( key, prop_node() ) ); return children.back().second; }
 
 		/// reserve children
 		void reserve( size_t n ) { children.reserve( n ); }
@@ -102,7 +106,7 @@ namespace flut
 
 		/// access child by name
 		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }
-		prop_node& operator[]( const key_t& key ) { return get_child( key ); }
+		prop_node& operator[]( const key_t& key ) { auto it = find( key ); if ( it != end() ) return it->second; else return add_child( key ); }
 
 		/// access child by index
 		const prop_node& operator[]( index_t idx ) const { flut_assert( idx < size() ); return children[ idx ].second; }
