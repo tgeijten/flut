@@ -5,15 +5,20 @@ namespace flut
 {
 	namespace log
 	{
-		int dynamic_log_level = FLUT_LOG_LEVEL_INFO;
+		level dynamic_log_level = level::info_level;
 
-		void set_level( int level )
+		void set_level( level l )
 		{
-			flut_assert( level >= FLUT_LOG_LEVEL_ALL && level <= FLUT_LOG_LEVEL_NONE );
-			dynamic_log_level = level;
+			flut_assert( l >= FLUT_LOG_LEVEL_ALL && l <= FLUT_LOG_LEVEL_NONE );
+			dynamic_log_level = l;
 		}
 
-		int get_level()
+		FLUT_API void set_level( int l )
+		{
+			set_level( static_cast<level>( l ) );
+		}
+
+		level get_level()
 		{
 			return dynamic_log_level;
 		}

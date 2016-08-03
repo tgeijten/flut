@@ -11,11 +11,12 @@
 #include "flut/system/log.hpp"
 #include "flut/math/angle.hpp"
 #include "flut/math/unit_value.hpp"
-#include "flut/flags.hpp"
+#include "flut/flag_set.hpp"
 #include "flut/math/regular_piecewise_linear_function.hpp"
 #include <fstream>
 #include "flut/timer.hpp"
 #include "flut/system_tools.hpp"
+#include "flut/system/test_framework.hpp"
 
 using std::cout;
 using std::endl;
@@ -30,8 +31,9 @@ void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = constants<T>::rel
 {
 	bool eq = equals( v1.x, v2.x, e ) && equals( v1.y, v2.y, e ) && equals( v1.z, v2.z, e );
 	auto diff = std::abs( v1.x - v2.x ) + std::abs( v1.y - v2.y ) + std::abs( v1.z - v2.z );
-	if ( eq ) log::info( "OK! diff=", diff, "v1=", v1, "v2=", v2 );
-	else log::error( "ERROR! diff=", diff, "v1=", v1, "v2=", v2 );
+	FLUT_TEST_MSG( eq, stringf( "diff=%.6f", diff ) );
+	//if ( eq ) log::info( "OK! diff=", diff, "v1=", v1, "v2=", v2 );
+	//else log::error( "ERROR! diff=", diff, "v1=", v1, "v2=", v2 );
 }
 
 template< typename T >
@@ -39,30 +41,33 @@ void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::rel
 {
 	bool eq = equals( q1.w, q2.W(), e ) && equals( q1.x, q2.X(), e ) && equals( q1.y, q2.Y(), e ) && equals( q1.z, q2.Z(), e );
 	auto diff = std::abs( q1.w - q2.W() ) + std::abs( q1.x - q2.X() ) + std::abs( q1.y - q2.Y() ) + std::abs( q1.z - q2.Z() );
-	if ( eq ) log::info( "OK! diff=", diff, "q1=", q1, "q2=", q2 );
-	else log::error( "ERROR! diff=", diff, "q1=", q1, "q2=", q2 );
+	FLUT_TEST_MSG( eq, stringf( "diff=%.6f", diff ) );
+	//if ( eq ) log::info( "OK! diff=", diff, "q1=", q1, "q2=", q2 );
+	//else log::error( "ERROR! diff=", diff, "q1=", q1, "q2=", q2 );
 }
 
 double sin_func( double x ) { return std::sin( x ); }
 
 void function_test()
 {
-	regular_piecewise_linear_function< real_t > func( -real_pi, real_pi, 16, sin_func );
+	regular_piecewise_linear_function< real_t > func( -real_pi, real_pi, 128, sin_func );
 
 	std::ofstream ostr( "test.txt" );
 	for ( real_t x = -2 * real_pi; x < 2 * real_pi; x += 0.1 )
 		ostr << x << "\t" << func.eval( x ) << endl;
 
 	timer t;
-	real_t result = 0.0;
+	real_t result = 0.0, verify_result = 0.0;
 	for ( int i = 0; i < 10000; ++i )
 	{
 		for ( real_t x = -real_pi; x <= real_pi; x += 0.001 )
+		{
 			result += func.eval( x );
+			verify_result += sin_func( x );
+		}
 	}
 	auto duration = t.seconds();
-	cout << duration << " result = " << result << endl;
-	wait_for_key();
+	FLUT_TEST_MSG( equals( result, verify_result, 0.01 ), stringf( "diff=%f duration=%f", result - verify_result, duration ) );
 }
 
 void angle_test()
@@ -100,7 +105,7 @@ void vec_quat_test()
 			log::debug( x, " is a power of 2" );
 
 	enum TestEnum { Apple, Pear, Banana, Orange };
-	flags< TestEnum > flg;
+	flag_set< TestEnum > flg;
 	flg.set( Apple, true );
 	flg.set( Banana, true );
 	flut_logvar4( flg.get( Apple ), flg.get( Pear ), flg.get( Banana ), flg.get( Orange ) );
@@ -111,7 +116,7 @@ void vec_quat_test()
 	std::default_random_engine re( 123 );
 	std::uniform_real_distribution<> rd( -10, 10 );
 
-	for ( size_t experiment = 0; experiment < 10; ++experiment )
+	for ( size_t experiment = 0; experiment < 2; ++experiment )
 	{
 		std::vector< double > rv( 16 );
 		std::generate( rv.begin(), rv.end(), [&]() { return rd( re ); } );

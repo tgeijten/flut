@@ -5,6 +5,7 @@
 #include "flut/system_tools.hpp"
 #include "prop_node_test.h"
 #include "flut/stopwatch.hpp"
+#include "flut/system/test_framework.hpp"
 
 using flut::string;
 
@@ -12,8 +13,9 @@ int main( int argc, char* argv[] )
 {
 	try
 	{
-		flut::log::set_level( FLUT_LOG_LEVEL_TRACE );
-		cout << flut::log::get_level();
+		flut::log::set_level( flut::log::info_level );
+
+		flut::log::trace( "log level: ", flut::log::get_level() );
 
 		auto str = flut::split_str( "appel; peer,,, banaan", ";. " );
 
@@ -40,5 +42,5 @@ int main( int argc, char* argv[] )
 		std::cout << e.what();				
 	}
 
-	return 0;
+	return flut::test_framework::get_instance().report();
 }

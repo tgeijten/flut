@@ -42,7 +42,7 @@ namespace flut
 		typedef vec3_< double > vec3d;
 	}
 
-	template< typename T > struct prop_node_converter< math::vec3_<T> > {
+	template< typename T > struct prop_node_cast< math::vec3_<T> > {
 		static math::vec3_<T> get( const prop_node& pn ) { return math::vec3_<T>( pn ); }
 		static void set( prop_node& pn, const math::vec3_<T>& vec ) { pn = static_cast< prop_node >( vec ); }
 	};

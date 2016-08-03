@@ -3,7 +3,7 @@
 #include "system/platform.hpp"
 #include "system/types.hpp"
 #include "system/assert.hpp"
-#include "flags.hpp"
+#include "flag_set.hpp"
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
@@ -62,7 +62,7 @@ namespace flut
 		char* end_pos;
 
 		enum buffer_flag { fail_flag, eof_flag };
-		flags< buffer_flag > buffer_flags;
+		flag_set< buffer_flag > buffer_flags;
 	};
 
 	/// load file into char buffer

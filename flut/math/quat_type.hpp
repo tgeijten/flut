@@ -32,7 +32,7 @@ namespace flut
 		typedef quat_< double > quatd;
 	}
 
-	template< typename T > struct prop_node_converter< math::quat_<T> > {
+	template< typename T > struct prop_node_cast< math::quat_<T> > {
 		static math::quat_<T> get( const prop_node& pn ) { return math::quat_<T>( pn ); }
 		static void set( prop_node& pn, const math::quat_<T>& q ) { pn = static_cast< prop_node >( q ); }
 	};

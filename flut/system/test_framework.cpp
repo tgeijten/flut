@@ -1,0 +1,47 @@
+#include "test_framework.hpp"
+#include "log.hpp"
+
+namespace flut
+{
+	flut::test_framework test_framework::test_;
+
+	test_framework::test_framework() :
+	num_tests( 0 ),
+	num_passed( 0 ),
+	num_failed( 0 )
+	{}
+
+	void test_framework::test( const char* name, bool result, const string& message )
+	{
+		++num_tests;
+		if ( result )
+		{
+			log::info( "TEST ", num_tests, " ", quoted( name ), ": passed. ", message );
+			num_passed++;
+		}
+		else
+		{
+			log::error( "TEST ", num_tests, " ", quoted( name ), ": FAILED! ", message );
+			num_failed++;
+		}
+	}
+
+	void test_framework::reset()
+	{
+		num_tests = num_passed = num_failed;
+	}
+
+	int test_framework::report()
+	{
+		auto level = num_failed > 0 ? log::error_level : log::info_level;
+		log::message( level, "Test results: ", num_tests, " performed, ", num_failed, " failed, ", num_passed, " passed" );
+
+		return num_failed > 0 ? -1 : 0;
+	}
+
+	flut::test_framework& test_framework::get_instance()
+	{
+		return test_;
+	}
+
+}

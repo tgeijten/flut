@@ -18,21 +18,28 @@
 
 #define flut_do_periodic( interval_, statement_ ) { static local_count_ = 0; if ( local_count_++ % interval_ == 0 ) { statement_; } }
 
-#define flut_logvar( var_ ) FLUT_LOG_OUTPUT_STREAM << #var_"=" << var_ << std::endl
-#define flut_logvar2( var1_, var2_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << std::endl
-#define flut_logvar3( var1_, var2_, var3_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << std::endl
-#define flut_logvar4( var1_, var2_, var3_, var4_ ) FLUT_LOG_OUTPUT_STREAM << #var1_"=" << var1_ << "\t" << #var2_"=" << var2_ << "\t" << #var3_"=" << var3_ << "\t" << #var4_"=" << var4_ << std::endl
+#define flut_logvar( var_ ) flut::log::trace( #var_"=", var )
+#define flut_logvar2( var1_, var2_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_ )
+#define flut_logvar3( var1_, var2_, var3_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_, "\t", #var3_"=", var3_ )
+#define flut_logvar4( var1_, var2_, var3_, var4_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_, "\t", #var3_"=", var3_, "\t", #var4_"=", var4_ )
 
 namespace flut
 {
 	namespace log
 	{
-		void FLUT_API set_level( int level );
-		int FLUT_API get_level();
+		enum level { trace_level = FLUT_LOG_LEVEL_TRACE, debug_level, info_level, warning_level, error_level, critical_level };
+
+		FLUT_API void set_level( level l );
+		FLUT_API void set_level( int l );
+		FLUT_API level get_level();
 
 		inline void log_output() { FLUT_LOG_OUTPUT_STREAM << std::endl; }
 		template< typename T, typename... Args > void log_output( T var, const Args&... args )
 		{ FLUT_LOG_OUTPUT_STREAM << var; log_output( args... ); }
+
+		template< typename... Args > void message( level l, const Args&... args ) {
+			if ( FLUT_STATIC_LOG_LEVEL <= l && get_level() <= l ) log_output( args... );
+		}
 
 		template< typename... Args > void trace( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )
