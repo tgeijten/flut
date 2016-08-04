@@ -11,27 +11,13 @@
 
 namespace flut
 {
-	class prop_node;
-
-	template< typename T, typename E = void > struct prop_node_cast {
-		static T get( const prop_node& pn ) { return from_str< T >( pn.get_value() ); }
-		static void set( prop_node& pn, const T& value ) { pn.set_value( to_str< T >( value ) ); }
-	};
-
-	template< typename T > struct prop_node_cast< vector<T> > {
-		static vector<T> get( const prop_node& pn )
-		{ vector<T> vec; for ( auto& p : pn ) vec.push_back( p.second.get<T>() ); return vec; }
-		static void set( prop_node& pn, const vector<T>& vec )
-		{ for ( size_t i = 0; i < vec.size(); ++i ) pn.add_child( stringf( "item%d", i ), make_prop_node( vec[ i ] ) ); }
-	};
-
-	template< typename T > struct prop_node_cast< T, typename std::enable_if< std::is_enum< T >::value >::type > {
-		static T get( const prop_node& pn ) { return static_cast<T>( from_str<int>( pn.get_value() ) ); }
-		static void set( prop_node& pn, const T& v ) { pn.set_value( to_str( static_cast<int>( v ) ) ); }
-	};
+	class prop_node; 
 
 	/// make a prop_node with a value
 	template< typename T > prop_node make_prop_node( const T& value );
+
+    /// forward declare prop_node_cast
+	template< typename T, typename E = void > struct prop_node_cast;
 
 	/// prop_node class
 	class FLUT_API prop_node
@@ -42,7 +28,7 @@ namespace flut
 		typedef std::pair< key_t, prop_node > pair_t;
 		typedef std::vector< pair_t > container_t;
 		typedef container_t::iterator iterator;
-		typedef container_t::const_iterator const_iterator;
+		typedef container_t::const_iterator const_iterator; 
 
 		/// constructors
 		prop_node() {}
@@ -134,6 +120,25 @@ namespace flut
 		value_t value;
 		container_t children;
 	};
+
+    /// prop_node_cast and specializations
+	template< typename T, typename E > struct prop_node_cast {
+		static T get( const prop_node& pn ) { return from_str< T >( pn.get_value() ); }
+		static void set( prop_node& pn, const T& value ) { pn.set_value( to_str< T >( value ) ); }
+	};
+
+	template< typename T > struct prop_node_cast< vector<T> > {
+		static vector<T> get( const prop_node& pn )
+		{ vector<T> vec; for ( auto& p : pn ) vec.push_back( p.second.get<T>() ); return vec; }
+		static void set( prop_node& pn, const vector<T>& vec )
+		{ for ( size_t i = 0; i < vec.size(); ++i ) pn.add_child( stringf( "item%d", i ), make_prop_node( vec[ i ] ) ); }
+	};
+
+	template< typename T > struct prop_node_cast< T, typename std::enable_if< std::is_enum< T >::value >::type > {
+		static T get( const prop_node& pn ) { return static_cast<T>( from_str<int>( pn.get_value() ) ); }
+		static void set( prop_node& pn, const T& v ) { pn.set_value( to_str( static_cast<int>( v ) ) ); }
+	};
+
 
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node().set( value ); }
 
