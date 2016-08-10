@@ -81,8 +81,8 @@ namespace flut
 		using degreef = degree_< float >;
 		using degreed = degree_< double >;
 
-		template< typename T > angle_< angle_unit::radians, T > make_rad( T rad ) { return angle_<angle_unit::radians, T>( rad ); }
-		template< typename T > angle_< angle_unit::degrees, T > make_deg( T deg ) { return angle_<angle_unit::degrees, T>( deg ); }
+		template< typename T > angle_< angle_unit::radians, T > rad( T rad ) { return angle_<angle_unit::radians, T>( rad ); }
+		template< typename T > angle_< angle_unit::degrees, T > deg( T deg ) { return angle_<angle_unit::degrees, T>( deg ); }
 
 		/// scalar multiplication
 		template< angle_unit U, typename T, typename TS >

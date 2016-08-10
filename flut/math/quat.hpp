@@ -131,7 +131,7 @@ namespace flut
 				T f = T(2) * std::acos( q.w ) / len;
 				return vec3_<T>( f * q.x, f * q.y, f * q.z );
 			}
-			else return vec3_<T>::make_zero();
+			else return vec3_<T>::zero();
 		}
 
 		/** Get quaternion using three axis vectors. */
