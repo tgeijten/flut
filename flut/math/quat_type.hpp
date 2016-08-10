@@ -24,7 +24,7 @@ namespace flut
 			T w, x, y, z;
 
 			/// generate quat with zero rotation
-			static quat_<T> make_zero() { return quat_<T>( T(0), T(0), T(0), T(1) ); }
+			static quat_<T> zero() { return quat_<T>( T(1), T(0), T(0), T(0) ); }
 		};
 		
 		typedef quat_< real_t > quat;

@@ -89,10 +89,10 @@ void angle_test()
 	auto a3s = 2 * a3;
 
 	auto sin1 = sin( a1_rd );
-	auto sin4 = sin( a4.radian() );
+	auto sin4 = sin( a4 );
 
-	auto qtest = make_quat_from_euler<float>( degree( 180.0 ), degree( 180 ).radian(), degree( 180 ).radian().degree(), euler_order::xyz );
-	auto qtest2 = make_quat_from_axis_angle( vec3_<float>::make_unit_x(), a6_df.radian() );
+	auto qtest = make_quat_from_euler( degree( 180.0 ), degree( 180 ), degree( 180 ).radian().degree(), euler_order::xyz );
+	auto qtest2 = make_quat_from_axis_angle( vec3_<float>::make_unit_x(), a6_df );
 
 	//flut_logvar4( a1.value, a2.value, a3.value, a4.value );
 	flut_logvar4( sizeof( a1_rd ), sizeof( a2_dd ), sizeof( a3 ), sizeof( a4 ) );

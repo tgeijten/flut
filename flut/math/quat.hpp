@@ -31,8 +31,8 @@ namespace flut
 			vec3_<T> qv( q.x, q.y, q.z );
 			vec3_<T> uv = cross_product( qv, v );
 			vec3_<T> uuv = cross_product( qv, uv );
-			uv *= T( 2 ) * q.w;
-			uuv *= T( 2 );
+			uv *= T(2) * q.w;
+			uuv *= T(2);
 			return v + uv + uuv;
 		}
 
@@ -67,21 +67,22 @@ namespace flut
 		}
 
 		/// make quaternion from axis and angle
-		template< typename T > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, const radian_<T>& ang )
+		template< typename T, angle_unit U > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, angle_<U, T> ang )
 		{
 			flut_assert( is_normalized<T>( axis ) );
-			auto ha = T( 0.5 ) * ang;
-			T hs = sin( ha );
-			return quat_<T>( cos( ha ), hs * axis.x, hs * axis.y, hs * axis.z );
+			T ha = T( 0.5 ) * ang.rad_value();
+			T hs = std::sin( ha );
+			return quat_<T>( std::cos( ha ), hs * axis.x, hs * axis.y, hs * axis.z );
 		}
 
 		/// make quaternion from Euler angles
-		template< typename T > quat_<T> make_quat_from_euler( const radian_<T>& x, const radian_<T>& y, const radian_<T>& z, euler_order eo = euler_order::xyz )
+		template< typename T, angle_unit U > quat_<T> make_quat_from_euler( angle_<U, T> x, angle_<U, T> y, angle_<U, T> z, euler_order eo = euler_order::xyz )
 		{
-			T hxa = T( 0.5 ) * x.value, hya = T( 0.5 ) * y.value, hza = T( 0.5 ) * z.value;
+			T hxa = T( 0.5 ) * x.rad_value(), hya = T( 0.5 ) * y.rad_value(), hza = T( 0.5 ) * z.rad_value();
 			quat_<T> qx = quat_<T>( std::cos( hxa ), std::sin( hxa ), T( 0 ), T( 0 ) );
 			quat_<T> qy = quat_<T>( std::cos( hya ), T( 0 ), std::sin( hya ), T( 0 ) );
 			quat_<T> qz = quat_<T>( std::cos( hza ), T( 0 ), T( 0 ), std::sin( hza ) );
+			// #TODO: more efficient
 			switch ( eo )
 			{
 			case flut::math::euler_order::xyz: return qx * ( qy * qz );
@@ -103,7 +104,7 @@ namespace flut
 			T d = dot_product( s, t );
 
 			if ( equals( d, T(1) ) ) // check if vectors are the same
-				return quat_<T>::make_zero();
+				return quat_<T>::zero();
 
 			auto clen = length( c );
 			if ( equals( clen, T(0) ) ) // check if vectors are 180 deg apart
