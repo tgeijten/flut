@@ -24,11 +24,11 @@ namespace flut
 			bool is_null() const { return x == T(0) && y == T(0) && z == T(0) && w == T(0); }
 
 			// static initializers
-			static vec4_<T> make_zero() { return vec4_<T>( T(0), T(0), T(0), T(0) ); }
-			static vec4_<T> make_unit_x() { return vec4_<T>( T(1), T(0), T(0), T(0) ); }
-			static vec4_<T> make_unit_y() { return vec4_<T>( T(0), T(1), T(0), T(0) ); }
-			static vec4_<T> make_unit_z() { return vec4_<T>( T(0), T(0), T(1), T(0) ); }
-			static vec4_<T> make_unit_w() { return vec4_<T>( T(0), T(0), T(0), T(1) ); }
+			static vec4_<T> zero() { return vec4_<T>( T(0), T(0), T(0), T(0) ); }
+			static vec4_<T> unit_x() { return vec4_<T>( T(1), T(0), T(0), T(0) ); }
+			static vec4_<T> unit_y() { return vec4_<T>( T(0), T(1), T(0), T(0) ); }
+			static vec4_<T> unit_z() { return vec4_<T>( T(0), T(0), T(1), T(0) ); }
+			static vec4_<T> unit_w() { return vec4_<T>( T(0), T(0), T(0), T(1) ); }
 		};
 
 		/// template instantiations
