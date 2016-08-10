@@ -40,7 +40,9 @@ namespace flut
 		char_stream& operator>>( unsigned short& v ) { v = (unsigned short)strtoul( cur_pos, &end_pos, radix ); process_end_pos(); return *this; }
 
 		string get_line();
+		string get_token( const char* operators = "" );
 		char getc() { char c = *cur_pos; if ( c == '\0' ) buffer_flags.set< eof_flag >(); else ++cur_pos; return c; }
+		char peekc() { if ( cur_pos == '\0' ) buffer_flags.set< eof_flag >(); return *cur_pos; }
 
 		bool good() { return !buffer_flags.any(); }
 		bool eof() { return buffer_flags.get< eof_flag >(); }
@@ -66,7 +68,7 @@ namespace flut
 	};
 
 	/// load file into char buffer
-	FLUT_API char_stream load_char_buffer( const string& filename );
+	FLUT_API char_stream load_char_stream( const string& filename );
 }
 
 #ifdef FLUT_COMP_MSVC

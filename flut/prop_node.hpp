@@ -54,8 +54,11 @@ namespace flut
 		template< typename T > T get( const key_t& key, const T& def ) const
 		{ const auto it = find( key ); if ( it != end() ) return it->second.get< T >(); else return def; }
 
-		/// see if this has a value
+		/// see if this prop_node has a value
 		bool has_value() const { return !value.empty(); }
+
+		/// see if this prop_node has children
+		bool has_children() const { return !children.empty(); }
 
 		/// access value_t value
 		const value_t& get_value() const { return value; }
