@@ -23,6 +23,11 @@ namespace flut
 			/// convert to prop_node
 			explicit operator prop_node() const { return prop_node().set( "p", p ).set( "q", q ); }
 
+			/// concatenate transforms
+			transform_<T> operator*( const transform_<T>& other ) const { return transform( other ); }
+			transform_<T> operator-() const { return inverse(); }
+			transform_<T> inverse() const { auto iq = -q; return transform_<T>( iq * -p, iq ); }
+
 			vec3_<T> transform( const vec3_<T>& v ) const { return p + q * v; }
 			vec3_<T> inv_transform( const vec3_<T>& v ) const { return -q * ( v - p ); }
 
