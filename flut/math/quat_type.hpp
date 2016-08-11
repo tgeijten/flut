@@ -33,7 +33,7 @@ namespace flut
 	}
 
 	template< typename T > struct prop_node_cast< math::quat_<T> > {
-		static math::quat_<T> get( const prop_node& pn ) { return math::quat_<T>( pn ); }
-		static void set( prop_node& pn, const math::quat_<T>& q ) { pn = static_cast< prop_node >( q ); }
+		static math::quat_<T> from( const prop_node& pn ) { return math::quat_<T>( pn ); }
+		static prop_node to( const math::quat_<T>& q ) { return static_cast< prop_node >( q ); }
 	};
 }

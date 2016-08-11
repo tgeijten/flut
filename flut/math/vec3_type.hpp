@@ -43,7 +43,7 @@ namespace flut
 	}
 
 	template< typename T > struct prop_node_cast< math::vec3_<T> > {
-		static math::vec3_<T> get( const prop_node& pn ) { return math::vec3_<T>( pn ); }
-		static void set( prop_node& pn, const math::vec3_<T>& vec ) { pn = static_cast< prop_node >( vec ); }
+		static math::vec3_<T> from( const prop_node& pn ) { return math::vec3_<T>( pn ); }
+		static prop_node to( const math::vec3_<T>& vec ) { return static_cast< prop_node >( vec ); }
 	};
 }
