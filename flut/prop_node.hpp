@@ -52,13 +52,14 @@ namespace flut
 
 		/// get the value of a child node, or a default value if it doesn't exist
 		template< typename T > T get( const key_t& key, const T& def ) const
-		{ const auto it = find( key ); if ( it != end() ) return it->second.get< T >(); else return def; }
+		{ const auto it = find_child( key ); if ( it != end() ) return it->second.get< T >(); else return def; }
 
 		/// see if this prop_node has a value
 		bool has_value() const { return !value.empty(); }
 
 		/// see if this prop_node has children
 		bool has_children() const { return !children.empty(); }
+		bool has_child( const key_t& key ) { return find_child( key ) != end(); }
 
 		/// access value_t value
 		const value_t& get_value() const { return value; }
@@ -85,17 +86,21 @@ namespace flut
 
 		/// set the value of a child node, the node is created if not existing
 		template< typename T > prop_node& set( const key_t& key, const T& v )
-		{ auto it = find( key ); if ( it == end() ) add_child( key, make_prop_node( v ) ); else it->second.set( v ); return *this; }
+		{ auto it = find_child( key ); if ( it == end() ) add_child( key, make_prop_node( v ) ); else it->second.set( v ); return *this; }
 
 		/// get a child node, throws exception if not existing
 		const prop_node& get_child( const key_t& key ) const
-		{ auto it = find( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+		{ auto it = find_child( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
 		prop_node& get_child( const key_t& key )
-		{ auto it = find( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+		{ auto it = find_child( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+
+		/// get a child node, return nullptr if not existing
+		const prop_node* try_get_child( const key_t& key ) const { auto it = find_child( key ); return it != end() ? &(it->second) : nullptr; }
+		prop_node* try_get_child( const key_t& key ) { auto it = find_child( key ); return it != end() ? &(it->second) : nullptr; }
 
 		/// access child by name
 		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }
-		prop_node& operator[]( const key_t& key ) { auto it = find( key ); if ( it != end() ) return it->second; else return add_child( key ); }
+		prop_node& operator[]( const key_t& key ) { auto it = find_child( key ); if ( it != end() ) return it->second; else return add_child( key ); }
 
 		/// access child by index
 		const prop_node& operator[]( index_t idx ) const { flut_assert( idx < size() ); return children[ idx ].second; }
@@ -103,8 +108,8 @@ namespace flut
 		size_t size() const { return children.size(); }
 
 		/// find a child node
-		iterator find( const key_t& key ) { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
-		const_iterator find( const key_t& key ) const { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
+		iterator find_child( const key_t& key ) { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
+		const_iterator find_child( const key_t& key ) const { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
 
 		/// begin of child nodes
 		iterator begin() { return children.begin(); }
