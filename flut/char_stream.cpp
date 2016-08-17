@@ -80,7 +80,7 @@ namespace flut
 					break;
 				}
 			}
-			string s = string( cur_pos, end_pos );
+			string s = string( cur_pos, size_t( end_pos - cur_pos ) );
 			process_end_pos();
 			return s;
 		}
