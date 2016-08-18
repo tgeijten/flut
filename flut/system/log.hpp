@@ -18,7 +18,7 @@
 
 #define flut_do_periodic( interval_, statement_ ) { static local_count_ = 0; if ( local_count_++ % interval_ == 0 ) { statement_; } }
 
-#define flut_logvar( var_ ) flut::log::trace( #var_"=", var )
+#define flut_logvar( var_ ) flut::log::trace( #var_"=", var_ )
 #define flut_logvar2( var1_, var2_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_ )
 #define flut_logvar3( var1_, var2_, var3_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_, "\t", #var3_"=", var3_ )
 #define flut_logvar4( var1_, var2_, var3_, var4_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_, "\t", #var3_"=", var3_, "\t", #var4_"=", var4_ )
