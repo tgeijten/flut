@@ -17,6 +17,15 @@ namespace flut
 {
 	int to_str_precision_value = 4;
 
+	FLUT_API string trim_str( const string& s )
+	{
+		const char* space_chars = " \t\r\n\f\v";
+		auto left = s.find_first_not_of( space_chars );
+		if ( left == string::npos ) return string( "" ); // string has no non-whitespace characters
+		auto right = s.find_last_not_of( space_chars );
+		return s.substr( left, 1 + right - left );
+	}
+
 	vector< string > split_str( const string& s, const string& sep_chars )
 	{
 		std::vector< string > strings;
@@ -27,6 +36,14 @@ namespace flut
 			ofs = s.find_first_not_of( sep_chars.c_str(), ofsend );
 		}
 		return strings;
+	}
+
+	FLUT_API std::pair< string, string > to_key_value( const string& s, const string& sep_char )
+	{
+		auto pos = s.find_first_of( sep_char.c_str() );
+		if ( pos == string::npos )
+			return make_pair( trim_str( s ), string("") );
+		else return make_pair( trim_str( left_str( s, pos ) ), trim_str( mid_str( s, pos + 1 ) ) );
 	}
 
 	string stringf( const char* format, ... )

@@ -28,8 +28,14 @@ namespace flut
 	/// get index of a substring in a string
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
+	/// remove leading and trailing spaces
+	FLUT_API string trim_str( const string& str );
+
 	/// split a string into a vector of strings
 	FLUT_API vector< string > split_str( const string& s, const string& sep_chars );
+
+	/// split string into trimmed key / value pair
+	FLUT_API std::pair< string, string > to_key_value( const string& s, const string& sep_char = "=" );
 
 	/// get formatted string (printf style)
 	FLUT_API string stringf( const char* format, ... );
