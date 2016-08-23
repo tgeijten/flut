@@ -37,6 +37,14 @@ namespace flut
 	/// split string into trimmed key / value pair
 	FLUT_API std::pair< string, string > to_key_value( const string& s, const string& sep_char = "=" );
 
+	inline bool scan_str_impl( std::stringstream& str ) { return true; }
+	template< typename T, typename... Args > bool scan_str_impl( std::stringstream& str, T& v, Args&... args )
+	{ str >> v; if ( str.good() ) return scan_str_impl( str, args... ); else return false; }
+
+	/// read variables from string
+	template< typename... Args > bool scan_str( const string& s, Args&... args )
+	{ std::stringstream str( s ); return scan_str_impl( str, args... ); }
+
 	/// get formatted string (printf style)
 	FLUT_API string stringf( const char* format, ... );
 

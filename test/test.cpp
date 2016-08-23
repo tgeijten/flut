@@ -6,6 +6,7 @@
 #include "prop_node_test.h"
 #include "flut/stopwatch.hpp"
 #include "flut/system/test_framework.hpp"
+#include "string_test.h"
 
 using flut::string;
 
@@ -26,6 +27,9 @@ int main( int argc, char* argv[] )
 
 		flut::prop_node_test();
 		sw.add_measure( "propnode" );
+
+		flut::string_test();
+		sw.add_measure( "string" );
 
 		flut::buffer_test();
 		sw.add_measure( "buffer" );
