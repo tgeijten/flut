@@ -90,9 +90,9 @@ namespace flut
 
 		/// get a child node, throws exception if not existing
 		const prop_node& get_child( const key_t& key ) const
-		{ auto it = find_child( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+		{ auto it = find_child( key ); flut_error_if( it == end(), "Could not find key: " + key ); return it->second; }
 		prop_node& get_child( const key_t& key )
-		{ auto it = find_child( key ); flut_assert_msg( it != end(), "Could not find key: " + key ); return it->second; }
+		{ auto it = find_child( key ); flut_error_if( it == end(), "Could not find key: " + key ); return it->second; }
 
 		/// get a child node, return nullptr if not existing
 		const prop_node* try_get_child( const key_t& key ) const { auto it = find_child( key ); return it != end() ? &(it->second) : nullptr; }

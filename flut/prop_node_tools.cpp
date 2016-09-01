@@ -30,10 +30,13 @@ namespace flut
 		rapidxml::xml_document<> doc;
 		doc.parse< 0 >( &file_contents[ 0 ] ); // not officially supported but probably safe
 
-		prop_node pn;
-		pn.add_child( doc.first_node()->name(), read_rapid_xml_node( doc.first_node() ) );
-
-		return pn;
+		if ( doc.first_node() )
+		{
+			prop_node pn;
+			pn.add_child( doc.first_node()->name(), read_rapid_xml_node( doc.first_node() ) );
+			return pn;
+		}
+		else return prop_node();
 	}
 
 	bool is_valid_prop_label( const string& s )

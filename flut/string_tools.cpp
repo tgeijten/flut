@@ -89,7 +89,7 @@ namespace flut
 	{
 		// read file contents into char array
 		FILE* f = fopen( filename.c_str(),"rb" );
-		flut_assert_msg( f, "Could not open file: " + filename );
+		flut_error_if( f == NULL, "Could not open " + quoted( filename ) );
 
 		fseek( f, 0, SEEK_END );
 		int file_len = ftell( f );
