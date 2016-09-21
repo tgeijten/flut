@@ -7,6 +7,7 @@
 #include "flut/stopwatch.hpp"
 #include "flut/system/test_framework.hpp"
 #include "string_test.h"
+#include "flut/dictionary.hpp"
 
 using flut::string;
 
@@ -14,8 +15,19 @@ int main( int argc, char* argv[] )
 {
 	try
 	{
-		flut::log::set_level( flut::log::info_level );
+		enum fruit { no_fruit, appel, peer, banaan };
+		auto fruit_dict = flut::dictionary< fruit >( { { appel, "appel" }, { peer, "peer" }, { banaan, "banaan" } } );
 
+		string s = "peer2";
+		switch ( fruit_dict( s, no_fruit ) )
+		{
+		case appel: cout << "we've got an apple"; break;
+		case peer: cout << "we've got a peario"; break;
+		case banaan: cout << "banana over here!"; break;
+		default: cout << "Could not find this fruit"; break;
+		}
+
+		flut::log::set_level( flut::log::info_level );
 		flut::log::trace( "log level: ", flut::log::get_level() );
 
 		auto str = flut::split_str( "appel; peer,,, banaan", ";. " );
