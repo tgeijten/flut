@@ -98,5 +98,4 @@ namespace flut
 	{
 		return char_stream( load_string( filename ) );
 	}
-
 }
