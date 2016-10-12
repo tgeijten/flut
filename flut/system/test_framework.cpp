@@ -16,12 +16,12 @@ namespace flut
 		++num_tests;
 		if ( result )
 		{
-			log::info( "TEST ", num_tests, " ", quoted( name ), ": passed. ", message );
+			log::info( "TEST ", num_tests, " ", name, ": passed. ", message );
 			num_passed++;
 		}
 		else
 		{
-			log::error( "TEST ", num_tests, " ", quoted( name ), ": FAILED! ", message );
+			log::error( "TEST ", num_tests, " ", name, ": FAILED! ", message );
 			num_failed++;
 		}
 	}
