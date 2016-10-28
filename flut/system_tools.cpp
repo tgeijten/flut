@@ -17,33 +17,47 @@ namespace flut
 #endif
 	}
 
-	string get_config_folder()
+#ifdef FLUT_COMP_MSVC
+	// define this helper function for windows, since it's so complicated
+	string get_known_windows_folder( KNOWNFOLDERID id )
+	{
+		// get the string, convert to single byte string, then free the original string (ugh)
+		wchar_t* wcsLocalAppData = 0;
+		SHGetKnownFolderPath( id, 0, NULL, &wcsLocalAppData );
+		char mbsLocalAppData[MAX_PATH];
+		wcstombs_s( size_t(), mbsLocalAppData, MAX_PATH, wcsLocalAppData, MAX_PATH );
+		CoTaskMemFree( static_cast<void*>( wcsLocalAppData ) );
+		return string( mbsLocalAppData );
+	}
+#endif
+
+	path get_config_folder()
 	{
 #ifdef FLUT_COMP_MSVC
-			// get the string, convert to single byte string, then free the original string (ugh)
-			wchar_t* wcsLocalAppData = 0;
-			SHGetKnownFolderPath( FOLDERID_LocalAppData, 0, NULL, &wcsLocalAppData );
-			char mbsLocalAppData[MAX_PATH];
-			size_t dummy;
-			wcstombs_s( &dummy, mbsLocalAppData, MAX_PATH, wcsLocalAppData, MAX_PATH );
-			CoTaskMemFree( static_cast<void*>( wcsLocalAppData ) );
-
-			return string( mbsLocalAppData );
+		return get_known_windows_folder( FOLDERID_LocalAppData );
 #else
-			string homeDir = std::getenv( "HOME" );
-			return homeDir + "/.config";
+		string homeDir = std::getenv( "HOME" );
+		return homeDir + "/.config";
 #endif
 	}
 
-	string FLUT_API get_application_folder()
+	path FLUT_API get_documents_folder()
+	{
+#ifdef FLUT_COMP_MSVC
+		return get_known_windows_folder( FOLDERID_LocalAppData );
+#else
+		return std::getenv( "HOME" );
+#endif
+	}
+
+	path FLUT_API get_application_folder()
 	{
 #ifdef FLUT_COMP_MSVC
 		char buf[ 1024 ];
 		GetModuleFileName( 0, buf, sizeof( buf ) );
 		return get_filename_folder( string( buf ) );
 #else
-        return "";
+		return "";
 #endif
 	}
-
 }
