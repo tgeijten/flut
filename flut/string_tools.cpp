@@ -12,6 +12,8 @@
 
 #include <stdarg.h>
 #include <memory>
+#include <sstream>
+#include <fstream>
 
 namespace flut
 {
@@ -87,8 +89,9 @@ namespace flut
 
 	string load_string( const string& filename )
 	{
+#if 0
 		// read file contents into char array
-		FILE* f = fopen( filename.c_str(),"rb" );
+		FILE* f = fopen( filename.c_str(), "rb" );
 		flut_error_if( f == NULL, "Could not open " + quoted( filename ) );
 
 		fseek( f, 0, SEEK_END );
@@ -99,6 +102,13 @@ namespace flut
 		fread( reinterpret_cast< void* >( &s[ 0 ] ), sizeof( char ), file_len, f );
 
 		return s;
+#else
+		// this method uses a stringbuf, which may be slower but more stable
+		std::ifstream ifstr( filename );
+		std::stringstream buf;
+		buf << ifstr.rdbuf();
+		return buf.str();
+#endif
 	}
 
 	flut::string get_filename_ext( const string& str )
