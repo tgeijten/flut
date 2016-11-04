@@ -46,12 +46,10 @@ namespace flut
 		{ str << var; log_output( l, str, args... ); }
 
 		template< typename... Args > void message( level l, const Args&... args )
-		{ 
-            if ( get_level() <= l ) {
-                std::stringstream str;
-                log_output( l, str, args... );
-            } 
-        }
+		{
+			if ( get_level() <= l )
+			{ std::stringstream str; log_output( l, str, args... ); }
+		}
 
 		template< typename... Args > void trace( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )
