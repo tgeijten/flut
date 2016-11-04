@@ -10,7 +10,7 @@ namespace flut
 	{
 		flag_set() : data( StorageT( 0 ) ) {}
 		flag_set( const flag_set& o ) : data( o.data ) {}
-		flag_set( std::initializer_list< EnumT >& flags ) : data( StorageT( 0 ) ) { for ( f : flags ) set( f ); }
+		flag_set( std::initializer_list< EnumT >& flags ) : data( StorageT( 0 ) ) { for ( auto f : flags ) set( f ); }
 
 		flag_set& operator=( const flag_set& o ) { data = o.data; return *this; }
 		flag_set& operator|=( const flag_set& o ) { data |= o.data; return *this; }
