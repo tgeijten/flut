@@ -2,7 +2,9 @@
 
 #include "flut/system/platform.hpp"
 #include "flut/system/types.hpp"
-#include "flut/string_tools.hpp"
+#include "flut/system/assert.hpp"
+#include "flut/system/string_cast.hpp"
+#include <algorithm>
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
@@ -78,6 +80,13 @@ namespace flut
 		prop_node& add_child( const key_t& key )
 		{ children.emplace_back( std::make_pair( key, prop_node() ) ); return children.back().second; }
 
+		/// insert children
+		const_iterator insert_children( const_iterator pos, const_iterator first, const_iterator last )
+		{ return children.insert( pos, first, last ); }
+
+		iterator insert_children( iterator pos, const_iterator first, const_iterator last )
+		{ return children.insert( pos, first, last ); }
+
 		/// reserve children
 		void reserve( size_t n ) { children.reserve( n ); }
 
@@ -114,10 +123,15 @@ namespace flut
 		/// begin of child nodes
 		iterator begin() { return children.begin(); }
 		const_iterator begin() const { return children.begin(); }
+		const_iterator cbegin() const { return children.cbegin(); }
 
 		/// end of child nodes
 		iterator end() { return children.end(); }
 		const_iterator end() const { return children.end(); }
+		const_iterator cend() const { return children.cend(); }
+
+		/// erase a child
+		iterator erase( const_iterator it ) { return children.erase( it ); }
 
 	private:
 		value_t value;
@@ -126,8 +140,8 @@ namespace flut
 
     /// prop_node_cast and specializations
 	template< typename T, typename E > struct prop_node_cast {
-		static T from( const prop_node& pn ) { return from_str< T >( pn.get_value() ); }
-		static prop_node to( const T& value ) { return prop_node( to_str< T >( value ) ); }
+		static T from( const prop_node& pn ) { return string_cast< T, E >::from( pn.get_value() ); }
+		static prop_node to( const T& value ) { return prop_node( string_cast< T, E >::to( value ) ); }
 	};
 
 	template< typename T > struct prop_node_cast< vector<T> > {

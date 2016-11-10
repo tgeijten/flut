@@ -87,7 +87,7 @@ namespace flut
 	FLUT_API int to_str_precision()
 	{ return to_str_precision_value; }
 
-	string load_string( const string& filename )
+	string load_string( const path& filename )
 	{
 #if 0
 		// read file contents into char array
@@ -104,7 +104,7 @@ namespace flut
 		return s;
 #else
 		// this method uses a stringbuf, which may be slower but more stable
-		std::ifstream ifstr( filename );
+		std::ifstream ifstr( filename.str() );
 		std::stringstream buf;
 		buf << ifstr.rdbuf();
 		return buf.str();

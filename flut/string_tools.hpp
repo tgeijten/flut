@@ -3,12 +3,13 @@
 #include "flut/system/platform.hpp"
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
+#include "system/path.hpp"
+#include "char_stream.hpp"
 
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <stdlib.h>
-#include "char_stream.hpp"
 
 namespace flut
 {
@@ -56,15 +57,13 @@ namespace flut
 	FLUT_API int to_str_precision();
 
 	/// convert any streamable type to string
-	template< typename T > string to_str( const T& value ) { std::ostringstream str; str << std::fixed << std::setprecision( to_str_precision() ) << value; return str.str(); }
-	template<> inline string to_str< string >( const string& s ) { return s; }
+	template< typename T > string to_str( const T& value ) { return string_cast< T >::to( value ); }
 
 	/// convert string to any streamable type
-	template< typename T > T from_str( const string& s ) { T value; std::stringstream str( s ); str >> value; return value; }
-	template<> inline string from_str< string >( const string& s ) { return s; }
+	template< typename T > T from_str( const string& s ) { return string_cast< T >::from( s ); }
 
 	/// convert space-delimited string to vector of elements
-	template< typename T >  vector< T > from_vec_str( const string& s, size_t size ) {
+	template< typename T > vector< T > from_vec_str( const string& s, size_t size ) {
 		char_stream str( s.c_str() );
 		vector< T > vec; if ( size != no_index ) vec.reserve( size );
 		while ( str.good() ) { T elem; str >> elem; if ( !str.fail() ) vec.push_back( elem ); }
@@ -72,7 +71,7 @@ namespace flut
 	}
 
 	/// make string with contents of a file
-	FLUT_API string load_string( const string& filename );
+	FLUT_API string load_string( const path& filename );
 
 	/// get a string between quotes
 	inline string quoted( const string& s ) { return '\"' + s + '\"'; }

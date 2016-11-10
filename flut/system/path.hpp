@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.hpp"
+#include "string_cast.hpp"
 
 namespace flut
 {
@@ -94,4 +95,9 @@ namespace flut
 	inline bool operator!=( const path& p1, const path& p2 ) { return p1.str() != p2.str(); }
 
 	inline std::ostream& operator<<( std::ostream& str, const path& p ) { str << p.str(); return str; }
+
+	template<> struct string_cast< path, void > {
+		static path from( const string& s ) { return path( s ); }
+		static string to( const path& value ) { return value.str(); }
+	};
 }

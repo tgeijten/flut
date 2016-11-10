@@ -2,9 +2,18 @@
 
 #include <contrib/rapidxml-1.13/rapidxml.hpp>
 #include <fstream>
+#include "system/path.hpp"
+#include "string_tools.hpp"
 
 namespace flut
 {
+	FLUT_API prop_node load_file( const path& filename )
+	{
+		if ( filename.extension() == "xml" )
+			return load_xml( filename );
+		else return load_prop( filename );
+	}
+
 	prop_node read_rapid_xml_node( rapidxml::xml_node<>* node )
 	{
 		// make new prop_node
@@ -24,7 +33,7 @@ namespace flut
 		return pn;
 	}
 
-	prop_node load_xml( const string& filename )
+	FLUT_API prop_node load_xml( const path& filename )
 	{
 		string file_contents = load_string( filename );
 		rapidxml::xml_document<> doc;
@@ -80,9 +89,9 @@ namespace flut
 		}
 	}
 
-	prop_node load_prop( const string& filename )
+	FLUT_API prop_node load_prop( const path& filename )
 	{
-		auto str = load_char_stream( filename );
+		auto str = load_char_stream( filename.str() );
 		prop_node root;
 		string t = get_prop_token( str );
 		while ( is_valid_prop_label( t ) )
@@ -112,9 +121,9 @@ namespace flut
 		}
 	}
 
-	void save_prop( const prop_node& pn, const string& filename, bool readable )
+	FLUT_API void save_prop( const prop_node& pn, const path& filename, bool readable )
 	{
-		std::ofstream str( filename );
+		std::ofstream str( filename.str() );
 		for ( auto& node : pn )
 		{
 			write_prop_none( str, node.first, node.second, 0, readable );
@@ -131,5 +140,50 @@ namespace flut
 			else if ( overwrite )
 				it->second = o.second;
 		}
+	}
+
+	void resolve_include_files( prop_node &pn, const path &filename, const string& include_directive, int level )
+	{
+		for ( auto iter = pn.begin(); iter != pn.end(); )
+		{
+			if ( iter->first == include_directive )
+			{
+				// load included file using filename path
+				path include_path = filename.parent_path() / iter->second.get< path >( "file" );
+				bool merge_children = iter->second.get< bool >( "merge_children", false );
+				auto included_props = load_file_with_include( include_path, include_directive, level + 1 );
+
+				// remove the include node
+				iter = pn.erase( iter );
+
+				// merge or include, depending on options
+				if ( merge_children )
+				{
+					merge_prop_nodes( pn, included_props, false );
+					iter = pn.begin(); // reset the iterator, which has become invalid after merge
+				}
+				else
+				{
+					// insert the children at the INCLUDE spot
+					iter = pn.insert_children( iter, included_props.begin(), included_props.end() );
+				}
+			}
+			else
+			{
+				// search in children
+				resolve_include_files( iter->second, filename, include_directive, level );
+				++iter;
+			}
+		}
+	}
+
+	prop_node load_file_with_include( const path& filename, const string& include_directive, int level )
+	{
+		flut_error_if( level >= 100, "Exceeded maximum include level, check for loops in includes" );
+
+		prop_node pn = load_file( filename );
+		resolve_include_files( pn, filename, include_directive, level );
+
+		return pn;
 	}
 }

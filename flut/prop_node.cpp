@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <memory>
 #include <iomanip>
+#include <algorithm>
 
 namespace flut
 {
