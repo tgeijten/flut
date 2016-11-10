@@ -9,8 +9,15 @@
 
 namespace flut
 {
-	/// load the contents of an xml file into a prop_node
-	prop_node FLUT_API load_xml( const string& filename );
-	prop_node FLUT_API load_prop( const string& filename );
-	void FLUT_API save_prop( const prop_node& pn, const string& filename, bool readable );
+	/// load contents from xml
+	FLUT_API prop_node load_xml( const string& filename );
+
+	/// load contents from prop
+	FLUT_API prop_node load_prop( const string& filename );
+
+	/// save contents to prop
+	FLUT_API void save_prop( const prop_node& pn, const string& filename, bool readable );
+
+	/// merge prop_nodes
+	FLUT_API void merge_prop_nodes( prop_node& pn, const prop_node& other, bool overwrite );
 }

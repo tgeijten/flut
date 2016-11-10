@@ -24,7 +24,7 @@ namespace flut
 		return pn;
 	}
 
-	prop_node FLUT_API load_xml( const string& filename )
+	prop_node load_xml( const string& filename )
 	{
 		string file_contents = load_string( filename );
 		rapidxml::xml_document<> doc;
@@ -80,7 +80,7 @@ namespace flut
 		}
 	}
 
-	prop_node FLUT_API load_prop( const string& filename )
+	prop_node load_prop( const string& filename )
 	{
 		auto str = load_char_stream( filename );
 		prop_node root;
@@ -105,19 +105,31 @@ namespace flut
 		str << newline;
 		if ( pn.has_children() )
 		{
-			str << indent << "{" << newline;
+			str << indent << "{" << newline; // #TODO only do newline when needed
 			for ( auto& node : pn )
 				write_prop_none( str, node.first, node.second, level + 1, readable );
 			str << indent << "}" << newline;
 		}
 	}
 
-	void FLUT_API save_prop( const prop_node& pn, const string& filename, bool readable )
+	void save_prop( const prop_node& pn, const string& filename, bool readable )
 	{
 		std::ofstream str( filename );
 		for ( auto& node : pn )
 		{
 			write_prop_none( str, node.first, node.second, 0, readable );
+		}
+	}
+
+	void merge_prop_nodes( prop_node& pn, const prop_node& other, bool overwrite )
+	{
+		for ( auto& o : other )
+		{
+			auto it = pn.find_child( o.first );
+			if ( it == pn.end() )
+				pn.add_child( o.first, o.second );
+			else if ( overwrite )
+				it->second = o.second;
 		}
 	}
 }

@@ -119,12 +119,7 @@ namespace flut
 		iterator end() { return children.end(); }
 		const_iterator end() const { return children.end(); }
 
-		/// output node and children to stream (nicely aligned)
-		std::ostream& to_stream( std::ostream& str, int depth = 0, int key_align = 0 ) const;
-
 	private:
-		int get_align_width( int depth ) const;
-
 		value_t value;
 		container_t children;
 	};
@@ -151,8 +146,8 @@ namespace flut
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node().set( value ); }
 
 	/// stream operator
-	inline std::ostream& operator<<( std::ostream& str, const prop_node& pn )
-	{ pn.to_stream( str ); return str; }
+	FLUT_API std::ostream& to_stream( std::ostream& str, const prop_node& pn, int depth = 0, int key_align = 0 );
+	inline std::ostream& operator<<( std::ostream& str, const prop_node& pn ) { return to_stream( str, pn ); }
 }
 
 #ifdef FLUT_COMP_MSVC
