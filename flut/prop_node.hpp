@@ -61,7 +61,7 @@ namespace flut
 
 		/// see if this prop_node has children
 		bool has_children() const { return !children.empty(); }
-		bool has_child( const key_t& key ) { return find_child( key ) != end(); }
+		bool has_child( const key_t& key ) const { return find_child( key ) != end(); }
 
 		/// access value_t value
 		const value_t& get_value() const { return value; }
@@ -133,7 +133,12 @@ namespace flut
 		/// erase a child
 		iterator erase( const_iterator it ) { return children.erase( it ); }
 
+		/// see if this node has been accessed (touched)
+		bool touched() const { return touch; }
+		size_t count_touched() const { size_t t = touched() ? 1 : 0; for ( auto& c : children ) t += count_touched(); return t; }
+
 	private:
+		bool touch;
 		value_t value;
 		container_t children;
 	};
