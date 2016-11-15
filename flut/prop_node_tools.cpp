@@ -102,6 +102,38 @@ namespace flut
 		return root;
 	}
 
+	FLUT_API prop_node load_ini( const path& filename )
+	{
+		prop_node pn;
+		prop_node* cur_group = &pn;
+
+		auto str = load_char_stream( filename.str() );
+		for ( string t = str.get_token( "=" ); str.good(); t = str.get_token( "=" ) )
+		{
+			if ( t.size() == 0 )
+				continue;
+
+			if ( t[0] == '#' )
+			{
+				str.get_line();
+				continue;
+			}
+
+			if ( t.size() > 2 && t[ 0 ] == '[' && t[ t.size() -1 ] == ']' )
+			{
+				cur_group = &pn.add_child( t.substr( 1, t.size() - 2 ) );
+				continue;
+			}
+
+			// must be a key = value line
+			string t2 = str.get_token( "=" );
+			flut_error_if( t == "=", "Error loading ini file, expected '='" );
+			t2 = str.get_token( "=" );
+			cur_group->set( t, t2 );
+		}
+		return pn;
+	}
+
 	void write_prop_none( std::ostream& str, const string& label, const prop_node& pn, int level, bool readable )
 	{
 		string indent = readable ? string( level, '\t' ) : "";

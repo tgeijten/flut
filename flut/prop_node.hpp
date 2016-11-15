@@ -63,6 +63,10 @@ namespace flut
 		bool has_children() const { return !children.empty(); }
 		bool has_child( const key_t& key ) const { return find_child( key ) != end(); }
 
+		/// see if this prop_node is empty
+		bool empty() const { return value.empty() && children.empty(); }
+		void clear() { value.clear(); children.clear(); }
+
 		/// access value_t value
 		const value_t& get_value() const { return value; }
 		void set_value( value_t&& val ) { value = std::move( val ); }
@@ -135,7 +139,7 @@ namespace flut
 
 		/// see if this node has been accessed (touched)
 		bool touched() const { return touch; }
-		size_t count_touched() const { size_t t = touched() ? 1 : 0; for ( auto& c : children ) t += count_touched(); return t; }
+		size_t count_untouched() const { size_t t = touched() ? 0 : 1; for ( auto& c : children ) t += count_untouched(); return t; }
 
 	private:
 		bool touch;

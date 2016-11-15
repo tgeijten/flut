@@ -19,6 +19,9 @@ namespace flut
 	/// load contents from prop
 	FLUT_API prop_node load_prop( const path& filename );
 
+	/// load contents from prop
+	FLUT_API prop_node load_ini( const path& filename );
+
 	/// save contents to prop
 	FLUT_API void save_prop( const prop_node& pn, const path& filename, bool readable );
 
