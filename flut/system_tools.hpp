@@ -5,8 +5,9 @@
 
 namespace flut
 {
-	char FLUT_API wait_for_key();
-	path FLUT_API get_config_folder();
-	path FLUT_API get_documents_folder();
-	path FLUT_API get_application_folder();
+	FLUT_API char wait_for_key();
+	FLUT_API path get_config_folder();
+	FLUT_API path get_documents_folder();
+	FLUT_API path get_application_folder();
+	FLUT_API bool exists( const path& file );
 }

@@ -6,6 +6,8 @@
 #	include <shlobj.h>
 #endif
 
+#include <fstream>
+
 namespace flut
 {
 	char wait_for_key()
@@ -41,16 +43,16 @@ namespace flut
 #endif
 	}
 
-	path FLUT_API get_documents_folder()
+	path get_documents_folder()
 	{
 #ifdef FLUT_COMP_MSVC
-		return get_known_windows_folder( FOLDERID_LocalAppData );
+		return get_known_windows_folder( FOLDERID_Documents );
 #else
 		return std::getenv( "HOME" );
 #endif
 	}
 
-	path FLUT_API get_application_folder()
+	path get_application_folder()
 	{
 #ifdef FLUT_COMP_MSVC
 		char buf[ 1024 ];
@@ -59,5 +61,11 @@ namespace flut
 #else
 		return "";
 #endif
+	}
+
+	FLUT_API bool exists( const path& file )
+	{
+		std::ifstream ifs( file.str() );
+		return ifs.good();
 	}
 }
