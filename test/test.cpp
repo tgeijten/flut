@@ -8,11 +8,15 @@
 #include "flut/system/test_framework.hpp"
 #include "string_test.h"
 #include "flut/dictionary.hpp"
+#include "flut/system/log_sink.hpp"
 
 using flut::string;
 
 int main( int argc, char* argv[] )
 {
+	flut::log::stream_sink str( flut::log::info_level, std::cout );
+	flut::log::add_sink( &str );
+
 	try
 	{
 		enum fruit { no_fruit, appel, peer, banaan };
@@ -26,9 +30,6 @@ int main( int argc, char* argv[] )
 		case banaan: cout << "banana over here!"; break;
 		default: cout << "Could not find this fruit"; break;
 		}
-
-		flut::log::set_level( flut::log::info_level );
-		flut::log::trace( "log level: ", flut::log::get_level() );
 
 		auto str = flut::split_str( "appel; peer,,, banaan", ";. " );
 

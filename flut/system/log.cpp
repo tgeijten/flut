@@ -1,39 +1,48 @@
-#include "log.hpp"
 #include "assert.hpp"
+#include "log.hpp"
+#include "log_sink.hpp"
 
 namespace flut
 {
 	namespace log
 	{
 		void std_cout_log( level l, const std::string& msg ) { std::cout << msg << std::endl; }
-		level dynamic_log_level = level::info_level;
-		log_output_func log_output_func_var = std_cout_log;
+		level lowest_log_level = level::never_log_level;
+		std::vector< sink* > global_sinks;
 
-		void set_level( level l )
+		void log_output( level l, std::stringstream& msg )
 		{
-			flut_assert( l >= FLUT_STATIC_LOG_LEVEL && l <= FLUT_LOG_LEVEL_NONE );
-			dynamic_log_level = l;
+			for ( auto s : global_sinks )
+				s->try_send_log_message( l, msg.str() );
 		}
 
-		FLUT_API void set_level( int l )
+		void add_sink( sink* s )
 		{
-			set_level( static_cast<level>( l ) );
+			flut_assert( s != nullptr );
+			if ( std::find( global_sinks.begin(), global_sinks.end(), s ) == global_sinks.end() )
+			{
+				global_sinks.push_back( s );
+				update_lowest_log_level();
+			}
 		}
 
-		level get_level()
+		void remove_sink( sink* s )
 		{
-			return dynamic_log_level;
+			auto it = std::find( global_sinks.begin(), global_sinks.end(), s );
+			if ( it != global_sinks.end() ) global_sinks.erase( it );
+			update_lowest_log_level();
 		}
 
-		FLUT_API log_output_func& get_log_output_func()
+		void update_lowest_log_level()
 		{
-			return log_output_func_var;
+			lowest_log_level = critical_level;
+			for ( auto s : global_sinks )
+				if ( s->get_log_level() < lowest_log_level ) lowest_log_level = s->get_log_level();
 		}
 
-		FLUT_API void set_log_output_func( log_output_func& f )
+		bool test_log_level( level l )
 		{
-			log_output_func_var = f;
+			return l >= lowest_log_level;
 		}
-
 	}
 }

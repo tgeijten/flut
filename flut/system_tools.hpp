@@ -10,4 +10,5 @@ namespace flut
 	FLUT_API path get_documents_folder();
 	FLUT_API path get_application_folder();
 	FLUT_API bool exists( const path& file );
+	FLUT_API string get_date_time_str();
 }
