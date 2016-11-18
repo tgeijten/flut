@@ -7,6 +7,8 @@
 #endif
 
 #include <fstream>
+#include "system/log.hpp"
+#include <chrono>
 
 namespace flut
 {
@@ -67,5 +69,23 @@ namespace flut
 	{
 		std::ifstream ifs( file.str() );
 		return ifs.good();
+	}
+
+	FLUT_API string get_date_time_str( const char* format )
+	{
+		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
+
+		std::stringstream ss;
+		ss << std::put_time( std::localtime( &in_time_t ), format );
+		return ss.str();
+	}
+
+	FLUT_API void crash( const string& message )
+	{
+		if ( !message.empty() )
+			log::critical( message );
+
+		// crash!
+		*(int*)(0) = 123;
 	}
 }
