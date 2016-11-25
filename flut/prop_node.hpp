@@ -1,5 +1,6 @@
 #pragma once
 
+#include "string_tools.hpp"
 #include "flut/system/platform.hpp"
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
