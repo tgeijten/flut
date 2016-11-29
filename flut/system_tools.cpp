@@ -71,13 +71,25 @@ namespace flut
 		return ifs.good();
 	}
 
+
 	FLUT_API string get_date_time_str( const char* format )
 	{
-		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
+        // GCC did not implement std::put_time until GCC 5
+#if defined(__GNUC__) && (__GNUC__ < 5)
+        auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
+        char arr[100];
+
+        std::stringstream ss;
+        ss << std::strftime(arr, sizeof(arr), format, std::localtime(&in_time_t));
+        return ss.str();
+#else
+        auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
 
 		std::stringstream ss;
 		ss << std::put_time( std::localtime( &in_time_t ), format );
 		return ss.str();
+#endif
+
 	}
 
 	FLUT_API void crash( const string& message )
