@@ -46,6 +46,10 @@ namespace flut
 		prop_node& operator=( const prop_node& other ) { value = other.value; children = other.children; return *this; }
 		prop_node& operator=( prop_node&& other ) { value = std::move( other.value ); children = std::move( other.children ); return *this; }
 
+		/// equality operators
+		bool operator==( const prop_node& other );
+		bool operator!=( const prop_node& other ) { return !( *this == other ); }
+
 		/// get the value of this node
 		template< typename T > T get() const { return prop_node_cast< T >::from( *this ); }
 

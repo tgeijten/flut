@@ -38,4 +38,23 @@ namespace flut
 
 		return str;
 	}
+
+	bool prop_node::operator==( const prop_node& other )
+	{
+		if ( value != other.value )
+			return false;
+
+		if ( size() != other.size() )
+			return false;
+
+		for ( size_t i = 0; i < children.size(); ++i )
+		{
+			if ( children[i].first != other.children[i].first )
+				return false;
+			if ( children[i].second != other.children[i].second )
+				return false;
+		}
+
+		return true;
+	}
 }

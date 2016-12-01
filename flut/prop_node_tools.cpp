@@ -1,6 +1,7 @@
 #include "prop_node_tools.hpp"
 
 #include <contrib/rapidxml-1.13/rapidxml.hpp>
+#include <contrib/rapidxml-1.13/rapidxml_print.hpp>
 #include <fstream>
 #include "system/path.hpp"
 #include "string_tools.hpp"
@@ -14,7 +15,7 @@ namespace flut
 		else return load_prop( filename );
 	}
 
-	prop_node read_rapid_xml_node( rapidxml::xml_node<>* node )
+	prop_node get_rapid_xml_node( rapidxml::xml_node<>* node )
 	{
 		// make new prop_node
 		prop_node pn = make_prop_node( node->value() );
@@ -27,10 +28,22 @@ namespace flut
 		for ( rapidxml::xml_node<>* child = node->first_node(); child; child = child->next_sibling() )
 		{
 			if ( child->name_size() > 0 )
-				pn.add_child( child->name(), read_rapid_xml_node( child ) );
+				pn.add_child( child->name(), get_rapid_xml_node( child ) );
 		}
 
 		return pn;
+	}
+
+	void set_rapid_xml_node( rapidxml::xml_document<>& doc, rapidxml::xml_node<>* xmlnode, const prop_node& pn )
+	{
+		if ( pn.has_value() )
+			xmlnode->value( pn.get_value().c_str() );
+
+		for ( auto& child : pn )
+		{
+			xmlnode->append_node( doc.allocate_node( rapidxml::node_element, child.first.c_str() ) );
+			set_rapid_xml_node( doc, xmlnode->last_node(), child.second );
+		}
 	}
 
 	FLUT_API prop_node load_xml( const path& filename )
@@ -42,10 +55,19 @@ namespace flut
 		if ( doc.first_node() )
 		{
 			prop_node pn;
-			pn.add_child( doc.first_node()->name(), read_rapid_xml_node( doc.first_node() ) );
+			pn.add_child( doc.first_node()->name(), get_rapid_xml_node( doc.first_node() ) );
 			return pn;
 		}
 		else return prop_node();
+	}
+
+	FLUT_API void save_xml( const prop_node& pn, const path& filename )
+	{
+		rapidxml::xml_document<> doc;
+		set_rapid_xml_node( doc, &doc, pn );
+		std::ofstream ostr( filename.str() );
+		ostr << doc;
+
 	}
 
 	bool is_valid_prop_label( const string& s )

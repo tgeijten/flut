@@ -10,20 +10,19 @@
 
 namespace flut
 {
-	/// load contents from xml
+	/// load contents from file (autodetect)
 	FLUT_API prop_node load_file( const path& filename );
 
-	/// load contents from xml
+	/// load/save contents from xml
 	FLUT_API prop_node load_xml( const path& filename );
+	FLUT_API void save_xml( const prop_node& pn, const path& filename );
 
-	/// load contents from prop
+	/// load/save contents from prop
 	FLUT_API prop_node load_prop( const path& filename );
+	FLUT_API void save_prop( const prop_node& pn, const path& filename, bool readable );
 
 	/// load contents from prop
 	FLUT_API prop_node load_ini( const path& filename );
-
-	/// save contents to prop
-	FLUT_API void save_prop( const prop_node& pn, const path& filename, bool readable );
 
 	/// merge prop_nodes
 	FLUT_API void merge_prop_nodes( prop_node& pn, const prop_node& other, bool overwrite );

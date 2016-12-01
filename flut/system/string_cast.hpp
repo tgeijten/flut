@@ -9,6 +9,11 @@ namespace flut
 		static string to( const T& value ) { std::ostringstream str; str << value; return str.str(); }
 	};
 
+	template<> struct string_cast< const char*, void > {
+		static const char* from( const string& s ) { return s.c_str(); }
+		static string to( const char* value ) { return string( value ); }
+	};
+
 	template<> struct string_cast< string, void > {
 		static string from( const string& s ) { return s; }
 		static string to( const string& value ) { return value; }
