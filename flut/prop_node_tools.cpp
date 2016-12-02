@@ -22,13 +22,13 @@ namespace flut
 
 		// add attributes
 		for ( rapidxml::xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute() )
-			pn.add( attr->name(), attr->value() );
+			pn.push_back( attr->name(), attr->value() );
 
 		// add child nodes
 		for ( rapidxml::xml_node<>* child = node->first_node(); child; child = child->next_sibling() )
 		{
 			if ( child->name_size() > 0 )
-				pn.add_child( child->name(), get_rapid_xml_node( child ) );
+				pn.push_back( child->name(), get_rapid_xml_node( child ) );
 		}
 
 		return pn;
@@ -55,7 +55,7 @@ namespace flut
 		if ( doc.first_node() )
 		{
 			prop_node pn;
-			pn.add_child( doc.first_node()->name(), get_rapid_xml_node( doc.first_node() ) );
+			pn.push_back( doc.first_node()->name(), get_rapid_xml_node( doc.first_node() ) );
 			return pn;
 		}
 		else return prop_node();
@@ -104,7 +104,7 @@ namespace flut
 			{
 				t = get_prop_token( str );
 				if ( is_valid_prop_label( t ) )
-					read_prop_node( str, parent.add_child( t ) );
+					read_prop_node( str, parent.push_back( t ) );
 				else if ( t != "}" )
 					flut_error( "Invalid token: " + t );
 			}
@@ -118,7 +118,7 @@ namespace flut
 		string t = get_prop_token( str );
 		while ( is_valid_prop_label( t ) )
 		{
-			read_prop_node( str, root.add_child( t ) );
+			read_prop_node( str, root.push_back( t ) );
 			t = get_prop_token( str );
 		}
 		return root;
@@ -130,28 +130,27 @@ namespace flut
 		prop_node* cur_group = &pn;
 
 		auto str = load_char_stream( filename.str() );
-		for ( string t = str.get_token( "=" ); str.good(); t = str.get_token( "=" ) )
+		for ( string line = trim_str( str.get_line() ); str.good(); line = trim_str( str.get_line() ) )
 		{
-			if ( t.size() == 0 )
+			if ( line.length() == 0 ) // empty line
 				continue;
 
-			if ( t[0] == '#' )
+			if ( line[0] == '#' ) // comment
 			{
 				str.get_line();
 				continue;
 			}
 
-			if ( t.size() > 2 && t[ 0 ] == '[' && t[ t.size() -1 ] == ']' )
+			if ( line.size() > 2 && line[ 0 ] == '[' && line[ line.size() -1 ] == ']' )
 			{
-				cur_group = &pn.add_child( t.substr( 1, t.size() - 2 ) );
+				cur_group = &pn.push_back( line.substr( 1, line.size() - 2 ) );
 				continue;
 			}
 
 			// must be a key = value line
-			string t2 = str.get_token( "=" );
-			flut_error_if( t == "=", "Error loading ini file, expected '='" );
-			t2 = str.get_token( "=" );
-			cur_group->set( t, t2 );
+			auto kvp = key_value_str( line );
+			flut_error_if( kvp.first == line, "Error loading ini file, expected '='" );
+			cur_group->set( kvp.first, kvp.second );
 		}
 		return pn;
 	}
@@ -161,14 +160,14 @@ namespace flut
 		std::ofstream str( filename.str() );
 		for ( auto& e : pn )
 		{
-			if ( e.second.has_children() ) // group item
+			if ( e.second.size() > 0 ) // group item
 			{
 				str << '[' << e.first << ']' << std::endl;
 				for ( auto& e2 : e.second )
-					str << e2.first << " = " << e2.second << std::endl;
+					str << e2.first << "=" << e2.second.get_value() << std::endl;
 			}
 			else if ( e.second.has_value() ) // main item
-				str << e.first << " = " << e.second << std::endl;
+				str << e.first << "=" << e.second.get_value() << std::endl;
 		}
 	}
 
@@ -182,7 +181,7 @@ namespace flut
 		if ( pn.has_value() )
 			str << assign << '\"' << pn.get_value() << '\"'; // #TODO only add quotes when needed
 		str << newline;
-		if ( pn.has_children() )
+		if ( pn.size() > 0 )
 		{
 			str << indent << "{" << newline; // #TODO only do newline when needed
 			for ( auto& node : pn )
@@ -204,9 +203,9 @@ namespace flut
 	{
 		for ( auto& o : other )
 		{
-			auto it = pn.find_child( o.first );
+			auto it = pn.find( o.first );
 			if ( it == pn.end() )
-				pn.add_child( o.first, o.second );
+				pn.push_back( o.first, o.second );
 			else if ( overwrite )
 				it->second = o.second;
 		}
@@ -235,7 +234,7 @@ namespace flut
 				else
 				{
 					// insert the children at the INCLUDE spot
-					iter = pn.insert_children( iter, included_props.begin(), included_props.end() );
+					iter = pn.insert( iter, included_props.begin(), included_props.end() );
 				}
 			}
 			else

@@ -19,8 +19,8 @@ namespace flut
 
 		prop_node pn;
 		for ( auto& m : measures_ )
-			pn.add( m.first, timer_.ticks_to_seconds( m.second ) );
-		pn.add( "internal", timer_.ticks_to_seconds( internal_measure_ ) );
+			pn.push_back( m.first, timer_.ticks_to_seconds( m.second ) );
+		pn.push_back( "internal", timer_.ticks_to_seconds( internal_measure_ ) );
 
 		set_to_str_precision( old_precision );
 

@@ -38,19 +38,19 @@ namespace flut
 
 		flut::prop_node pn;
 		pn.set( 1.2 );
-		pn.add( "test", 1.2 );
+		pn.push_back( "test", 1.2 );
 		auto a = pn.get< float >();
 
 		std::vector< custom_struct > vec;
 		for ( int i = 1; i <= 3; ++i ) vec.push_back( custom_struct( stringf( "name%d", i ), i * 1.5 ) );
-		pn.add( "vec_test", vec );
+		pn.push_back( "vec_test", vec );
 
 		std::vector< math::vec3f > vec2;
 		for ( int i = 1; i <= 3; ++i ) vec2.push_back( math::vec3d( i, i * 1.1, i * 1.11 ) );
-		pn.add( "vec2_test", vec2 );
+		pn.push_back( "vec2_test", vec2 );
 
-		pn.add( "e1", e1 );
-		pn.add( "e2", e2 );
+		pn.push_back( "e1", e1 );
+		pn.push_back( "e2", e2 );
 
 		auto vec1b = pn.get< std::vector< custom_struct > >( "vec_test" );
 		auto vec2b = pn.get< std::vector< math::vec3f > >( "vec2_test" );
