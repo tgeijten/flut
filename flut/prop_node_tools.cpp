@@ -156,6 +156,22 @@ namespace flut
 		return pn;
 	}
 
+	FLUT_API void save_ini( const prop_node& pn, const path& filename )
+	{
+		std::ofstream str( filename.str() );
+		for ( auto& e : pn )
+		{
+			if ( e.second.has_children() ) // group item
+			{
+				str << '[' << e.first << ']' << std::endl;
+				for ( auto& e2 : e.second )
+					str << e2.first << " = " << e2.second << std::endl;
+			}
+			else if ( e.second.has_value() ) // main item
+				str << e.first << " = " << e.second << std::endl;
+		}
+	}
+
 	void write_prop_none( std::ostream& str, const string& label, const prop_node& pn, int level, bool readable )
 	{
 		string indent = readable ? string( level, '\t' ) : "";

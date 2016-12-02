@@ -23,6 +23,7 @@ namespace flut
 
 	/// load contents from prop
 	FLUT_API prop_node load_ini( const path& filename );
+	FLUT_API void save_ini( const prop_node& pn, const path& filename );
 
 	/// merge prop_nodes
 	FLUT_API void merge_prop_nodes( prop_node& pn, const prop_node& other, bool overwrite );
