@@ -49,7 +49,7 @@ namespace flut
 
 		path parent_path() const {
 			size_t n = last_separator_pos();
-			return n != string::npos ? data.substr( 0, n ) : data;
+			return n != string::npos ? data.substr( 0, n ) : path();
 		}
 
 		path extension() const {
