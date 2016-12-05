@@ -79,9 +79,9 @@ namespace flut
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
 		char arr[100];
 
-		std::stringstream ss;
-		ss << std::strftime(arr, sizeof(arr), format, std::localtime(&in_time_t));
-		return ss.str();
+		std::strftime(arr, sizeof(arr), format, std::localtime(&in_time_t));
+		string str(arr);
+		return str;
 #else
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
 
