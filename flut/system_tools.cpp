@@ -77,10 +77,10 @@ namespace flut
 		// GCC did not implement std::put_time until GCC 5
 #if defined(__GNUC__) && (__GNUC__ < 5)
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
-		char arr[100];
 
-		std::strftime(arr, sizeof(arr), format, std::localtime(&in_time_t));
-		string str(arr);
+		char arr[100];
+		std::strftime( arr, sizeof( arr ), format, std::localtime( &in_time_t ) );
+		string str( arr );
 		return str;
 #else
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
