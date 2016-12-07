@@ -11,6 +11,17 @@ find_path(FLUT_INCLUDE_DIR
 	PATHS ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
+# Check required compiler versions
+# ---------------
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
+	set(FLUT_REQUIRED_GCC_VERSION 4.9.1)
+	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${FLUT_REQUIRED_GCC_VERSION})
+		message(FATAL_ERROR "GNU GCC/G++ version must be at least version: "
+							"${FLUT_REQUIRED_GCC_VERSION}. GCC version is "
+                            "${CMAKE_CXX_COMPILER_VERSION}.")
+	endif()
+endif()
+	
 # Compiler flags.
 # ---------------
 # Must compile with C++11 with gcc/clang.
