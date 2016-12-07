@@ -37,7 +37,7 @@ namespace flut
 		normalenum e2 = value2;
 
 		flut::prop_node pn;
-		pn.set( 1.2 );
+		pn.set_value( 1.2 );
 		pn.push_back( "test", 1.2 );
 		auto a = pn.get< float >();
 

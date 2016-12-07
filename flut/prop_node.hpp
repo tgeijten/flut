@@ -77,8 +77,17 @@ namespace flut
 
 		/// access value_t value
 		const value_t& get_value() const { set_accessed(); return value; }
-		void set_value( value_t&& val ) { value = std::move( val ); }
-		void set_value( const value_t& val ) { value = val; }
+
+		/// set the value of this node
+		template< typename T > prop_node& set_value( const T& v ) { value = string_cast< T >::to( v ); return *this; }
+		prop_node& set_value( value_t&& v ) { value = std::move( v ); return *this; }
+
+		/// set the value of a child node, the node is created if not existing
+		template< typename T > prop_node& set( const key_t& key, const T& v )
+		{ auto it = find( key ); if ( it == end() ) push_back( key, make_prop_node( v ) ); else it->second.set( v ); return *this; }
+
+		/// set the value of this node
+		template< typename T > prop_node& set( const T& v ) { *this = prop_node_cast< T >::to( v ); return *this; }
 
 		/// add a node with a value
 		template< typename T > prop_node& push_back( const key_t& key, const T& value )
@@ -99,13 +108,6 @@ namespace flut
 
 		/// reserve children
 		void reserve( size_t n ) { children.reserve( n ); }
-
-		/// set the value of this node
-		template< typename T > prop_node& set( const T& v ) { *this = prop_node_cast< T >::to( v ); return *this; }
-
-		/// set the value of a child node, the node is created if not existing
-		template< typename T > prop_node& set( const key_t& key, const T& v )
-		{ auto it = find( key ); if ( it == end() ) push_back( key, make_prop_node( v ) ); else it->second.set( v ); return *this; }
 
 		/// get a child node, throws exception if not existing
 		const prop_node& get_child( const key_t& key ) const
@@ -177,8 +179,7 @@ namespace flut
 		static prop_node to( const T& v ) { return prop_node( to_str( static_cast<int>( v ) ) ); }
 	};
 
-
-	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node().set( value ); }
+	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node_cast< T >::to( value ); }
 
 	/// stream operator
 	FLUT_API std::ostream& to_stream( std::ostream& str, const prop_node& pn, int depth = 0, int key_align = 0 );
