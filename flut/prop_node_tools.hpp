@@ -29,5 +29,5 @@ namespace flut
 	FLUT_API void merge_prop_nodes( prop_node& pn, const prop_node& other, bool overwrite );
 
 	/// insert prop_nodes
-	FLUT_API prop_node load_file_with_include( const path& filename, const string& include_directive, int level = 0 );
+	FLUT_API prop_node load_file_with_include( const path& filename, const string& include_directive = "INCLUDE", int level = 0 );
 }

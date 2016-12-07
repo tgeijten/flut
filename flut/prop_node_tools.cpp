@@ -221,6 +221,8 @@ namespace flut
 				path include_path = filename.parent_path() / iter->second.get< path >( "file" );
 				bool merge_children = iter->second.get< bool >( "merge_children", false );
 				auto included_props = load_file_with_include( include_path, include_directive, level + 1 );
+				flut_error_if( included_props.size() != 1, "Included files must have a single root node" );
+				auto& included_children = included_props.begin()->second;
 
 				// remove the include node
 				iter = pn.erase( iter );
@@ -228,7 +230,7 @@ namespace flut
 				// merge or include, depending on options
 				if ( merge_children )
 				{
-					merge_prop_nodes( pn, included_props, false );
+					merge_prop_nodes( pn, included_children, false );
 					iter = pn.begin(); // reset the iterator, which has become invalid after merge
 				}
 				else
