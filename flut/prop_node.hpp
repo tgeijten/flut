@@ -1,6 +1,5 @@
 #pragma once
 
-#include "string_tools.hpp"
 #include "flut/system/platform.hpp"
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
@@ -173,11 +172,6 @@ namespace flut
 		{ vector<T> vec; for ( auto& p : pn ) vec.push_back( p.second.get<T>() ); return vec; }
 		static prop_node to( const vector<T>& vec )
 		{ prop_node pn; for ( size_t i = 0; i < vec.size(); ++i ) pn.push_back( stringf( "item%d", i ), make_prop_node( vec[ i ] ) ); return pn; }
-	};
-
-	template< typename T > struct prop_node_cast< T, typename std::enable_if< std::is_enum< T >::value >::type > {
-		static T from( const prop_node& pn ) { return static_cast<T>( from_str<int>( pn.get_value() ) ); }
-		static prop_node to( const T& v ) { return prop_node( to_str( static_cast<int>( v ) ) ); }
 	};
 
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node_cast< T >::to( value ); }
