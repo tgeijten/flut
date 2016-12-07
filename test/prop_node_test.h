@@ -58,6 +58,10 @@ namespace flut
 		FLUT_TEST( e1 == pn.get< enumclass >( "e1" ) );
 		FLUT_TEST( e2 == pn.get< normalenum >( "e2" ) );
 
+		prop_node p2;
+		p2.set( "test", pn );
+		FLUT_TEST( p2.get_child( "test" ) == pn );
+
 		log::trace( pn );
 	}
 }

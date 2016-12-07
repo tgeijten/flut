@@ -84,9 +84,11 @@ namespace flut
 
 		/// set the value of a child node, the node is created if not existing
 		template< typename T > prop_node& set( const key_t& key, const T& v )
-		{ auto it = find( key ); if ( it == end() ) push_back( key, make_prop_node( v ) ); else it->second.set( v ); return *this; }
+		{ auto it = find( key ); if ( it == end() ) push_back( key, v ); else it->second.set( v ); return *this; }
 
 		/// set the value of this node
+		prop_node& set( prop_node&& pn ) { *this = std::move( pn ); return *this; }
+		prop_node& set( const prop_node& pn ) { *this = pn; return *this; }
 		template< typename T > prop_node& set( const T& v ) { *this = prop_node_cast< T >::to( v ); return *this; }
 
 		/// add a node with a value
@@ -165,6 +167,11 @@ namespace flut
 	template< typename T, typename E > struct prop_node_cast {
 		static T from( const prop_node& pn ) { return string_cast< T, E >::from( pn.get_value() ); }
 		static prop_node to( const T& value ) { return prop_node( string_cast< T, E >::to( value ) ); }
+	};
+
+	template<> struct prop_node_cast< prop_node > {
+		static prop_node from( const prop_node& pn ) { return pn; }
+		static prop_node to( const prop_node& value ) { return value; }
 	};
 
 	template< typename T > struct prop_node_cast< vector<T> > {
