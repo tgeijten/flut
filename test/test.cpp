@@ -19,20 +19,6 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		enum fruit { no_fruit, appel, peer, banaan };
-		auto fruit_dict = flut::dictionary< fruit >( { { appel, "appel" }, { peer, "peer" }, { banaan, "banaan" } } );
-
-		string s = "peer2";
-		switch ( fruit_dict( s, no_fruit ) )
-		{
-		case appel: cout << "we've got an apple"; break;
-		case peer: cout << "we've got a peario"; break;
-		case banaan: cout << "banana over here!"; break;
-		default: cout << "Could not find this fruit"; break;
-		}
-
-		auto str = flut::split_str( "appel; peer,,, banaan", ";. " );
-
 		flut_logvar2( flut::math::constants<double>::epsilon(), flut::math::constants<double>::relaxed_epsilon() );
 		flut_logvar2( flut::math::constants<float>::epsilon(), flut::math::constants<float>::relaxed_epsilon() );
 

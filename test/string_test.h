@@ -3,11 +3,20 @@
 #include "flut/string_tools.hpp"
 #include "flut/system/test_framework.hpp"
 #include "flut/system/path.hpp"
+#include "flut/dictionary.hpp"
 
 namespace flut
 {
 	void string_test()
 	{
+		enum fruit { no_fruit, appel, peer, banaan };
+		auto fruit_dict = flut::dictionary< fruit >( { { appel, "appel" }, { peer, "peer" }, { banaan, "banaan" } } );
+
+		FLUT_TEST( fruit_dict( "appel", no_fruit ) == appel );
+		FLUT_TEST( fruit_dict( "peer", no_fruit ) == peer );
+		FLUT_TEST( fruit_dict( "banaan", no_fruit ) == banaan );
+		FLUT_TEST( fruit_dict( "peerr", no_fruit ) == no_fruit );
+
 		string s = "Test 0.123 24";
 		string a;
 		double d;
@@ -21,6 +30,11 @@ namespace flut
 		FLUT_TEST( vs[ 0 ] == "Test" );
 		FLUT_TEST( vs[ 1 ] == "0.123" );
 		FLUT_TEST( vs[ 2 ] == "24" );
+
+		auto vs2 = flut::split_str( "appel; peer,,, banaan", ";. " );
+		FLUT_TEST( vs2[ 0 ] == "appel" );
+		FLUT_TEST( vs2[ 1 ] == "peer" );
+		FLUT_TEST( vs2[ 2 ] == "banaan" );
 
 		path p( "X:/appel/taart.txt" );
 		FLUT_TEST( p.empty() == false );

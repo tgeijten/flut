@@ -62,6 +62,11 @@ namespace flut
 		p2.set( "test", pn );
 		FLUT_TEST( p2.get_child( "test" ) == pn );
 
+		// test delimiters
+		pn.set_delimited( "this.is.a.subfolder", 1.5 );
+		FLUT_TEST( pn[ "this" ][ "is" ][ "a" ][ "subfolder" ].get< double >() == 1.5 );
+		FLUT_TEST( pn.get_delimited< double >( "this.is.a.subfolder" ) == 1.5 );
+
 		log::trace( pn );
 	}
 }

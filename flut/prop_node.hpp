@@ -91,6 +91,20 @@ namespace flut
 		prop_node& set( const prop_node& pn ) { *this = pn; return *this; }
 		template< typename T > prop_node& set( const T& v ) { *this = prop_node_cast< T >::to( v ); return *this; }
 
+		/// set the value of a child node, accessing children through delimiter character
+		template< typename T > prop_node& set_delimited( const key_t& key, const T& v, const char delim = '.' ) {
+			auto p = key.find_first_of( delim );
+			if ( p == string::npos ) return set( key, v );
+			else return get_or_add_child( left_str( key, p ) ).set_delimited( mid_str( key, p + 1 ), v, delim );
+		}
+
+		/// get the value of a child node, accessing children through delimiter character
+		template< typename T > T get_delimited( const key_t& key, const char delim = '.' ) const {
+			auto p = key.find_first_of( delim );
+			if ( p == string::npos ) return get< T >( key );
+			else return get_child( left_str( key, p ) ).get_delimited< T >( mid_str( key, p + 1 ), delim );
+		}
+
 		/// add a node with a value
 		template< typename T > prop_node& push_back( const key_t& key, const T& value )
 		{ children.push_back( std::make_pair( key, make_prop_node( value ) ) ); return children.back().second; }
@@ -118,18 +132,18 @@ namespace flut
 		{ auto it = find( key ); flut_error_if( it == end(), "Could not find key: " + key ); set_accessed(); return it->second; }
 
 		/// get a child node, return nullptr if not existing
-		const prop_node* try_get( const key_t& key ) const
-		{ set_accessed(); auto it = find( key ); return it != end() ? &(it->second ) : nullptr; }
-		prop_node* try_get( const key_t& key )
-		{ set_accessed(); auto it = find( key ); return it != end() ? &(it->second ) : nullptr; }
+		const prop_node* try_get_child( const key_t& key ) const
+		{ set_accessed(); auto it = find( key ); return it != end() ? &( it->second ) : nullptr; }
+		prop_node* try_get_child( const key_t& key )
+		{ set_accessed(); auto it = find( key ); return it != end() ? &( it->second ) : nullptr; }
 
 		/// get a child node or add it if not existing
-		prop_node& get_or_add( const key_t& key )
+		prop_node& get_or_add_child( const key_t& key )
 		{ set_accessed(); auto it = find( key ); if ( it != end() ) return it->second; else return push_back( key ); }
 
 		/// access child by name
 		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }
-		prop_node& operator[]( const key_t& key ) { return get_or_add( key ); }
+		prop_node& operator[]( const key_t& key ) { return get_or_add_child( key ); }
 
 		/// access child by index
 		const prop_node& operator[]( index_t idx ) const { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
