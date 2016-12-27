@@ -14,8 +14,8 @@ namespace flut
 	{
 		struct FLUT_API random_number_generator
 		{
-			random_number_generator( size_t seed = 123 ) : engine( seed ) {}
-			void seed( size_t s ) { engine.seed( s ); }
+			random_number_generator( unsigned int seed = 123 ) : engine( seed ) {}
+			void seed( unsigned int s ) { engine.seed( s ); }
 			template< typename T > T uni( T min = T( 0 ), T max = T( 1 ) ) { return std::uniform_real_distribution<T>( min, max )( engine ); }
 			template< typename T > T norm( T mean, T stdev ) { return std::normal_distribution<T>( mean, stdev )( engine ); }
 

@@ -95,14 +95,14 @@ namespace flut
 		template< typename T > prop_node& set_delimited( const key_t& key, const T& v, const char delim = '.' ) {
 			auto p = key.find_first_of( delim );
 			if ( p == string::npos ) return set( key, v );
-			else return get_or_add_child( left_str( key, p ) ).set_delimited( mid_str( key, p + 1 ), v, delim );
+			else return get_or_add_child( key.substr( 0, p ) ).set_delimited( mid_str( key, p + 1 ), v, delim );
 		}
 
 		/// get the value of a child node, accessing children through delimiter character
 		template< typename T > T get_delimited( const key_t& key, const char delim = '.' ) const {
 			auto p = key.find_first_of( delim );
 			if ( p == string::npos ) return get< T >( key );
-			else return get_child( left_str( key, p ) ).get_delimited< T >( mid_str( key, p + 1 ), delim );
+			else return get_child( key.substr( 0, p ) ).get_delimited< T >( mid_str( key, p + 1 ), delim );
 		}
 
 		/// add a node with a value

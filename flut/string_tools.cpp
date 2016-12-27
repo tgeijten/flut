@@ -52,7 +52,7 @@ namespace flut
 		auto pos = s.find_first_of( sep_char.c_str() );
 		if ( pos == string::npos )
 			return make_pair( s, string("") );
-		else return make_pair( trim_str( left_str( s, pos ) ), trim_str( mid_str( s, pos + 1 ) ) );
+		else return make_pair( trim_str( s.substr( 0, pos ) ), trim_str( mid_str( s, pos + 1 ) ) );
 	}
 
 	string stringf( const char* format, ... )

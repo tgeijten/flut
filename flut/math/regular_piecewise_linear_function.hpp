@@ -11,7 +11,7 @@ namespace flut
 		class regular_piecewise_linear_function
 		{
 		public:
-			regular_piecewise_linear_function( T x_min, T x_max, size_t intervals, std::function< double( double ) > fn ) :
+			regular_piecewise_linear_function( T x_min, T x_max, int intervals, std::function< double( double ) > fn ) :
 			x_base( x_min ),
 			x_step( ( x_max - x_min ) / intervals ),
 			points( intervals + 1 ),
