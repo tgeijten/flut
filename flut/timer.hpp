@@ -6,6 +6,10 @@
 #	define FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
 #else
 #	include <chrono>
+#	ifdef FLUT_COMP_MSVC
+#		pragma warning( push )
+#		pragma warning( disable: 4251 )
+#	endif
 #endif
 
 namespace flut
@@ -48,3 +52,7 @@ namespace flut
 #endif
 	};
 }
+
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( pop )
+#endif
