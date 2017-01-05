@@ -12,10 +12,10 @@ namespace flut
 {
 	namespace math
 	{
-		/// euler order for euler angle conversions
+		/// Euler order for Euler angle conversions
 		enum class euler_order { xyz, xzy, yxz, yzx, zxy, zyx };
 
-		/** Quaternion multiplication. */
+		/// Quaternion multiplication
 		template< typename T > quat_<T> operator*( const quat_<T>& q1, const quat_<T>& q2 )
 		{
 			return quat_<T>(
@@ -25,7 +25,7 @@ namespace flut
 				q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x );
 		}
 
-		/** Vector multiplication. */
+		/// Vector multiplication
 		template< typename T > vec3_<T> operator*( const quat_<T>& q, const vec3_<T>& v )
 		{
 			vec3_<T> qv( q.x, q.y, q.z );
@@ -36,7 +36,7 @@ namespace flut
 			return v + uv + uuv;
 		}
 
-		/** Negation (conjugate). */
+		/// Negation (conjugate)
 		template< typename T > quat_<T> operator-( quat_<T> q )
 		{ q.x = -q.x; q.y = -q.y; q.z = -q.z; return q; }
 
@@ -48,7 +48,7 @@ namespace flut
 		template< typename T > bool is_normalized( quat_<T> v )
 		{ return equals( v.w * v.w + v.x * v.x + v.y * v.y + v.z * v.z, T(1) ); }
 
-		/** Normalize. */
+		/// Normalize
 		template< typename T > quat_<T>& normalize( quat_<T>& q )
 		{
 			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w );
@@ -95,7 +95,13 @@ namespace flut
 			}
 		}
 
-		/** Get quaternion to represent the rotation from source to target vector. */
+		/// make quaternion from vec3 of Euler angles
+		template< typename T, angle_unit U > quat_<T> make_quat_from_euler( const vec3_< angle_<U, T> >& eu, euler_order eo = euler_order::xyz )
+		{
+			return make_quat_from_euler( eu.x, eu.y, eu.z, eo );
+		}
+
+		/// Get quaternion to represent the rotation from source to target vector
 		template< typename T > quat_<T> make_quat_from_directions( const vec3_<T>& source, const vec3_<T>& target )
 		{
 			vec3_<T> s = normalized( source );
@@ -117,11 +123,11 @@ namespace flut
 			return quat_<T>( std::cos( a ), c.x * sa, c.y * sa, c.z * sa );
 		}
 
-		/** Get quaternion to represent the rotation from source to target quaternion. */
+		/// Get quaternion to represent the rotation from source to target quaternion
 		template< typename T > quat_<T> quat_from_quats( const quat_<T>& source, const quat_<T>& target )
 		{ FLUT_NOT_IMPLEMENTED; }
 
-		/** Get quaternion from rotation vector. */
+		/// Get rotation vector from quaternion
 		template< typename T > vec3_<T> make_rotation_vector( const quat_<T>& q )
 		{
 			flut_assert( is_normalized( q ) );
@@ -134,7 +140,7 @@ namespace flut
 			else return vec3_<T>::zero();
 		}
 
-		/** Get quaternion using three axis vectors. */
+		/// Get quaternion using three axis vectors
 		template< typename T > quat_<T> make_quat_from_axes( const vec3_<T>& x, const vec3_<T>& y, const vec3_<T>& z )
 		{
 			flut_assert( is_normalized( x ) && is_normalized( y ) && is_normalized( z ) );
