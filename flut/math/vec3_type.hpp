@@ -14,7 +14,7 @@ namespace flut
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
 			template< typename T2 > vec3_<T>& operator=( const vec3_<T2>& o ) { x = T(o.x); y = T(o.y); z = T(o.z); return *this; }
-			vec3_( const prop_node& pn ) : x( pn.get<T>( "x" ) ), y( pn.get<T>( "y" ) ), z( pn.get<T>( "z" ) ) {}
+			vec3_( const prop_node& pn ) : x( pn.get<T>( "x", T(0) ) ), y( pn.get<T>( "y", T(0) ) ), z( pn.get<T>( "z", T(0) ) ) {}
 
 			/// convert to prop_node
 			explicit operator prop_node() const { return prop_node().set( "x", x ).set( "y", y ).set( "z", z ); }
@@ -34,6 +34,9 @@ namespace flut
 			static vec3_<T> unit_x() { return vec3_<T>( T(1), T(0), T(0) ); }
 			static vec3_<T> unit_y() { return vec3_<T>( T(0), T(1), T(0) ); }
 			static vec3_<T> unit_z() { return vec3_<T>( T(0), T(0), T(1) ); }
+			static vec3_<T> neg_unit_x() { return vec3_<T>( T( -1 ), T( 0 ), T( 0 ) ); }
+			static vec3_<T> neg_unit_y() { return vec3_<T>( T( 0 ), T( -1 ), T( 0 ) ); }
+			static vec3_<T> neg_unit_z() { return vec3_<T>( T( 0 ), T( 0 ), T( -1 ) ); }
 		};
 
 		/// template instantiations
