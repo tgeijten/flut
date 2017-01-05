@@ -42,6 +42,10 @@ namespace flut
 		template< typename T > vec3_<T>& operator/=( vec3_<T>& v, T s )
 		{ T ms = inv( s ); v.x *= ms; v.y *= ms; v.z *= ms; return v; }
 
+		/// Scale components (masking)
+		template< typename T > vec3_<T> operator*( const vec3_<T>& v1, const vec3_<T>& v2 )
+		{ return vec3_<T>( v1.x * v2.x, v1.y * v2.y, v1.z * v2.z ); }
+
 		/// Get length of a vec3
 		template< typename T > T length( vec3_<T> v )
 		{ return sqrt( v.x * v.x + v.y * v.y + v.z * v.z ); }
@@ -50,7 +54,7 @@ namespace flut
 		template< typename T > T squared_length( vec3_<T> v )
 		{ return v.x * v.x + v.y * v.y + v.z * v.z; }
 
-		/// test if a vec3 is of unit length
+		/// Test if a vec3 is of unit length
 		template< typename T > T is_normalized( vec3_<T> v )
 		{ return equals( v.x * v.x + v.y * v.y + v.z * v.z, T(1) ); }
 
