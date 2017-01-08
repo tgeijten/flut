@@ -45,6 +45,9 @@ namespace flut
 		/// Scale components (masking)
 		template< typename T > vec3_<T> operator*( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return vec3_<T>( v1.x * v2.x, v1.y * v2.y, v1.z * v2.z ); }
+		/// Scale components (masking)
+		template< typename T > vec3_<T>& operator*=( vec3_<T>& v1, const vec3_<T>& v2 )
+		{ v1.x *= v2.x; v1.y *= v2.y; v1.z *= v2.z; return v1; }
 
 		/// Get length of a vec3
 		template< typename T > T length( vec3_<T> v )

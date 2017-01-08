@@ -27,7 +27,7 @@
 
 /// throw exception
 #define flut_error( message_ ) \
-FLUT_EXCEPTION( std::string( message_ ) )
+	FLUT_EXCEPTION( std::string( message_ ) )
 
 /// conditional throw exception
 #define flut_error_if( condition_, message_ ) \
