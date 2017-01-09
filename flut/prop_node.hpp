@@ -45,6 +45,7 @@ namespace flut
 		/// assignment operators
 		prop_node& operator=( const prop_node& other ) { value = other.value; children = other.children; return *this; }
 		prop_node& operator=( prop_node&& other ) { value = std::move( other.value ); children = std::move( other.children ); return *this; }
+		template< typename T > prop_node& operator=( const T& v ) { *this = prop_node_cast<T>::to( v ); return *this; }
 
 		/// equality operators
 		bool operator==( const prop_node& other );
