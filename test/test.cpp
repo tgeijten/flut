@@ -9,6 +9,7 @@
 #include "string_test.h"
 #include "flut/dictionary.hpp"
 #include "flut/system/log_sink.hpp"
+#include "factory_test.h"
 
 using flut::string;
 
@@ -24,8 +25,11 @@ int main( int argc, char* argv[] )
 
 		flut::stopwatch sw;
 
+		flut::factory_test();
+		sw.add_measure( "factory" );
+
 		flut::prop_node_test();
-		sw.add_measure( "propnode" );
+		sw.add_measure( "prop_node" );
 
 		flut::string_test();
 		sw.add_measure( "string" );
