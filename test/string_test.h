@@ -31,7 +31,7 @@ namespace flut
 		FLUT_TEST( vs[ 1 ] == "0.123" );
 		FLUT_TEST( vs[ 2 ] == "24" );
 
-		auto vs2 = flut::split_str( "appel; peer,,, banaan", ";. " );
+		auto vs2 = flut::split_str( "appel; peer,,, banaan", ";., " );
 		FLUT_TEST( vs2[ 0 ] == "appel" );
 		FLUT_TEST( vs2[ 1 ] == "peer" );
 		FLUT_TEST( vs2[ 2 ] == "banaan" );
