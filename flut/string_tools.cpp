@@ -112,6 +112,7 @@ namespace flut
 #else
 		// this method uses a stringbuf, which may be slower but more stable
 		std::ifstream ifstr( filename.str() );
+		flut_error_if( !ifstr.good(), "Could not open " + filename.str() );
 		std::stringstream buf;
 		buf << ifstr.rdbuf();
 		return buf.str();
