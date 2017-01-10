@@ -8,6 +8,11 @@
 #	include <chrono>
 #endif
 
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( push )
+#	pragma warning( disable: 4251 )
+#endif
+
 namespace flut
 {
 	class FLUT_API timer
@@ -48,3 +53,7 @@ namespace flut
 #endif
 	};
 }
+
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( pop )
+#endif
