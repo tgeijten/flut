@@ -28,9 +28,11 @@ namespace flut
 			transform_<T> operator-() const { return inverse(); }
 			transform_<T> inverse() const { auto iq = -q; return transform_<T>( iq * -p, iq ); }
 
+			vec3_<T> operator*( const vec3_<T>& v ) const { return p + q * v; }
 			vec3_<T> transform( const vec3_<T>& v ) const { return p + q * v; }
 			vec3_<T> inv_transform( const vec3_<T>& v ) const { return -q * ( v - p ); }
 
+			quat_<T> operator*( const quat_<T>& o ) const { return q * o; }
 			quat_<T> transform( const quat_<T>& o ) const { return q * o; }
 			quat_<T> inv_transform( const quat_<T>& o ) const { return -q * o; }
 
