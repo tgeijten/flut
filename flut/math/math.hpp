@@ -52,5 +52,9 @@ namespace flut
 
 		/// check if an integer value is a power of two
 		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
+
+		/// square wave, period = 2, min = -1, max = 1
+		template< typename T > T square_wave( T v ) { return fmod( v, T(2) ) < T(1) ? T(1) : T(-1); }
+
 	}
 }
