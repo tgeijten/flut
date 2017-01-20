@@ -5,15 +5,15 @@
 #include "flut/system/log.hpp"
 #include "flut/buffer/interpolation.hpp"
 #include "flut/buffer/buffer_base.hpp"
-#include "flut/buffer/regular_buffer.hpp"
-#include "flut/buffer/regular_ring_buffer.hpp"
+#include "flut/buffer/frame_buffer.hpp"
+#include "flut/buffer/circular_frame_buffer.hpp"
 
 namespace flut
 {
 	void buffer_test()
 	{
 		// regular buffer test
-		regular_buffer< double, string > regbuf( 0 );
+		frame_buffer< double, string > regbuf( 0 );
 
 		//regular_ring_buffer< double, 100, void > ringbuf( 20 );
 		for ( int i = 0; i < 10; ++i )
