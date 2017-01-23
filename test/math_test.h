@@ -91,8 +91,8 @@ void angle_test()
 	auto sin1 = sin( a1_rd );
 	auto sin4 = sin( a4 );
 
-	auto qtest = make_quat_from_euler( degree( 180.0 ), degree( 180 ), degree( 180 ).radian().degree(), euler_order::xyz );
-	auto qtest2 = make_quat_from_axis_angle( vec3_<float>::unit_x(), a6_df );
+	auto qtest = quat_from_euler( degree( 180.0 ), degree( 180 ), degree( 180 ).radian().degree(), euler_order::xyz );
+	auto qtest2 = quat_from_axis_angle( vec3_<float>::unit_x(), a6_df );
 
 	//flut_logvar4( a1.value, a2.value, a3.value, a4.value );
 	flut_logvar4( sizeof( a1_rd ), sizeof( a2_dd ), sizeof( a3 ), sizeof( a4 ) );
@@ -127,8 +127,8 @@ void vec_quat_test()
 		auto flut_y = normalized( cross_product( flut_x, normalized( flut_v2 ) ) );
 		auto flut_z = cross_product( flut_x, flut_y );
 		flut_logvar3( flut_x.length(), flut_y.length(), flut_z.length() );
-		auto flut_q1 = make_quat_from_axes( flut_x, flut_y, flut_z );
-		auto flut_q2 = make_quat_from_axis_angle( normalized( vec3( rv[6], rv[7], rv[8] ) ), rad( rv[9] ) );
+		auto flut_q1 = quat_from_axes( flut_x, flut_y, flut_z );
+		auto flut_q2 = quat_from_axis_angle( normalized( vec3( rv[6], rv[7], rv[8] ) ), rad( rv[9] ) );
 		auto flut_q3 = flut_q1 * flut_q2;
 		auto flut_q4 = normalized( flut_q3 );
 		flut_logvar3( length(flut_q1), length(flut_q2), length(flut_q3) );
@@ -164,7 +164,7 @@ void vec_quat_test()
 
 		for ( int j = 0; j < 6; ++j )
 		{
-			auto flut_qeo = make_quat_from_euler< real_t >( rad( rv[0] ), rad( rv[1] ), rad( rv[2] ), flut_eo[ j ] );
+			auto flut_qeo = quat_from_euler( rad( rv[0] ), rad( rv[1] ), rad( rv[2] ), flut_eo[ j ] );
 			auto scone_qeo = QuatFromEuler( Radian( rv[0] ), Radian( rv[1] ), Radian( rv[2] ), scone_eo[j] );
 			compare( flut_qeo, scone_qeo );
 		}
