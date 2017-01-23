@@ -67,7 +67,7 @@ namespace flut
 		}
 
 		/// make quaternion from axis and angle
-		template< typename T, angle_unit U > quat_<T> make_quat_from_axis_angle( const vec3_<T>& axis, angle_<U, T> ang )
+		template< angle_unit U, typename T > quat_<T> quat_from_axis_angle( const vec3_<T>& axis, angle_<U, T> ang )
 		{
 			flut_assert( is_normalized<T>( axis ) );
 			T ha = T( 0.5 ) * ang.rad_value();
@@ -76,7 +76,7 @@ namespace flut
 		}
 
 		/// make quaternion from Euler angles
-		template< typename T, angle_unit U > quat_<T> make_quat_from_euler( angle_<U, T> x, angle_<U, T> y, angle_<U, T> z, euler_order eo = euler_order::xyz )
+		template< angle_unit U, typename T > quat_<T> quat_from_euler( angle_<U, T> x, angle_<U, T> y, angle_<U, T> z, euler_order eo = euler_order::xyz )
 		{
 			T hxa = T( 0.5 ) * x.rad_value(), hya = T( 0.5 ) * y.rad_value(), hza = T( 0.5 ) * z.rad_value();
 			quat_<T> qx = quat_<T>( std::cos( hxa ), std::sin( hxa ), T( 0 ), T( 0 ) );
@@ -96,13 +96,40 @@ namespace flut
 		}
 
 		/// make quaternion from vec3 of Euler angles
-		template< typename T, angle_unit U > quat_<T> make_quat_from_euler( const vec3_< angle_<U, T> >& eu, euler_order eo = euler_order::xyz )
+		template< angle_unit U, typename T > quat_<T> quat_from_euler( const vec3_< angle_<U, T> >& eu, euler_order eo = euler_order::xyz )
 		{
-			return make_quat_from_euler( eu.x, eu.y, eu.z, eo );
+			return quat_from_euler( eu.x, eu.y, eu.z, eo );
+		}
+
+		/// get Euler angles from quat
+		template< typename T > vec3_< radian_< T > > euler_from_quat( const quat_<T>& q )
+		{
+			FLUT_NOT_IMPLEMENTED;
+		}
+
+		template< typename T > radian_< T > pitch( const quat_<T>& q )
+		{
+			T tx = T(2) * q.x, tz = T(2) * q.z;
+			T twx = tx * q.w, txx = tx * q.x, tyz = tz * q.y, tzz = tz * q.z;
+			return radian_< T >( atan2( tyz + twx, T(1) - ( txx + tzz ) ) );
+		}
+
+		template< typename T > radian_< T > yaw( const quat_<T>& q )
+		{
+			T tx = T(2) * q.x, ty = T(2) * q.y, tz = T(2) * q.z;
+			T twy = ty * q.w, txx = tx * q.x, txz = tz * q.x, tyy = ty * q.y;
+			return radian_< T >( atan2( txz + twy, T(1) - ( txx + tyy ) ) );
+		}
+
+		template< typename T > radian_< T > roll( const quat_<T>& q )
+		{
+			T ty = T(2) * q.y, tz = T(2) * q.z;
+			T twz = tz * q.w, Real txy = ty * q.x, tyy = ty * q.y, tzz = tz * q.z;
+			return radian_< T >( atan2( txy + twz, T(1) - ( tyy + tzz ) ) );
 		}
 
 		/// Get quaternion to represent the rotation from source to target vector
-		template< typename T > quat_<T> make_quat_from_directions( const vec3_<T>& source, const vec3_<T>& target )
+		template< typename T > quat_<T> quat_from_directions( const vec3_<T>& source, const vec3_<T>& target )
 		{
 			vec3_<T> s = normalized( source );
 			vec3_<T> t = normalized( target );
@@ -141,7 +168,7 @@ namespace flut
 		}
 
 		/// Get quaternion using three axis vectors
-		template< typename T > quat_<T> make_quat_from_axes( const vec3_<T>& x, const vec3_<T>& y, const vec3_<T>& z )
+		template< typename T > quat_<T> quat_from_axes( const vec3_<T>& x, const vec3_<T>& y, const vec3_<T>& z )
 		{
 			flut_assert( is_normalized( x ) && is_normalized( y ) && is_normalized( z ) );
 			quat_<T> q;
