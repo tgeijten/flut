@@ -5,7 +5,7 @@
 #include "flut/system/log.hpp"
 #include "flut/buffer/interpolation.hpp"
 #include "flut/buffer/buffer_base.hpp"
-#include "flut/buffer/frame_buffer.hpp"
+#include "flut/buffer/storage.hpp"
 #include "flut/buffer/circular_frame_buffer.hpp"
 
 namespace flut
@@ -13,11 +13,11 @@ namespace flut
 	void buffer_test()
 	{
 		// regular buffer test
-		frame_buffer< double, string > regbuf( 0 );
+		storage< float, string > buf( 0 );
 
 		//regular_ring_buffer< double, 100, void > ringbuf( 20 );
 		for ( int i = 0; i < 10; ++i )
-			regbuf.add_channel( stringf( "channel%d", i ) );
+			buf.add_channel( stringf( "channel%d", i ) );
 
 		// more tests
 		std::vector< std::pair< double, math::vec3 > > buf_test;
