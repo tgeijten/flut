@@ -179,11 +179,6 @@ namespace flut
 	};
 
     /// prop_node_cast and specializations
-	template< typename T, typename E > struct prop_node_cast {
-		static T from( const prop_node& pn ) { return string_cast< T, E >::from( pn.get_value() ); }
-		static prop_node to( const T& value ) { return prop_node( string_cast< T, E >::to( value ) ); }
-	};
-
 	template<> struct prop_node_cast< prop_node > {
 		static prop_node from( const prop_node& pn ) { return pn; }
 		static prop_node to( const prop_node& value ) { return value; }
@@ -196,12 +191,26 @@ namespace flut
 		{ prop_node pn; for ( size_t i = 0; i < vec.size(); ++i ) pn.push_back( stringf( "item%d", i ), make_prop_node( vec[ i ] ) ); return pn; }
 	};
 
+	template< typename T > struct is_prop_node_constructable { static const bool value = false; };
+	template< typename T > struct prop_node_cast< T, typename std::enable_if< is_prop_node_constructable< T >::value >::type > {
+		static T from( const prop_node& pn ) { return T( pn ); }
+		static prop_node to( const T& value ) { flut_error( "Cannot convert this class to prop_node" ); }
+	};
+
+	template< typename T, typename E > struct prop_node_cast {
+		static T from( const prop_node& pn ) { return string_cast<T, E>::from( pn.get_value() ); }
+		static prop_node to( const T& value ) { return prop_node( string_cast<T, E>::to( value ) ); }
+	};
+
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node_cast< T >::to( value ); }
 
 	/// stream operator
 	FLUT_API std::ostream& to_stream( std::ostream& str, const prop_node& pn, int depth = 0, int key_align = 0 );
 	inline std::ostream& operator<<( std::ostream& str, const prop_node& pn ) { return to_stream( str, pn ); }
 }
+
+#define IS_PROP_NODE_CONSTRUCTABLE( _class_name_ ) \
+template<> struct ::flut::is_prop_node_constructable< _class_name_ > { static const bool value = true; };
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( pop )

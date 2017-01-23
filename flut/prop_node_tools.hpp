@@ -10,7 +10,7 @@
 
 namespace flut
 {
-	/// load contents from file (autodetect)
+	/// load contents from file (auto detect)
 	FLUT_API prop_node load_file( const path& filename );
 
 	/// load/save contents from xml
