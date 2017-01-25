@@ -2,6 +2,7 @@
 
 #include "vec3_type.hpp"
 #include "math.hpp"
+#include "angle.hpp"
 
 namespace flut
 {
@@ -76,6 +77,10 @@ namespace flut
 		/// Cross product
 		template< typename T > vec3_<T> cross_product( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return vec3_<T>( v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x ); }
+
+		/// Make vec3 from radius, inclination & azimuth
+		template< angle_unit U, typename T > vec3_<T> vec3_from_polar( T radius, angle_<U, T> inclination, angle_<U, T> azimuth )
+		{ return vec3_<T>( sin( inclination ) * sin( azimuth ) , cos( inclination ), sin( inclination ) * cos( azimuth ) ); }
 
 		/// stream out
 		template< typename T > std::ostream& operator<<( std::ostream& str, const vec3_<T>& v )
