@@ -10,6 +10,9 @@ namespace flut
 	{
 		template< typename T > struct vec3_
 		{
+			typedef T* iterator;
+			typedef const T* const_iterator;
+
 			vec3_() {}
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
@@ -22,6 +25,10 @@ namespace flut
 			/// element access
 			const T& operator[]( index_t idx ) const { return (&x)[idx]; }
 			T& operator[]( index_t idx ) { return (&x)[idx]; }
+			iterator begin() { return &x; }
+			iterator end() { return &x + 3; }
+			const_iterator begin() const { return &x; }
+			const_iterator end() const { return &x + 3; }
 			T x, y, z;
 
 			/// const properties
@@ -38,6 +45,7 @@ namespace flut
 			static vec3_<T> neg_unit_x() { return vec3_<T>( T(-1), T(0), T(0) ); }
 			static vec3_<T> neg_unit_y() { return vec3_<T>( T(0), T(-1), T(0) ); }
 			static vec3_<T> neg_unit_z() { return vec3_<T>( T(0), T(0), T(-1) ); }
+			static vec3_<T> uni( T v ) { return vec3_<T>( v, v, v ); }
 		};
 
 		/// template instantiations
