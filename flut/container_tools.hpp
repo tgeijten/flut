@@ -20,6 +20,14 @@ namespace flut
 	typename C::const_iterator min_element( const C& cont )
 	{ return std::min_element( std::cbegin( cont ), std::cend( cont ) ); }
 
+	template< typename C >
+	typename C::iterator max_element( C& cont )
+	{ return std::max_element( std::begin( cont ), std::end( cont ) ); }
+
+	template< typename C >
+	typename C::const_iterator max_element( const C& cont )
+	{ return std::max_element( std::cbegin( cont ), std::cend( cont ) ); }
+
 	template< typename T >
 	index_t find_index( const vector< T >& vec, const T& val )
 	{
