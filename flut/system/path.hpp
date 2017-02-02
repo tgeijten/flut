@@ -21,6 +21,7 @@ namespace flut
 		static char preferred_separator() { return '/'; }
 
 		const string& str() const { return data; }
+		const char* c_str() const { return data.c_str(); }
 
 		path& replace_extension( const path& ext ) {
 			size_t n = data.find_last_of( '.' );

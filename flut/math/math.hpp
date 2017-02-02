@@ -19,6 +19,7 @@ namespace flut
 			static T zero() { return T( 0 ); }
 			static T max() { return std::numeric_limits< T >::max(); }
 			static T min() { return std::numeric_limits< T >::min(); }
+			static T lowest() { return std::numeric_limits< T >::lowest(); }
 		};
 		const real_t real_pi = constants< real_t >::pi();
 		const float float_pi = constants< float >::pi();
