@@ -54,7 +54,7 @@ namespace flut
 		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
 
 		/// check a value is within a range
-		template< typename T > T is_between( T v, T min, T max ) { return ( v >= min && v <= max ); }
+		template< typename T > bool is_between( T v, T min, T max ) { return ( v >= min && v <= max ); }
 
 		/// square wave, period = 2, min = -1, max = 1
 		template< typename T > T square_wave( T v ) { return fmod( v, T(2) ) < T(1) ? T(1) : T(-1); }
