@@ -152,19 +152,32 @@ namespace flut
 
 		/// Get quaternion to represent the rotation from source to target quaternion
 		template< typename T > quat_<T> quat_from_quats( const quat_<T>& source, const quat_<T>& target )
-		{ FLUT_NOT_IMPLEMENTED; }
+		{ return -source * target; }
 
 		/// Get rotation vector from quaternion
-		template< typename T > vec3_<T> make_rotation_vector( const quat_<T>& q )
+		template< typename T > vec3_<T> rotation_vector_from_quat( const quat_<T>& q )
 		{
 			flut_assert( is_normalized( q ) );
-			T len = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
-			if ( len > constants<T>::epsilon() )
+			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
+			if ( l > constants<T>::epsilon() )
 			{
-				T f = T(2) * std::acos( q.w ) / len;
+				T f = T(2) * std::acos( q.w ) / l;
 				return vec3_<T>( f * q.x, f * q.y, f * q.z );
 			}
 			else return vec3_<T>::zero();
+		}
+
+		/// Get axis angle from quaternion
+		template< typename T > std::pair< vec3_<T>, radian_<T> > axis_angle_from_quat( const quat_<T>& q )
+		{
+			flut_assert( is_normalized( q ) );
+			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
+			if ( l > constants::epsilon() )
+			{
+				T s = T(1) / l;
+				return std::pair< vec3_<T>, radian_<T> >{ vec3f( s * q.x, s * q.y, s * q.z ), radian_<T>( T(2) * std::acos( q.w ) ) };
+			}
+			else return std::pair< vec3_<T>, radian_<T> >{ vec3_<T>::unit_x(), radian_<T>( T(0) ) };
 		}
 
 		/// Get quaternion using three axis vectors

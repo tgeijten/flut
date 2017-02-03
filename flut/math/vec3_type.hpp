@@ -15,6 +15,7 @@ namespace flut
 
 			vec3_() {}
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
+			vec3_( T v ) : x( v ), y( v ), z( v ) {}
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
 			template< typename T2 > vec3_<T>& operator=( const vec3_<T2>& o ) { x = T(o.x); y = T(o.y); z = T(o.z); return *this; }
 			vec3_( const prop_node& pn ) : x( pn.get<T>( "x", T(0) ) ), y( pn.get<T>( "y", T(0) ) ), z( pn.get<T>( "z", T(0) ) ) {}

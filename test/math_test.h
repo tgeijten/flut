@@ -133,7 +133,7 @@ void vec_quat_test()
 		auto flut_q4 = normalized( flut_q3 );
 		flut_logvar3( length(flut_q1), length(flut_q2), length(flut_q3) );
 		auto flut_v4 = flut_q4 * flut_v1;
-		auto flut_v5 = make_rotation_vector( flut_q4 );
+		auto flut_v5 = rotation_vector_from_quat( flut_q4 );
 
 		auto scone_v1 = scone::Vec3( rv[0], rv[1], rv[2] );
 		auto scone_v2 = scone::Vec3( rv[3], rv[4], rv[5] );
