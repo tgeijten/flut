@@ -11,8 +11,8 @@ namespace flut
 		template< typename T > struct constants
 		{
 			static T pi() { return T( 3.14159265358979 ); }
-			static T half_pi() { return T( 0.5 * 3.14159265358979 ); }
-			static T two_pi() { return T( 2 * 3.14159265358979 ); }
+			static T half_pi() { return T( 0.5 ) * T( 3.14159265358979 ); }
+			static T two_pi() { return T( 2 ) * T( 3.14159265358979 ); }
 			static T epsilon() { return std::numeric_limits< T >::epsilon(); }
 			static T relaxed_epsilon() { return T( 4 * std::numeric_limits< T >::epsilon() ); }
 			static T one() { return T( 1 ); }
@@ -21,6 +21,11 @@ namespace flut
 			static T min() { return std::numeric_limits< T >::min(); }
 			static T lowest() { return std::numeric_limits< T >::lowest(); }
 		};
+
+		typedef constants< int > consti;
+		typedef constants< float > constf;
+		typedef constants< double > constd;
+
 		const real_t real_pi = constants< real_t >::pi();
 		const float float_pi = constants< float >::pi();
 		const double double_pi = constants< double >::pi();

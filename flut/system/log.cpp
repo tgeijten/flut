@@ -22,7 +22,7 @@ namespace flut
 			if ( std::find( global_sinks.begin(), global_sinks.end(), s ) == global_sinks.end() )
 			{
 				global_sinks.push_back( s );
-				update_lowest_log_level();
+				get_global_log_level();
 			}
 		}
 
@@ -30,14 +30,22 @@ namespace flut
 		{
 			auto it = std::find( global_sinks.begin(), global_sinks.end(), s );
 			if ( it != global_sinks.end() ) global_sinks.erase( it );
-			update_lowest_log_level();
+			get_global_log_level();
 		}
 
-		void update_lowest_log_level()
+		FLUT_API void set_global_log_level( level l )
+		{
+			for ( auto s : global_sinks )
+				s->set_log_level( l );
+			lowest_log_level = l;
+		}
+
+		level get_global_log_level()
 		{
 			lowest_log_level = critical_level;
 			for ( auto s : global_sinks )
 				if ( s->get_log_level() < lowest_log_level ) lowest_log_level = s->get_log_level();
+			return lowest_log_level;
 		}
 
 		bool test_log_level( level l )

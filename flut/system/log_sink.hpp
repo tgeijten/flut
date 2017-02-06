@@ -14,7 +14,7 @@ namespace flut
 			virtual ~sink() { flut::log::remove_sink( this ); }
 			virtual void send_log_message( level l, const string& msg ) = 0;
 			void try_send_log_message( level l, const string& msg ) { if ( test_log_level( l ) ) send_log_message( l, msg ); }
-			void set_log_level( level l ) { log_level_ = l; flut::log::update_lowest_log_level(); }
+			void set_log_level( level l ) { log_level_ = l; flut::log::get_global_log_level(); }
 			level get_log_level() { return log_level_; }
 			bool test_log_level( level l ) { return l >= log_level_; }
 

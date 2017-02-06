@@ -35,7 +35,9 @@ namespace flut
 		FLUT_API void add_sink( sink* s );
 		FLUT_API void remove_sink( sink* s );
 
-		FLUT_API void update_lowest_log_level();
+		FLUT_API void set_global_log_level( level l );
+		FLUT_API level get_global_log_level();
+
 		FLUT_API bool test_log_level( level l );
 
 		FLUT_API void log_output( level l, std::stringstream& msg );
