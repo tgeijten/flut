@@ -24,5 +24,6 @@ namespace flut
 	protected:
 		int mu;
 		int lambda;
+		struct cmaes_t* pimpl;
 	};
 }
