@@ -9,16 +9,6 @@
 
 namespace flut
 {
-	static void FATAL( char const *s1, char const *s2, char const *s3, char const *s4 )
-	{
-		FLUT_EXCEPTION( std::string( s1 ) + s2 + s3 + s4 );
-	}
-
-	static void ERRORMESSAGE( char const *s1, char const *s2, char const *s3, char const *s4 )
-	{
-		flut::log::error( std::string( s1 ) + s2 + s3 + s4 );
-	}
-
 	typedef std::vector< double > dbl_vec;
 
 	struct cmaes_random_t
@@ -40,10 +30,8 @@ namespace flut
 		int N; /* problem dimension, must stay constant, should be unsigned or long? */
 		unsigned int seed;
 		dbl_vec xstart;
-		dbl_vec typicalX;
-		int typicalXcase;
 		dbl_vec rgInitialStds;
-		double * rgDiffMinChange;
+		double * rgDiffMinChange; // Minimal coordinate wise standard deviation. Not used.
 
 		/* termination parameters */
 		double stopMaxFunEvals;
@@ -79,9 +67,9 @@ namespace flut
 
 		double sigma;  /* step size */
 
-		dbl_vec rgxmean;  /* mean x vector, "parent" */
-		dbl_vec rgxbestever;
-		std::vector< dbl_vec > rgrgx;   /* range of x-vectors, lambda offspring */
+		dbl_vec current_mean;  /* mean x vector, "parent" */
+		dbl_vec current_best;
+		std::vector< dbl_vec > current_pop;   /* range of x-vectors, lambda offspring */
 		std::vector< int > index;       /* sorting index of sample pop. */
 		dbl_vec arFuncValueHist;
 
@@ -178,7 +166,7 @@ namespace flut
 
 		if ( t->mu < 1 || t->mu > t->lambda ||
 			( t->mu == t->lambda && t->weights[ 0 ] == t->weights[ t->mu - 1 ] ) )
-			FATAL( "cmaes_readpara_SetWeights(): invalid setting of mu or lambda", 0, 0, 0 );
+			flut_error( "cmaes_readpara_SetWeights(): invalid setting of mu or lambda" );
 
 	} /* cmaes_readpara_SetWeights() */
 
@@ -222,7 +210,7 @@ namespace flut
 
 
 
-	void cmaes_init_all( cmaes_t *t,
+	void cmaes_init( cmaes_t *t,
 		int dim,
 		const dbl_vec& inxstart,
 		const dbl_vec& inrgsigma,
@@ -235,7 +223,6 @@ namespace flut
 
 		t->sp.N = dim;
 		t->sp.seed = (unsigned)inseed;
-		t->sp.typicalXcase = 0;
 		t->sp.rgDiffMinChange = NULL;
 		t->sp.stopMaxFunEvals = -1;
 		t->sp.stopMaxIter = -1;
@@ -274,11 +261,11 @@ namespace flut
 			for ( int i = 0; i < N; ++i )
 				t->sp.rgInitialStds[ i ] = inrgsigma[ i ];
 		}
+	}
 
-		//
-		// void cmaes_readpara_SupplementDefaults( cmaes_readpara_t *t )
-		//
-
+	void cmaes_readpara_SupplementDefaults( cmaes_t *t )
+	{
+		int N = t->sp.N;
 		double t1, t2;
 		if ( t->sp.stStopFitness.flg == -1 )
 			t->sp.stStopFitness.flg = 0;
@@ -337,10 +324,11 @@ namespace flut
 		if ( t->sp.updateCmode.maxtime < 0 )
 			t->sp.updateCmode.maxtime = 0.20; /* maximal 20% of CPU-time */
 
-		// 
-		// cmaes_init_final()
-		//
+	}
 
+	void cmaes_init_final( cmaes_t *t )
+	{
+		int N = t->sp.N;
 		int i, j;
 		double dtest, trace;
 
@@ -374,9 +362,9 @@ namespace flut
 		t->rgps.resize( N );
 		t->rgdTmp.resize( N + 1 );
 		t->rgBDz.resize( N );
-		t->rgxmean.resize( N + 2 ); // WTF? t->rgxmean[ 0 ] = N; ++t->rgxmean;
+		t->current_mean.resize( N + 2 ); // WTF? t->rgxmean[ 0 ] = N; ++t->rgxmean;
 		t->rgxold.resize( N + 2 ); // WTF? t->rgxold[ 0 ] = N; ++t->rgxold;
-		t->rgxbestever.resize( N + 3 ); // WTF? t->rgxbestever[ 0 ] = N; ++t->rgxbestever;
+		t->current_best.resize( N + 3 ); // WTF? t->rgxbestever[ 0 ] = N; ++t->rgxbestever;
 		t->rgout.resize( N + 2 ); // WTF? t->rgout[ 0 ] = N; ++t->rgout;
 		t->rgD.resize( N );
 		t->C.resize( N );
@@ -393,9 +381,9 @@ namespace flut
 		t->index.resize( t->sp.lambda );
 		for ( i = 0; i < t->sp.lambda; ++i )
 			t->index[ i ] = i; /* should not be necessary */
-		t->rgrgx.resize( t->sp.lambda );
+		t->current_pop.resize( t->sp.lambda );
 		for ( i = 0; i < t->sp.lambda; ++i ) {
-			t->rgrgx[ i ].resize( N + 2 ); // WTF? t->rgrgx[ i ][ 0 ] = N; t->rgrgx[ i ]++;
+			t->current_pop[ i ].resize( N + 2 ); // WTF? t->rgrgx[ i ][ 0 ] = N; t->rgrgx[ i ]++;
 		}
 
 		/* Initialize newed space  */
@@ -422,11 +410,7 @@ namespace flut
 
 		/* set xmean */
 		for ( i = 0; i < N; ++i )
-			t->rgxmean[ i ] = t->rgxold[ i ] = t->sp.xstart[ i ];
-		/* use in case xstart as typicalX */
-		if ( t->sp.typicalXcase )
-			for ( i = 0; i < N; ++i )
-				t->rgxmean[ i ] += t->sigma * t->rgD[ i ] * cmaes_random_Gauss( &t->rand );
+			t->current_mean[ i ] = t->rgxold[ i ] = t->sp.xstart[ i ];
 	}
 
 
@@ -556,7 +540,7 @@ namespace flut
 
 		/* Sort eigenvalues and corresponding vectors. */
 #if 1
-	  /* TODO: really needed here? So far not, but practical and only O(n^2) */
+		/* TODO: really needed here? So far not, but practical and only O(n^2) */
 		{
 			int j;
 			double p;
@@ -758,14 +742,12 @@ namespace flut
 					&& fabs( cc - C[ i > j ? i : j ][ i > j ? j : i ] ) > 3e-14 ) {
 					sprintf( s, "%d %d: %.17e %.17e, %e",
 						i, j, cc, C[ i > j ? i : j ][ i > j ? j : i ], cc - C[ i > j ? i : j ][ i > j ? j : i ] );
-					ERRORMESSAGE( "pimpl_t:Eigen(): imprecise result detected ",
-						s, 0, 0 );
+					log::error( "pimpl_t:Eigen(): imprecise result detected ", s );
 					++res;
 				}
 				if ( fabs( dd - ( i == j ) ) > 1e-10 ) {
 					sprintf( s, "%d %d %.17e ", i, j, dd );
-					ERRORMESSAGE( "pimpl_t:Eigen(): imprecise result detected (Q not orthog.)",
-						s, 0, 0 );
+					log::error( "pimpl_t:Eigen(): imprecise result detected (Q not orthog.) ", s );
 					++res;
 				}
 			}
@@ -822,7 +804,7 @@ namespace flut
 		int iNk, i, j, N = t->sp.N;
 		int flgdiag = ( ( t->sp.diagonalCov == 1 ) || ( t->sp.diagonalCov >= t->gen ) );
 		double sum;
-		const auto& xmean = t->rgxmean;
+		const auto& xmean = t->current_mean;
 
 		/* cmaes_SetMean(t, xmean); * xmean could be changed at this point */
 
@@ -846,7 +828,7 @@ namespace flut
 		{ /* generate scaled cmaes_random vector (D * z)    */
 			for ( i = 0; i < N; ++i )
 				if ( flgdiag )
-					t->rgrgx[ iNk ][ i ] = xmean[ i ] + t->sigma * t->rgD[ i ] * cmaes_random_Gauss( &t->rand );
+					t->current_pop[ iNk ][ i ] = xmean[ i ] + t->sigma * t->rgD[ i ] * cmaes_random_Gauss( &t->rand );
 				else
 					t->rgdTmp[ i ] = t->rgD[ i ] * cmaes_random_Gauss( &t->rand );
 			if ( !flgdiag )
@@ -854,14 +836,14 @@ namespace flut
 				for ( i = 0; i < N; ++i ) {
 					for ( j = 0, sum = 0.; j < N; ++j )
 						sum += t->B[ i ][ j ] * t->rgdTmp[ j ];
-					t->rgrgx[ iNk ][ i ] = xmean[ i ] + t->sigma * sum;
+					t->current_pop[ iNk ][ i ] = xmean[ i ] + t->sigma * sum;
 				}
 		}
 		if ( t->state == 3 || t->gen == 0 )
 			++t->gen;
 		t->state = 1;
 
-		return( t->rgrgx );
+		return( t->current_pop );
 	} /* SamplePopulation() */
 
 
@@ -902,8 +884,8 @@ namespace flut
 							+ ( 1 - hsig )*t->sp.ccumcov*( 2. - t->sp.ccumcov ) * t->C[ i ][ j ] );
 					for ( k = 0; k < t->sp.mu; ++k ) { /* additional rank mu update */
 						t->C[ i ][ j ] += ccovmu * t->sp.weights[ k ]
-							* ( t->rgrgx[ t->index[ k ] ][ i ] - t->rgxold[ i ] )
-							* ( t->rgrgx[ t->index[ k ] ][ j ] - t->rgxold[ j ] )
+							* ( t->current_pop[ t->index[ k ] ][ i ] - t->rgxold[ i ] )
+							* ( t->current_pop[ t->index[ k ] ][ j ] - t->rgxold[ j ] )
 							/ sigmasquare;
 					}
 				}
@@ -926,20 +908,18 @@ namespace flut
 		double psxps;
 
 		if ( t->state == 3 )
-			FATAL( "cmaes_UpdateDistribution(): You need to call \n",
-				"SamplePopulation() before update can take place.", 0, 0 );
+			flut_error( "cmaes_UpdateDistribution(): You need to call SamplePopulation() before update can take place." );
 		if ( rgFunVal.size() != t->sp.N )
-			FATAL( "cmaes_UpdateDistribution(): ",
-				"Fitness function value array input is missing.", 0, 0 );
+			flut_error( "cmaes_UpdateDistribution(): Fitness function value array input is missing." );
 
 		if ( t->state == 1 )  /* function values are delivered here */
 			t->countevals += t->sp.lambda;
 		else
-			ERRORMESSAGE( "cmaes_UpdateDistribution(): unexpected state", 0, 0, 0 );
+			flut_error( "cmaes_UpdateDistribution(): unexpected state" );
 
 		/* assign function values */
 		for ( i = 0; i < t->sp.lambda; ++i )
-			t->rgrgx[ i ][ N ] = t->rgFuncValue[ i ] = rgFunVal[ i ];
+			t->current_pop[ i ][ N ] = t->rgFuncValue[ i ] = rgFunVal[ i ];
 
 
 		/* Generate index */
@@ -949,8 +929,7 @@ namespace flut
 		if ( t->rgFuncValue[ t->index[ 0 ] ] ==
 			t->rgFuncValue[ t->index[ (int)t->sp.lambda / 2 ] ] ) {
 			t->sigma *= exp( 0.2 + t->sp.cs / t->sp.damps );
-			ERRORMESSAGE( "Warning: sigma increased due to equal function values\n",
-				"   Reconsider the formulation of the objective function", 0, 0 );
+			log::warning( "Warning: sigma increased due to equal function values. Reconsider the formulation of the objective function" );
 		}
 
 		/* update function value history */
@@ -959,19 +938,19 @@ namespace flut
 		t->arFuncValueHist[ 0 ] = rgFunVal[ t->index[ 0 ] ];
 
 		/* update xbestever */
-		if ( t->rgxbestever[ N ] > t->rgrgx[ t->index[ 0 ] ][ N ] || t->gen == 1 )
+		if ( t->current_best[ N ] > t->current_pop[ t->index[ 0 ] ][ N ] || t->gen == 1 )
 			for ( i = 0; i <= N; ++i ) {
-				t->rgxbestever[ i ] = t->rgrgx[ t->index[ 0 ] ][ i ];
-				t->rgxbestever[ N + 1 ] = t->countevals;
+				t->current_best[ i ] = t->current_pop[ t->index[ 0 ] ][ i ];
+				t->current_best[ N + 1 ] = t->countevals;
 			}
 
 		/* calculate xmean and rgBDz~N(0,C) */
 		for ( i = 0; i < N; ++i ) {
-			t->rgxold[ i ] = t->rgxmean[ i ];
-			t->rgxmean[ i ] = 0.;
+			t->rgxold[ i ] = t->current_mean[ i ];
+			t->current_mean[ i ] = 0.;
 			for ( iNk = 0; iNk < t->sp.mu; ++iNk )
-				t->rgxmean[ i ] += t->sp.weights[ iNk ] * t->rgrgx[ t->index[ iNk ] ][ i ];
-			t->rgBDz[ i ] = sqrt( t->sp.mueff )*( t->rgxmean[ i ] - t->rgxold[ i ] ) / t->sigma;
+				t->current_mean[ i ] += t->sp.weights[ iNk ] * t->current_pop[ t->index[ iNk ] ][ i ];
+			t->rgBDz[ i ] = sqrt( t->sp.mueff )*( t->current_mean[ i ] - t->rgxold[ i ] ) / t->sigma;
 		}
 
 		/* calculate z := D^(-1) * B^(-1) * rgBDz into rgdTmp */
@@ -1037,7 +1016,7 @@ namespace flut
 
 		t->state = 3;
 
-		return ( t->rgxmean );
+		return ( t->current_mean );
 
 	} /* cmaes_UpdateDistribution() */
 
@@ -1064,7 +1043,11 @@ namespace flut
 	optimizer( dim )
 	{
 		pimpl = new pimpl_t;
-		cmaes_init_all( pimpl->cmaes, dim, init_mean, init_std, seed, lambda );
+
+		cmaes_init( pimpl->cmaes, dim, init_mean, init_std, seed, lambda );
+		cmaes_readpara_SupplementDefaults( pimpl->cmaes );
+		cmaes_init_final( pimpl->cmaes );
+
 		lambda_ = pimpl->cmaes->sp.lambda;
 		mu_ = pimpl->cmaes->sp.mu;
 	}
