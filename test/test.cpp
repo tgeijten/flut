@@ -10,6 +10,7 @@
 #include "flut/dictionary.hpp"
 #include "flut/system/log_sink.hpp"
 #include "factory_test.h"
+#include "optimizer_test.h"
 
 using flut::string;
 
@@ -24,6 +25,8 @@ int main( int argc, char* argv[] )
 		flut_logvar2( flut::math::constants<float>::epsilon(), flut::math::constants<float>::relaxed_epsilon() );
 
 		flut::stopwatch sw;
+
+		flut::optimizer_test();
 
 		flut::factory_test();
 		sw.add_measure( "factory" );
