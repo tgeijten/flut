@@ -362,17 +362,17 @@ namespace flut
 		t->rgps.resize( N );
 		t->rgdTmp.resize( N + 1 );
 		t->rgBDz.resize( N );
-		t->current_mean.resize( N + 2 ); // WTF? t->rgxmean[ 0 ] = N; ++t->rgxmean;
-		t->rgxold.resize( N + 2 ); // WTF? t->rgxold[ 0 ] = N; ++t->rgxold;
-		t->current_best.resize( N + 3 ); // WTF? t->rgxbestever[ 0 ] = N; ++t->rgxbestever;
-		t->rgout.resize( N + 2 ); // WTF? t->rgout[ 0 ] = N; ++t->rgout;
+		t->current_mean.resize( N + 1 ); // WTF? t->rgxmean[ 0 ] = N; ++t->rgxmean; fixed!
+		t->rgxold.resize( N + 1 ); // WTF? t->rgxold[ 0 ] = N; ++t->rgxold; fixed!
+		t->current_best.resize( N + 2 ); // WTF? t->rgxbestever[ 0 ] = N; ++t->rgxbestever; fixed!
+		t->rgout.resize( N + 1 ); // WTF? t->rgout[ 0 ] = N; ++t->rgout; fixed!
 		t->rgD.resize( N );
 		t->C.resize( N );
 		t->B.resize( N );
 		t->publicFitness.resize( t->sp.lambda );
-		t->rgFuncValue.resize( t->sp.lambda + 1 ); // WTF? t->rgFuncValue[ 0 ] = t->sp.lambda; ++t->rgFuncValue;
+		t->rgFuncValue.resize( t->sp.lambda ); // WTF? t->rgFuncValue[ 0 ] = t->sp.lambda; ++t->rgFuncValue; fixed!
 		t->arFuncValueHist.resize( 10 + (int)ceil( 3.*10.*N / t->sp.lambda ) );
-		// WTF? t->arFuncValueHist[ 0 ] = (double)( 10 + (int)ceil( 3.*10.*N / t->sp.lambda ) ); t->arFuncValueHist++;
+		// WTF? t->arFuncValueHist[ 0 ] = (double)( 10 + (int)ceil( 3.*10.*N / t->sp.lambda ) ); t->arFuncValueHist++; fixed!
 
 		for ( i = 0; i < N; ++i ) {
 			t->C[ i ].resize( i + 1 );
@@ -383,7 +383,7 @@ namespace flut
 			t->index[ i ] = i; /* should not be necessary */
 		t->current_pop.resize( t->sp.lambda );
 		for ( i = 0; i < t->sp.lambda; ++i ) {
-			t->current_pop[ i ].resize( N + 2 ); // WTF? t->rgrgx[ i ][ 0 ] = N; t->rgrgx[ i ]++;
+			t->current_pop[ i ].resize( N + 1 ); // WTF? t->rgrgx[ i ][ 0 ] = N; t->rgrgx[ i ]++; fixed!
 		}
 
 		/* Initialize newed space  */
@@ -909,7 +909,7 @@ namespace flut
 
 		if ( t->state == 3 )
 			flut_error( "cmaes_UpdateDistribution(): You need to call SamplePopulation() before update can take place." );
-		if ( rgFunVal.size() != t->sp.N )
+		if ( rgFunVal.size() != t->sp.lambda )
 			flut_error( "cmaes_UpdateDistribution(): Fitness function value array input is missing." );
 
 		if ( t->state == 1 )  /* function values are delivered here */
@@ -963,19 +963,6 @@ namespace flut
 			t->rgdTmp[ i ] = sum / t->rgD[ i ];
 		}
 
-		/* TODO?: check length of t->rgdTmp and set an upper limit, e.g. 6 stds */
-		/* in case of manipulation of arx,
-		   this can prevent an increase of sigma by several orders of magnitude
-		   within one step; a five-fold increase in one step can still happen.
-		*/
-		/*
-		  for (j = 0, sum = 0.; j < N; ++j)
-			sum += t->rgdTmp[j] * t->rgdTmp[j];
-		  if (sqrt(sum) > chiN + 6. * sqrt(0.5)) {
-			rgdTmp length should be set to upper bound and hsig should become zero
-		  }
-		*/
-
 		/* cumulation for sigma (ps) using B*z */
 		for ( i = 0; i < N; ++i ) {
 			if ( !flgdiag )
@@ -1020,36 +1007,136 @@ namespace flut
 
 	} /* cmaes_UpdateDistribution() */
 
+	//
+	// Boundary transformation
+	//
 
 	typedef struct {
-		double const *lower_bounds; /* array of size len_of_bounds */
-		double const *upper_bounds; /* array of size len_of_bounds */
-		unsigned long len_of_bounds; /* in case, last value is recycled */
-		double *al; /* "add"-on to lower boundary preimage, same length as bounds */
-		double *au; /* add-on to upper boundary preimage, same length as bounds */
-	} cmaes_boundary_transformation_t;
+		dbl_vec lower_bounds; /* array of size len_of_bounds */
+		dbl_vec upper_bounds; /* array of size len_of_bounds */
+		dbl_vec al; /* "add"-on to lower boundary preimage, same length as bounds */
+		dbl_vec au; /* add-on to upper boundary preimage, same length as bounds */
+	} cmaes_boundary_trans_t;
 
+	void cmaes_boundary_trans_init( cmaes_boundary_trans_t *t,
+        const dbl_vec& lower_bounds, const dbl_vec& upper_bounds )
+	{
+		flut_assert( upper_bounds.size() == lower_bounds.size() );
+		auto l = lower_bounds.size();
+
+		t->lower_bounds = lower_bounds;
+		t->upper_bounds = upper_bounds;
+
+		/* compute boundaries in pre-image space, al and au */
+		t->al.resize( l );
+		t->au.resize( l );
+
+		auto& lb = t->lower_bounds;
+		auto& ub = t->upper_bounds;
+		for( int i = 0; i < l; ++i) {
+			if (lb[i] == ub[i])
+				flut_error("Lower and upper bounds must be different in all variables");
+			/* between lb+al and ub-au transformation is the identity */
+			t->al[i] = fmin((ub[i] - lb[i]) / 2., (1. + fabs(lb[i])) / 20.);
+			t->au[i] = fmin((ub[i] - lb[i]) / 2., (1. + fabs(ub[i])) / 20.);
+		}
+	}
+
+	void cmaes_boundary_trans_shift_into_feasible_preimage( cmaes_boundary_trans_t *t, const dbl_vec& x, dbl_vec& y )
+	{
+		auto len = t->lower_bounds.size();
+		for ( size_t i = 0; i < len; ++i ) {
+			double lb, ub, al, au, r, xlow, xup;
+			lb = t->lower_bounds[ i ];
+			ub = t->upper_bounds[ i ];
+			al = t->al[ i ];
+			au = t->au[ i ];
+			xlow = lb - 2 * al - ( ub - lb ) / 2.0;
+			xup = ub + 2 * au + ( ub - lb ) / 2.0;
+			r = 2 * ( ub - lb + al + au ); /* == xup - xlow == period of the transformation */
+
+			y[ i ] = x[ i ];
+
+			if ( y[ i ] < xlow ) { /* shift up */
+				y[ i ] += r * ( 1 + (int)( ( xlow - y[ i ] ) / r ) );
+			}
+			if ( y[ i ] > xup ) { /* shift down */
+				y[ i ] -= r * ( 1 + (int)( ( y[ i ] - xup ) / r ) );
+				/* printf(" \n%f\n", fmod(y[i] - ub - au, r)); */
+			}
+			if ( y[ i ] < lb - al ) /* mirror */
+				y[ i ] += 2 * ( lb - al - y[ i ] );
+			if ( y[ i ] > ub + au )
+				y[ i ] -= 2 * ( y[ i ] - ub - au );
+
+			if ( ( y[ i ] < lb - al - 1e-15 ) || ( y[ i ] > ub + au + 1e-15 ) ) {
+				flut_error( stringf( "BUG in cmaes_boundary_transformation_shift_into_feasible_preimage: lb=%f, ub=%f, al=%f au=%f, y=%f\n", lb, ub, al, au, y[ i ] ) );
+			}
+		}
+	}
+
+	void cmaes_boundary_trans( cmaes_boundary_trans_t *t, const dbl_vec& x, dbl_vec& y )
+	{
+		auto len = t->lower_bounds.size();
+		cmaes_boundary_trans_shift_into_feasible_preimage( t, x, y );
+		for ( size_t i = 0; i < len; ++i ) {
+			double lb, ub, al, au;
+			lb = t->lower_bounds[ i ];
+			ub = t->upper_bounds[ i ];
+			al = t->al[ i ];
+			au = t->au[ i ];
+			if ( y[ i ] < lb + al )
+				y[ i ] = lb + ( y[ i ] - ( lb - al ) ) * ( y[ i ] - ( lb - al ) ) / 4. / al;
+			else if ( y[ i ] > ub - au )
+				y[ i ] = ub - ( y[ i ] - ( ub + au ) ) * ( y[ i ] - ( ub + au ) ) / 4. / au;
+		}
+	}
+
+	void cmaes_boundary_trans_inverse( cmaes_boundary_trans_t *t, const dbl_vec& x, dbl_vec& y )
+	{
+		auto len = t->lower_bounds.size();
+		unsigned long i;
+
+		for ( i = 0; i < len; ++i ) {
+			double lb, ub, al, au;
+			lb = t->lower_bounds[ i ];
+			ub = t->upper_bounds[ i ];
+			al = t->al[ i ];
+			au = t->au[ i ];
+			y[ i ] = x[ i ];
+			if ( y[ i ] < lb + al )
+				y[ i ] = ( lb - al ) + 2 * sqrt( al * ( y[ i ] - lb ) );
+			else if ( y[ i ] > ub - au )
+				y[ i ] = ( ub + au ) - 2 * sqrt( au * ( ub - y[ i ] ) );
+		}
+	}
 
 	struct pimpl_t
 	{
-		pimpl_t() { cmaes = new cmaes_t; bounds = new cmaes_boundary_transformation_t; }
-		~pimpl_t() { delete cmaes; delete bounds; }
+		cmaes_t cmaes;
+		cmaes_boundary_trans_t bounds;
 
-		cmaes_t* cmaes;
-		cmaes_boundary_transformation_t* bounds;
+		vector< vector< double > > bounded_pop;
 	};
 
-	cma_optimizer::cma_optimizer( int dim, const real_vec& init_mean, const real_vec& init_std, int lambda, int seed, cma_weights w ) :
-	optimizer( dim )
+	cma_optimizer::cma_optimizer( int d, const real_vec& init_mean, const real_vec& init_std, int lam, int seed, cma_weights w ) :
+	optimizer( d )
 	{
 		pimpl = new pimpl_t;
 
-		cmaes_init( pimpl->cmaes, dim, init_mean, init_std, seed, lambda );
-		cmaes_readpara_SupplementDefaults( pimpl->cmaes );
-		cmaes_init_final( pimpl->cmaes );
+		cmaes_init( &pimpl->cmaes, d, init_mean, init_std, seed, lam );
+		cmaes_readpara_SupplementDefaults( &pimpl->cmaes );
+		cmaes_init_final( &pimpl->cmaes );
 
-		lambda_ = pimpl->cmaes->sp.lambda;
-		mu_ = pimpl->cmaes->sp.mu;
+		pimpl->bounded_pop.resize( lambda() );
+		for ( auto& ind : pimpl->bounded_pop )
+			ind.resize( dim() );
+	}
+
+	cma_optimizer::cma_optimizer( int dim, const real_vec& init_mean, const real_vec& init_std, const real_vec& lower_bounds, const real_vec& upper_bounds, int lambda, int seed, cma_weights w ) :
+	cma_optimizer( dim, init_mean, init_std, lambda, seed, w ) 
+	{
+		set_boundaries( lower_bounds, upper_bounds );
 	}
 
 	cma_optimizer::~cma_optimizer()
@@ -1057,13 +1144,50 @@ namespace flut
 		delete pimpl;
 	}
 
+	void cma_optimizer::set_boundaries( const vector< double >& lower, const vector< double >& upper )
+	{
+		cmaes_boundary_trans_init( &pimpl->bounds, lower, upper );
+	}
+
 	const std::vector< std::vector< double > >& cma_optimizer::sample_population()
 	{
-		return cmaes_SamplePopulation( pimpl->cmaes );
+		auto& pop = cmaes_SamplePopulation( &pimpl->cmaes );
+		for ( index_t pop_idx = 0; pop_idx < pop.size(); ++pop_idx )
+		{
+			if ( pimpl->bounds.lower_bounds.size() > 0 )
+			{
+				// apply transform
+				cmaes_boundary_trans( &pimpl->bounds, pop[ pop_idx ], pimpl->bounded_pop[ pop_idx ] );
+			}
+			else
+			{
+				// simply copy
+				for ( index_t idx = 0; idx < dim(); ++idx )
+					pimpl->bounded_pop[ pop_idx ][ idx ] = pop[ pop_idx ][ idx ];
+			}
+		}
+
+		return pimpl->bounded_pop;
 	}
 
 	void cma_optimizer::update_distribution( const std::vector< double >& results )
 	{
-		cmaes_UpdateDistribution( pimpl->cmaes, results );
+		cmaes_UpdateDistribution( &pimpl->cmaes, results );
 	}
+
+	int cma_optimizer::lambda() const
+	{
+		return pimpl->cmaes.sp.lambda;
+	}
+
+	int cma_optimizer::mu() const
+	{
+		return pimpl->cmaes.sp.mu;
+	}
+
+	int cma_optimizer::dim() const
+	{
+		return pimpl->cmaes.sp.N;
+	}
+
 }
