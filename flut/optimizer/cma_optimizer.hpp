@@ -2,8 +2,6 @@
 
 #include "optimizer.hpp"
 
-struct pimpl_t;
-
 namespace flut
 {
 	enum class cma_weights { none = 0, equal = 1, linear = 2, super_linear = 3 };
@@ -17,11 +15,6 @@ namespace flut
 			int lambda = 0, int seed = 123,
 			cma_weights w = cma_weights::super_linear );
 
-		cma_optimizer( int dim,
-			const real_vec& init_mean, const real_vec& init_std,
-			const real_vec& lower_bounds, const real_vec& upper_bounds,
-			objective_func_t func, cma_weights w = cma_weights::super_linear );
-
 		virtual ~cma_optimizer();
 
 		const std::vector< std::vector< double > >& sample_population();
@@ -32,6 +25,6 @@ namespace flut
 	protected:
 		int mu_;
 		int lambda_;
-		pimpl_t* pimpl;
+		struct pimpl_t* pimpl;
 	};
 }
