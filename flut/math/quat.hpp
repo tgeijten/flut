@@ -124,7 +124,7 @@ namespace flut
 		template< typename T > radian_< T > roll( const quat_<T>& q )
 		{
 			T ty = T(2) * q.y, tz = T(2) * q.z;
-			T twz = tz * q.w, Real txy = ty * q.x, tyy = ty * q.y, tzz = tz * q.z;
+			T twz = tz * q.w, txy = ty * q.x, tyy = ty * q.y, tzz = tz * q.z;
 			return radian_< T >( atan2( txy + twz, T(1) - ( tyy + tzz ) ) );
 		}
 
@@ -172,7 +172,7 @@ namespace flut
 		{
 			flut_assert( is_normalized( q ) );
 			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
-			if ( l > constants::epsilon() )
+			if ( l > constants<T>::epsilon() )
 			{
 				T s = T(1) / l;
 				return std::pair< vec3_<T>, radian_<T> >{ vec3f( s * q.x, s * q.y, s * q.z ), radian_<T>( T(2) * std::acos( q.w ) ) };

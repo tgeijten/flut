@@ -23,7 +23,7 @@ namespace flut
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
 
 		/// find index of a label
-		index_t find_channel( const L& label ) const { auto it = label_indices_.find( label ); return ( it != label_indices_.end() ) ? it->second : no_index; }
+		index_t find_channel( const L& label ) const { auto it = labels_.find( label ); return ( it != labels_.end() ) ? it->second : no_index; }
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
@@ -98,7 +98,7 @@ namespace flut
 	private:
 		size_t frame_size_;
 		std::vector< L > labels_;
-        std::vector< T > data_;
+		std::vector< T > data_;
 	};
 
 	template< typename T, typename L > std::ostream& operator<<( std::ostream& str, const storage< T, L >& buf )
