@@ -17,32 +17,34 @@ namespace flut
 	class FLUT_API optimizer
 	{
 	public:
-		typedef vector< double > real_vec;
+		typedef vector< double > vec_double;
 
-		optimizer( int dim );
-		optimizer( int dim, const real_vec& lower, const real_vec& upper );
+		static double no_objective_func( const vec_double& ) { flut_error( "No objective function" ); }
+
+		optimizer( int dim, objective_func_t func = no_objective_func );
 		virtual ~optimizer();
 
-		//virtual real_vec evaluate( const vector< real_vec >& pop );
-		bool is_better( double a, double b ) { return maximize ? a > b : a < b; }
+		virtual vec_double evaluate( const vector< vec_double >& pop );
+
+		bool is_better( double a, double b ) { return maximize() ? a > b : a < b; }
+
+		bool maximize() const { return maximize_; }
+		void set_maximize( bool m ) { maximize_ = m; }
 		
+		int max_threads() const { return max_threads_; }
+		void set_max_threads( int val ) { max_threads_ = val; }
+
 	protected:
-		void to_bounded( real_vec& values );
-		void from_bounded( real_vec& values );
 
 		// parameter settings
-		bool maximize = false;
-		int dim = -1;
+		bool maximize_ = false;
+		int dim_ = -1;
 
 		// evaluation settings
-		int max_threads = 1;
+		int max_threads_ = 1;
 
 		// objective
-		//objective_func_t func;
-
-		// boundaries
-		real_vec lower_bounds;
-		real_vec upper_bounds;
+		objective_func_t func_;
 	};
 }
 

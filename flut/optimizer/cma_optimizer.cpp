@@ -1119,8 +1119,8 @@ namespace flut
 		vector< vector< double > > bounded_pop;
 	};
 
-	cma_optimizer::cma_optimizer( int d, const real_vec& init_mean, const real_vec& init_std, int lam, int seed, cma_weights w ) :
-	optimizer( d )
+	cma_optimizer::cma_optimizer( int d, const vec_double& init_mean, const vec_double& init_std, objective_func_t func, int lam, int seed, cma_weights w ) :
+	optimizer( d, func )
 	{
 		pimpl = new pimpl_t;
 
@@ -1133,8 +1133,8 @@ namespace flut
 			ind.resize( dim() );
 	}
 
-	cma_optimizer::cma_optimizer( int dim, const real_vec& init_mean, const real_vec& init_std, const real_vec& lower_bounds, const real_vec& upper_bounds, int lambda, int seed, cma_weights w ) :
-	cma_optimizer( dim, init_mean, init_std, lambda, seed, w ) 
+	cma_optimizer::cma_optimizer( int dim, const vec_double& init_mean, const vec_double& init_std, const vec_double& lower_bounds, const vec_double& upper_bounds, objective_func_t func, int lambda, int seed, cma_weights w ) :
+	cma_optimizer( dim, init_mean, init_std, func, lambda, seed, w ) 
 	{
 		set_boundaries( lower_bounds, upper_bounds );
 	}
@@ -1172,7 +1172,14 @@ namespace flut
 
 	void cma_optimizer::update_distribution( const std::vector< double >& results )
 	{
-		cmaes_UpdateDistribution( &pimpl->cmaes, results );
+		if ( maximize() )
+		{
+			// negate first, since c-cmaes always minimizes
+			vec_double neg_results ( results.size() );
+			std::transform( results.begin(), results.end(), neg_results.begin(), [&]( const double& v ) { return -v; } );
+			cmaes_UpdateDistribution( &pimpl->cmaes, neg_results );
+		}
+		else cmaes_UpdateDistribution( &pimpl->cmaes, results );
 	}
 
 	int cma_optimizer::lambda() const

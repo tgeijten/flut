@@ -1,19 +1,13 @@
 #include "optimizer.hpp"
+#include <future>
+#include "flut/system/log.hpp"
 
 namespace flut
 {
 
-	optimizer::optimizer( int d ) :
-	dim( d ),
-	lower_bounds( dim, std::numeric_limits< real_t >::lowest() ),
-	upper_bounds( dim, std::numeric_limits< real_t >::max() )
-	{
-	}
-
-	optimizer::optimizer( int d, const real_vec& lower, const real_vec& upper ) :
-	dim( d ),
-	lower_bounds( lower ),
-	upper_bounds( upper )
+	optimizer::optimizer( int d, objective_func_t f ) :
+	dim_( d ),
+	func_( f )
 	{
 	}
 
@@ -21,21 +15,36 @@ namespace flut
 	{
 	}
 
-	//optimizer::real_vec optimizer::evaluate( const vector< real_vec >& pop )
-	//{
-	//	real_vec fitness;
-	//	fitness.reserve( dim );
-	//	for ( auto& ind : pop )
-	//		fitness.push_back( func( ind ) );
-	//	return fitness;
-	//}
-
-	void optimizer::to_bounded( real_vec& values )
+	flut::optimizer::vec_double optimizer::evaluate( const vector< vec_double >& pop )
 	{
-	}
+		vector< std::pair< std::future< double >, index_t > > threads;
+		vector< double > results( pop.size(), 0.0 );
 
-	void optimizer::from_bounded( real_vec& values )
-	{
+		for ( index_t eval_idx = 0; eval_idx < pop.size(); ++eval_idx )
+		{
+			// first make sure enough threads are available
+			while ( threads.size() >= max_threads() )
+			{
+				for ( auto it = threads.begin(); it != threads.end(); )
+				{
+					if ( it->first.wait_for( std::chrono::milliseconds( 1 ) ) == std::future_status::ready )
+					{
+						// a thread is finished, lets add it to the results and make room for a new thread
+						results[ it->second ] = it->first.get();
+						it = threads.erase( it );
+					}
+					else ++it;
+				}
+			}
+
+			// add new thread
+			threads.push_back( std::make_pair( std::async( std::launch::async, func_, pop[ eval_idx ] ), eval_idx ) );
+		}
+
+		// wait for remaining threads
+		for ( auto& f : threads )
+			results[ f.second ] = f.first.get();
+
+		return results;
 	}
 }
-

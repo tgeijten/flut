@@ -11,13 +11,15 @@ namespace flut
 	public:
 
 		cma_optimizer( int dim,
-			const real_vec& init_mean, const real_vec& init_std,
+			const vec_double& init_mean, const vec_double& init_std,
+			objective_func_t func = optimizer::no_objective_func,
 			int lambda = 0, int seed = 123,
 			cma_weights w = cma_weights::log );
 
 		cma_optimizer( int dim,
-			const real_vec& init_mean, const real_vec& init_std,
-			const real_vec& lower_bounds, const real_vec& upper_bounds,
+			const vec_double& init_mean, const vec_double& init_std,
+			const vec_double& lower_bounds, const vec_double& upper_bounds,
+			objective_func_t func = optimizer::no_objective_func,
 			int lambda = 0, int seed = 123,
 			cma_weights w = cma_weights::log );
 
