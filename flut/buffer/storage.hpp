@@ -23,7 +23,7 @@ namespace flut
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
 
 		/// find index of a label
-		index_t find_channel( const L& label ) const { auto it = labels_.find( label ); return ( it != labels_.end() ) ? it->second : no_index; }
+		index_t find_channel( const L& label ) const { auto it = labels_.find( label ); return ( it != labels_.end() ) ? it - labels_.begin(): no_index; }
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
