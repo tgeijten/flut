@@ -1203,5 +1203,4 @@ namespace flut
 	{
 		return pimpl->cmaes.sp.N;
 	}
-
 }
