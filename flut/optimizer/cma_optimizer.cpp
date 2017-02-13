@@ -5,7 +5,9 @@
 #include "flut/container_tools.hpp"
 #include "flut/math/math.hpp"
 #include "flut/system/log.hpp"
-#include <math.h>
+
+#include <cmath>
+#include <cstring>
 
 namespace flut
 {
@@ -53,7 +55,7 @@ namespace flut
 		double facupdateCmode;
 
 		/* supplementary variables */
-		char weigkey[ 10 ];
+		cma_weights weigh_mode;
 	};
 
 
@@ -136,24 +138,30 @@ namespace flut
 
 
 
-	void cmaes_readpara_SetWeights( cmaes_readpara_t *t, const char * mode )
+	void cmaes_readpara_SetWeights( cmaes_readpara_t *t )
 	{
 		double s1, s2;
 		int i;
 
 		t->weights.resize( t->mu );
-		if ( strcmp( mode, "lin" ) == 0 )
+		switch ( t->weigh_mode )
+		{
+		case cma_weights::linear:
 			for ( i = 0; i < t->mu; ++i )
 				t->weights[ i ] = t->mu - i;
-		else if ( strncmp( mode, "equal", 3 ) == 0 )
+			break;
+		case cma_weights::equal:
 			for ( i = 0; i < t->mu; ++i )
 				t->weights[ i ] = 1;
-		else if ( strcmp( mode, "log" ) == 0 )
+			break;
+		case cma_weights::log:
 			for ( i = 0; i < t->mu; ++i )
-				t->weights[ i ] = ::log( t->mu + 1. ) - ::log( i + 1. );
-		else
-			for ( i = 0; i < t->mu; ++i )
-				t->weights[ i ] = ::log( t->mu + 1. ) - ::log( i + 1. );
+				t->weights[ i ] = std::log( t->mu + 1. ) - std::log( i + 1. );
+			break;
+		default:
+			flut_error( "Invalid weighting mode " + to_str( t->weigh_mode ) );
+			break;
+		}
 
 		/* normalize weights vector and set mueff */
 		for ( i = 0, s1 = 0, s2 = 0; i < t->mu; ++i ) {
@@ -167,7 +175,6 @@ namespace flut
 		if ( t->mu < 1 || t->mu > t->lambda ||
 			( t->mu == t->lambda && t->weights[ 0 ] == t->weights[ t->mu - 1 ] ) )
 			flut_error( "cmaes_readpara_SetWeights(): invalid setting of mu or lambda" );
-
 	} /* cmaes_readpara_SetWeights() */
 
 
@@ -202,7 +209,7 @@ namespace flut
 			rquad = x1*x1 + x2*x2;
 		}
 		while ( rquad >= 1 || rquad <= 0 );
-		fac = sqrt( -2.0*::log( rquad ) / rquad );
+		fac = sqrt( -2.0*std::log( rquad ) / rquad );
 		t->flgstored = 1;
 		t->hold = fac * x1;
 		return fac * x2;
@@ -232,7 +239,7 @@ namespace flut
 		t->sp.lambda = lambda;
 		t->sp.mu = -1;
 		t->sp.mucov = -1;
-		strcpy( t->sp.weigkey, "log" );
+		t->sp.weigh_mode = cma_weights::log;
 
 		t->sp.cs = -1;
 		t->sp.ccumcov = -1;
@@ -271,13 +278,13 @@ namespace flut
 			t->sp.stStopFitness.flg = 0;
 
 		if ( t->sp.lambda < 2 )
-			t->sp.lambda = 4 + (int)( 3 * ::log( (double)N ) );
+			t->sp.lambda = 4 + (int)( 3 * std::log( (double)N ) );
 
 		if ( t->sp.mu == -1 )
 			t->sp.mu = t->sp.lambda / 2;
 
 		if ( t->sp.weights.empty() )
-			cmaes_readpara_SetWeights( &t->sp, t->sp.weigkey );
+			cmaes_readpara_SetWeights( &t->sp );
 
 		if ( t->sp.cs > 0 ) /* factor was read */
 			t->sp.cs *= ( t->sp.mueff + 2. ) / ( N + t->sp.mueff + 3. );
