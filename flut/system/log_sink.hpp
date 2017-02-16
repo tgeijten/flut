@@ -10,7 +10,7 @@ namespace flut
 		class FLUT_API sink
 		{
 		public:
-			sink( level l ) : log_level_( l ) { flut::log::add_sink( this ); }
+			sink( level l = info_level ) : log_level_( l ) { flut::log::add_sink( this ); }
 			virtual ~sink() { flut::log::remove_sink( this ); }
 			virtual void send_log_message( level l, const string& msg ) = 0;
 			void try_send_log_message( level l, const string& msg ) { if ( test_log_level( l ) ) send_log_message( l, msg ); }
