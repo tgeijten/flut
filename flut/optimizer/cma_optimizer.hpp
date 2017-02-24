@@ -33,6 +33,7 @@ namespace flut
 		int lambda() const;
 		int mu() const;
 		int dim() const;
+		int random_seed() const;
 
 	protected:
 		struct pimpl_t* pimpl;

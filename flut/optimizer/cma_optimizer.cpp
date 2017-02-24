@@ -118,10 +118,15 @@ namespace flut
 
 		t->flgstored = 0;
 		t->startseed = inseed; /* purely for bookkeeping */
+
+		long epoch = clock();
+		if ( inseed < 1 ) {
+			while ( epoch == (long)clock() );
+			inseed = (long unsigned)labs( (long)( 100 * time( NULL ) + clock() ) );
+		}
+
 		while ( inseed > 2e9 )
 			inseed /= 2; /* prevent infinite loop on 32 bit system */
-		if ( inseed < 1 )
-			inseed = 1;
 		t->aktseed = inseed;
 		for ( long i = 39; i >= 0; --i )
 		{
@@ -1026,7 +1031,7 @@ namespace flut
 	} cmaes_boundary_trans_t;
 
 	void cmaes_boundary_trans_init( cmaes_boundary_trans_t *t,
-        const dbl_vec& lower_bounds, const dbl_vec& upper_bounds )
+		const dbl_vec& lower_bounds, const dbl_vec& upper_bounds )
 	{
 		flut_assert( upper_bounds.size() == lower_bounds.size() );
 		auto l = lower_bounds.size();
@@ -1040,12 +1045,12 @@ namespace flut
 
 		auto& lb = t->lower_bounds;
 		auto& ub = t->upper_bounds;
-		for( int i = 0; i < l; ++i) {
-			if (lb[i] == ub[i])
-				flut_error("Lower and upper bounds must be different in all variables");
+		for ( int i = 0; i < l; ++i ) {
+			if ( lb[ i ] == ub[ i ] )
+				flut_error( "Lower and upper bounds must be different in all variables" );
 			/* between lb+al and ub-au transformation is the identity */
-			t->al[i] = fmin((ub[i] - lb[i]) / 2., (1. + fabs(lb[i])) / 20.);
-			t->au[i] = fmin((ub[i] - lb[i]) / 2., (1. + fabs(ub[i])) / 20.);
+			t->al[ i ] = fmin( ( ub[ i ] - lb[ i ] ) / 2., ( 1. + fabs( lb[ i ] ) ) / 20. );
+			t->au[ i ] = fmin( ( ub[ i ] - lb[ i ] ) / 2., ( 1. + fabs( ub[ i ] ) ) / 20. );
 		}
 	}
 
@@ -1127,7 +1132,7 @@ namespace flut
 	};
 
 	cma_optimizer::cma_optimizer( int d, const vec_double& init_mean, const vec_double& init_std, objective_func_t func, int lam, int seed, cma_weights w ) :
-	optimizer( d, func )
+		optimizer( d, func )
 	{
 		pimpl = new pimpl_t;
 
@@ -1141,7 +1146,7 @@ namespace flut
 	}
 
 	cma_optimizer::cma_optimizer( int dim, const vec_double& init_mean, const vec_double& init_std, const vec_double& lower_bounds, const vec_double& upper_bounds, objective_func_t func, int lambda, int seed, cma_weights w ) :
-	cma_optimizer( dim, init_mean, init_std, func, lambda, seed, w ) 
+		cma_optimizer( dim, init_mean, init_std, func, lambda, seed, w )
 	{
 		set_boundaries( lower_bounds, upper_bounds );
 	}
@@ -1182,7 +1187,7 @@ namespace flut
 		if ( maximize() )
 		{
 			// negate first, since c-cmaes always minimizes
-			vec_double neg_results ( results.size() );
+			vec_double neg_results( results.size() );
 			std::transform( results.begin(), results.end(), neg_results.begin(), [&]( const double& v ) { return -v; } );
 			cmaes_UpdateDistribution( &pimpl->cmaes, neg_results );
 		}
@@ -1202,5 +1207,10 @@ namespace flut
 	int cma_optimizer::dim() const
 	{
 		return pimpl->cmaes.sp.N;
+	}
+
+	int cma_optimizer::random_seed() const
+	{
+		return pimpl->cmaes.rand.aktseed;
 	}
 }

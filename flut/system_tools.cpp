@@ -4,11 +4,13 @@
 #ifdef FLUT_COMP_MSVC
 #	include <conio.h>
 #	include <shlobj.h>
+#	pragma warning( disable: 4996 )
 #endif
 
 #include <fstream>
 #include "system/log.hpp"
 #include <chrono>
+#include <corecrt_io.h>
 
 namespace flut
 {
@@ -65,12 +67,28 @@ namespace flut
 #endif
 	}
 
-	FLUT_API bool exists( const path& file )
+	FLUT_API bool file_exists( const path& file )
 	{
 		std::ifstream ifs( file.str() );
 		return ifs.good();
 	}
 
+
+	FLUT_API bool folder_exists( const path& folder )
+	{
+		if ( !folder.empty() )
+		{
+			if ( access( folder.c_str(), 0 ) == 0 )
+			{
+				struct stat status;
+				stat( folder.c_str(), &status );
+				if ( status.st_mode & S_IFDIR )
+					return true;
+			}
+		}
+		// if any condition fails
+		return false;
+	}
 
 	FLUT_API string get_date_time_str( const char* format )
 	{
@@ -99,5 +117,17 @@ namespace flut
 
 		// crash!
 		*(int*)(0) = 123;
+	}
+
+	FLUT_API void set_thread_priority( thread_priority p )
+	{
+#ifdef FLUT_COMP_MSVC
+
+		::SetThreadPriority( ::GetCurrentThread(), (int)p );
+#elif __APPLE__
+		// TODO setschedprio unavailable; maybe use getschedparam?
+#else
+		pthread_setschedparam( pthread_self(), SCHED_RR, (int)p + 2 );
+#endif
 	}
 }
