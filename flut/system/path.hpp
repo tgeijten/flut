@@ -92,6 +92,10 @@ namespace flut
 		return p1.has_filename() ? path( p1.str() + path::preferred_separator() + p2.str() ) : path( p1.str() + p2.str() );
 	}
 
+	inline path operator+( const path& p1, const string& p2 ) {
+		return path( p1.str() + p2 );
+	}
+
 	inline bool operator==( const path& p1, const path& p2 ) { return p1.str() == p2.str(); }
 	inline bool operator!=( const path& p1, const path& p2 ) { return p1.str() != p2.str(); }
 
