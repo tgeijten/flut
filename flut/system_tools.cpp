@@ -11,6 +11,7 @@
 #include "system/log.hpp"
 #include <chrono>
 #include <corecrt_io.h>
+#include <direct.h>
 
 namespace flut
 {
@@ -86,8 +87,12 @@ namespace flut
 					return true;
 			}
 		}
-		// if any condition fails
-		return false;
+		return false; // if any condition fails
+	}
+
+	FLUT_API void create_folder( const path& folder )
+	{
+		mkdir( folder.c_str() );
 	}
 
 	FLUT_API string get_date_time_str( const char* format )
