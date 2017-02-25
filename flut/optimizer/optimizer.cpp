@@ -17,33 +17,48 @@ namespace flut
 
 	flut::optimizer::vec_double optimizer::evaluate( const vector< vec_double >& pop )
 	{
-		vector< std::pair< std::future< double >, index_t > > threads;
 		vector< double > results( pop.size(), 0.0 );
 
-		for ( index_t eval_idx = 0; eval_idx < pop.size(); ++eval_idx )
+		try
 		{
-			// first make sure enough threads are available
-			while ( threads.size() >= max_threads() )
+			vector< std::pair< std::future< double >, index_t > > threads;
+
+			for ( index_t eval_idx = 0; eval_idx < pop.size(); ++eval_idx )
 			{
-				for ( auto it = threads.begin(); it != threads.end(); )
+				// first make sure enough threads are available
+				while ( threads.size() >= max_threads() )
 				{
-					if ( it->first.wait_for( std::chrono::milliseconds( 1 ) ) == std::future_status::ready )
+					for ( auto it = threads.begin(); it != threads.end(); )
 					{
-						// a thread is finished, lets add it to the results and make room for a new thread
-						results[ it->second ] = it->first.get();
-						it = threads.erase( it );
+						if ( it->first.wait_for( std::chrono::milliseconds( 1 ) ) == std::future_status::ready )
+						{
+							// a thread is finished, lets add it to the results and make room for a new thread
+							results[ it->second ] = it->first.get();
+							it = threads.erase( it );
+						}
+						else ++it;
 					}
-					else ++it;
 				}
+
+				// add new thread
+				threads.push_back( std::make_pair( std::async( std::launch::async, func_, pop[ eval_idx ] ), eval_idx ) );
 			}
 
-			// add new thread
-			threads.push_back( std::make_pair( std::async( std::launch::async, func_, pop[ eval_idx ] ), eval_idx ) );
+			// wait for remaining threads
+			for ( auto& f : threads )
+				results[ f.second ] = f.first.get();
 		}
+		catch ( std::exception& e )
+		{
+			log::critical( "Error during multi-threaded evaluation" );
+			std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
 
-		// wait for remaining threads
-		for ( auto& f : threads )
-			results[ f.second ] = f.first.get();
+		}
+		catch ( ... )
+		{
+			log::critical( "Unknown error during multi-threaded evaluation" );
+			std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
+		}
 
 		return results;
 	}
