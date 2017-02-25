@@ -77,6 +77,11 @@ namespace flut
 
 	FLUT_API bool folder_exists( const path& folder )
 	{
+#ifdef FLUT_COMP_MSVC
+		DWORD dwAttrib = GetFileAttributes( path( folder ).make_preferred().c_str() );
+		return ( dwAttrib != INVALID_FILE_ATTRIBUTES &&
+			( dwAttrib & FILE_ATTRIBUTE_DIRECTORY ) );
+#else
 		if ( !folder.empty() )
 		{
 			if ( access( folder.c_str(), 0 ) == 0 )
@@ -88,11 +93,16 @@ namespace flut
 			}
 		}
 		return false; // if any condition fails
+#endif
 	}
 
-	FLUT_API void create_folder( const path& folder )
+	FLUT_API bool create_folder( const path& folder )
 	{
-		mkdir( folder.c_str() );
+#ifdef FLUT_COMP_MSVC
+		return CreateDirectory( folder.c_str(), NULL ) != 0;
+#else
+		return mkdir( folder.c_str() ) == 0;
+#endif
 	}
 
 	FLUT_API string get_date_time_str( const char* format )
@@ -100,14 +110,11 @@ namespace flut
 		// GCC did not implement std::put_time until GCC 5
 #if defined(__GNUC__) && (__GNUC__ < 5)
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
-
 		char arr[100];
 		std::strftime( arr, sizeof( arr ), format, std::localtime( &in_time_t ) );
-		string str( arr );
-		return str;
+		return string( arr );
 #else
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
-
 		std::stringstream ss;
 		ss << std::put_time( std::localtime( &in_time_t ), format );
 		return ss.str();
