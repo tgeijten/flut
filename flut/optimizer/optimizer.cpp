@@ -50,14 +50,11 @@ namespace flut
 		}
 		catch ( std::exception& e )
 		{
-			log::critical( "Error during multi-threaded evaluation" );
-			std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
-
+			log::critical( "Error during multi-threaded evaluation: ", e.what() );
 		}
 		catch ( ... )
 		{
 			log::critical( "Unknown error during multi-threaded evaluation" );
-			std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
 		}
 
 		return results;

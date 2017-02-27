@@ -79,8 +79,7 @@ namespace flut
 	{
 #ifdef FLUT_COMP_MSVC
 		DWORD dwAttrib = GetFileAttributes( path( folder ).make_preferred().c_str() );
-		return ( dwAttrib != INVALID_FILE_ATTRIBUTES &&
-			( dwAttrib & FILE_ATTRIBUTE_DIRECTORY ) );
+		return ( dwAttrib != INVALID_FILE_ATTRIBUTES && ( dwAttrib & FILE_ATTRIBUTE_DIRECTORY ) );
 #else
 		if ( !folder.empty() )
 		{
