@@ -12,6 +12,7 @@
 #include <chrono>
 #include <corecrt_io.h>
 #include <direct.h>
+#include <thread>
 
 namespace flut
 {
@@ -128,6 +129,11 @@ namespace flut
 
 		// crash!
 		*(int*)(0) = 123;
+	}
+
+	FLUT_API void sleep( int ms )
+	{
+		std::this_thread::sleep_for( std::chrono::milliseconds( ms ) );
 	}
 
 	FLUT_API void set_thread_priority( thread_priority p )

@@ -3,8 +3,8 @@
 #include "platform.hpp"
 #include "types.hpp"
 
-#define FLUT_TEST( operation ) flut::test_framework::get_instance().test( #operation, operation );
-#define FLUT_TEST_MSG( operation, message ) flut::test_framework::get_instance().test( #operation, operation, message );
+#define FLUT_TEST( operation ) flut::test_framework::get_instance().test( #operation, operation )
+#define FLUT_TEST_MSG( operation, message ) flut::test_framework::get_instance().test( #operation, operation, message )
 #define FLUT_TEST_REPORT flut::test_framework::get_instance().report
 
 namespace flut
@@ -13,7 +13,7 @@ namespace flut
 	{
 	public:
 		test_framework();
-		void test( const char* name, bool result, const string& message = "" );
+		bool test( const char* name, bool result, const string& message = "" );
 		void reset();
 		int report();
 

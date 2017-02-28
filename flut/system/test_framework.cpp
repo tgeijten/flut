@@ -11,18 +11,20 @@ namespace flut
 	num_failed( 0 )
 	{}
 
-	void test_framework::test( const char* name, bool result, const string& message )
+	bool test_framework::test( const char* name, bool result, const string& message )
 	{
 		++num_tests;
 		if ( result )
 		{
 			log::info( "TEST ", num_tests, " ", name, ": passed. ", message );
 			num_passed++;
+			return true;
 		}
 		else
 		{
 			log::error( "TEST ", num_tests, " ", name, ": FAILED! ", message );
 			num_failed++;
+			return false;
 		}
 	}
 
