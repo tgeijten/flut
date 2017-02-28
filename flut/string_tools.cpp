@@ -141,7 +141,7 @@ namespace flut
 
 	FLUT_API char decode_char( const char* buf, size_t buf_size, int* len )
 	{
-		flut_error_if( buf_size == 0, "Could not read buffer" );
+		flut_error_if( buf_size == 0, "Invalid buffer size" );
 		*len = 0;
 		if ( *buf != '\\' || buf_size == 1 )
 			return *buf;
@@ -189,7 +189,7 @@ namespace flut
 	FLUT_API bool needs_quotes( const string& s )
 	{
 		for ( const char& c : s )
-			if ( c < 32 || c == '\"' || c == '\\' )
+			if ( c < 33 || c == '\"' || c == '\\' )
 				return true;
 		return false;
 	}

@@ -7,17 +7,17 @@ namespace flut
 
 	char_stream::char_stream()
 	{
-		init_buffer( str_buffer.c_str() );
+		init_buffer( str_buffer.c_str(), str_buffer.size() );
 	}
 
 	char_stream::char_stream( const char* buf )
 	{
-		init_buffer( buf );
+		init_buffer( buf, strlen( buf ) );
 	}
 
 	char_stream::char_stream( string&& other ) : str_buffer( std::move( other ) )
 	{
-		init_buffer( str_buffer.c_str() );
+		init_buffer( str_buffer.c_str(), str_buffer.size() );
 	}
 
 	flut::char_stream& char_stream::operator>>( string& s )
@@ -46,19 +46,22 @@ namespace flut
 			string s;
 			while ( good() )
 			{
-				char c = getc();
-				if ( c == '\"' ) break; // end quote
-				if ( c == '\\' )
+				char c = peekc();
+				if ( c == '\"' )
+				{
+					getc();
+					skip_whitespace();
+					break; // end quote
+				}
+				else if ( c == '\\' )
 				{
 					int len;
-					s += decode_char( cur_pos, end_pos - cur_pos, &len );
-					cur_pos += len;
-					process_end_pos();
-
+					s += decode_char( cur_pos, buffer_end - cur_pos, &len );
+					for ( ; len > 0; --len ) getc();
 				}
+				else s += getc();
 			}
 
-			skip_whitespace();
 			return s;
 		}
 		else
@@ -82,11 +85,12 @@ namespace flut
 		}
 	}
 
-	void char_stream::init_buffer( const char* b )
+	void char_stream::init_buffer( const char* b, size_t len )
 	{
 		flut_assert( b != 0 );
 		cur_pos = buffer = b;
 		end_pos = nullptr;
+		buffer_end = buffer + len;
 		skip_whitespace();
 	}
 

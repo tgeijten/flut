@@ -49,7 +49,7 @@ namespace flut
 		bool fail() { return buffer_flags.get< fail_flag >(); }
 
 	private:
-		void init_buffer( const char* b );
+		void init_buffer( const char* b, size_t len );
 
 		void skip_whitespace()
 		{ for( ; isspace( *cur_pos ); ++cur_pos ); if ( *cur_pos == '\0' ) buffer_flags.set< eof_flag >(); }
@@ -62,6 +62,7 @@ namespace flut
 		const char* buffer;
 		const char* cur_pos;
 		char* end_pos;
+		const char* buffer_end;
 
 		enum buffer_flag { fail_flag, eof_flag };
 		flag_set< buffer_flag > buffer_flags;

@@ -192,7 +192,7 @@ namespace flut
 		string newline = readable ? "\n" : " ";
 		string assign = readable ? " = " : "=";
 
-		str << indent << label;
+		str << indent << try_quoted( label );
 		if ( pn.has_value() )
 			str << assign << try_quoted( pn.get_value() );
 		str << newline;
