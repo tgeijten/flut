@@ -14,6 +14,7 @@
 #include <memory>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 
 namespace flut
 {
@@ -117,6 +118,106 @@ namespace flut
 		buf << ifstr.rdbuf();
 		return buf.str();
 #endif
+	}
+
+	FLUT_API string encode_char( char c )
+	{
+		if ( c == '\"' )
+			return "\\\"";
+		else if ( c == '\\' )
+			return "\\\\";
+		else if ( c < 32 )
+		{
+			switch ( c )
+			{
+			case '\r': return "\\r";
+			case '\n': return "\\n";
+			case '\t': return "\\t";
+			default: return stringf( "\\%03o", (int)c );
+			}
+		}
+		else return string( 1, c ); // nothing to encode
+	}
+
+	FLUT_API char decode_char( const char* buf, size_t buf_size, int* len )
+	{
+		flut_error_if( buf_size == 0, "Could not read buffer" );
+		*len = 0;
+		if ( *buf != '\\' || buf_size == 1 )
+			return *buf;
+
+		*len = 2;
+		switch ( *(++buf) )
+		{
+		case 0: return '?'; // this is an error
+		case '\\': return '\\';
+		case '\"': return '\"';
+		case 'r': return '\r';
+		case 'n': return '\n';
+		case 't': return '\t';
+		default:
+		{
+			// read oct digits
+			int value = 0;
+			int max_len = std::min( (int)buf_size - 1, 3 );
+			for ( *len = 1; *len <= max_len; ++(*len) )
+			{
+				if ( *buf >= '0' && *buf < '8' )
+					value = value * 8 + *buf++ - '0';
+				else break;
+			}
+			if ( *len > 1 && value > 0 && value < 32 )
+				return char( value ); // we read a valid char
+			else return '?'; // no valid char could be read
+		}
+		}
+	}
+
+	FLUT_API string quoted( const string& s )
+	{
+		string sout = "\"";
+		for ( const char& c : s )
+		{
+			if ( c == '\"' || c == '\\' || c < 32 )
+				sout += encode_char( c );
+			else sout += c;
+		}
+		sout += "\"";
+		return sout;
+	}
+
+	FLUT_API bool needs_quotes( const string& s )
+	{
+		for ( const char& c : s )
+			if ( c < 32 || c == '\"' || c == '\\' )
+				return true;
+		return false;
+	}
+
+	FLUT_API string try_quoted( const string& s )
+	{
+		if ( needs_quotes( s ) )
+			return quoted( s );
+		else return s;
+	}
+
+	FLUT_API string try_unquoted( const string& s )
+	{
+		if ( s.empty() || s.front() != '\"' || s.back() != '\"' )
+			return s; // no quotes
+
+		string sout;
+		for ( auto it = s.begin() + 1; *it != '\"'; ++it )
+		{
+			if ( *it == '\\' )
+			{
+				int len;
+				sout += decode_char( &( *it ), s.end() - it, &len );
+				it += ( len - 1 );
+			}
+			else sout += *it;
+		}
+		return sout;
 	}
 
 	flut::string get_filename_ext( const string& str )

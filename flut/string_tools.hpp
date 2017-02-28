@@ -75,7 +75,22 @@ namespace flut
 	FLUT_API string load_string( const path& filename );
 
 	/// get a string between quotes
-	inline string quoted( const string& s ) { return '\"' + s + '\"'; }
+	FLUT_API string encode_char( char c );
+
+	/// get a string between quotes
+	FLUT_API char decode_char( const char* buf, size_t buf_size, int* len );
+
+	/// get a string between quotes
+	FLUT_API string quoted( const string& s );
+
+	/// get a string between quotes
+	FLUT_API bool needs_quotes( const string& s );
+
+	/// get a string between quotes
+	FLUT_API string try_quoted( const string& s );
+
+	/// get a string between quotes
+	FLUT_API string try_unquoted( const string& s );
 
 	/// Get filename extension (without dot)
 	FLUT_API string get_filename_ext( const string& str );

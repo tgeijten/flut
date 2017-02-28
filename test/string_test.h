@@ -36,6 +36,11 @@ namespace flut
 		FLUT_TEST( vs2[ 1 ] == "peer" );
 		FLUT_TEST( vs2[ 2 ] == "banaan" );
 
+		auto nasty_string = string( "String with \"quotes\" and spaces\nand\tspecial\001\002\003characters" );
+		auto quoted_nasty = try_quoted( nasty_string );
+		auto unquoted_nasty = try_unquoted( quoted_nasty );
+		FLUT_TEST( nasty_string == unquoted_nasty );
+
 		path p( "X:/appel/taart.txt" );
 		FLUT_TEST( p.empty() == false );
 		FLUT_TEST( p.extension() == "txt" );

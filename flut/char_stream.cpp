@@ -48,18 +48,14 @@ namespace flut
 			{
 				char c = getc();
 				if ( c == '\"' ) break; // end quote
-
 				if ( c == '\\' )
 				{
-					c = tolower( getc() );
-					switch ( c )
-					{
-					case 't': s += "\t"; break;
-					case 'n': s += "\n"; break;
-					default: s += c; break;
-					}
+					int len;
+					s += decode_char( cur_pos, end_pos - cur_pos, &len );
+					cur_pos += len;
+					process_end_pos();
+
 				}
-				else s += c;
 			}
 
 			skip_whitespace();
