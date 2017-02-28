@@ -37,7 +37,6 @@ namespace flut
 		normalenum e2 = value2;
 
 		flut::prop_node pn;
-		pn.set_value( 1.2 );
 		pn.push_back( "test", 1.2 );
 		auto a = pn.get< float >();
 
@@ -66,6 +65,17 @@ namespace flut
 		pn.set_delimited( "this.is.a.subfolder", 1.5 );
 		FLUT_TEST( pn[ "this" ][ "is" ][ "a" ][ "subfolder" ].get< double >() == 1.5 );
 		FLUT_TEST( pn.get_delimited< double >( "this.is.a.subfolder" ) == 1.5 );
+
+		pn.set( "key with spaces", "value with spaces\nand \"special\" \001 characters" );
+
+		save_prop( pn, "prop_node_test.prop" );
+		auto pn_loaded = load_prop( "prop_node_test.prop" );
+
+		if ( !FLUT_TEST( pn == pn_loaded ) )
+		{
+			log::info( pn );
+			log::info( pn_loaded );
+		}
 
 		log::trace( pn );
 	}

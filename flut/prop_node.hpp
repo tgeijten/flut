@@ -198,6 +198,11 @@ namespace flut
 		static prop_node to( const T& value ) { flut_error( "Cannot convert this class to prop_node" ); }
 	};
 
+	template< std::size_t N > struct prop_node_cast< char[ N ] > {
+		static const char* from( const prop_node& pn ) { flut_error( "Cannot convert prop_node to string literal" ); }
+		static prop_node to( const char* value ) { return prop_node( string( value ) ); }
+	};
+
 	template< typename T, typename E > struct prop_node_cast {
 		static T from( const prop_node& pn ) { return string_cast<T, E>::from( pn.get_value() ); }
 		static prop_node to( const T& value ) { return prop_node( string_cast<T, E>::to( value ) ); }

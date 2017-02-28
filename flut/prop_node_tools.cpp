@@ -194,7 +194,7 @@ namespace flut
 
 		str << indent << label;
 		if ( pn.has_value() )
-			str << assign << '\"' << pn.get_value() << '\"'; // #TODO only add quotes when needed
+			str << assign << try_quoted( pn.get_value() );
 		str << newline;
 		if ( pn.size() > 0 )
 		{
@@ -205,13 +205,16 @@ namespace flut
 		}
 	}
 
-	FLUT_API void save_prop( const prop_node& pn, const path& filename, bool readable )
+	FLUT_API bool save_prop( const prop_node& pn, const path& filename, bool readable )
 	{
-		std::ofstream str( filename.str() );
-		for ( auto& node : pn )
+		std::ofstream str( filename.str(), std::ios_base::out | std::ios_base::trunc );
+		if ( str.good() )
 		{
-			write_prop_none( str, node.first, node.second, 0, readable );
+			for ( auto& node : pn )
+				write_prop_none( str, node.first, node.second, 0, readable );
+			return true;
 		}
+		else return false;
 	}
 
 	void merge_prop_nodes( prop_node& pn, const prop_node& other, bool overwrite )
