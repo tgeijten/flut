@@ -94,8 +94,8 @@ namespace flut
 		skip_whitespace();
 	}
 
-	flut::char_stream load_char_stream( const string& filename )
+	flut::char_stream load_char_stream( const string& filename, error_code* ec )
 	{
-		return char_stream( load_string( filename ) );
+		return char_stream( load_string( filename, ec ) );
 	}
 }

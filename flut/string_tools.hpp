@@ -10,6 +10,7 @@
 #include <sstream>
 #include <algorithm>
 #include <stdlib.h>
+#include "error_code.h"
 
 namespace flut
 {
@@ -72,7 +73,7 @@ namespace flut
 	}
 
 	/// make string with contents of a file
-	FLUT_API string load_string( const path& filename );
+	FLUT_API string load_string( const path& filename, error_code* ec = nullptr );
 
 	/// get a string between quotes
 	FLUT_API string encode_char( char c );

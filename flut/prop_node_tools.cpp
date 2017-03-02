@@ -61,19 +61,31 @@ namespace flut
 		}
 	}
 
-	FLUT_API prop_node load_xml( const path& filename )
+	FLUT_API prop_node load_xml( const path& filename, error_code* ec )
 	{
-		string file_contents = load_string( filename );
-		rapidxml::xml_document<> doc;
-		doc.parse< 0 >( &file_contents[ 0 ] ); // not officially supported but probably safe
+		string file_contents = load_string( filename, ec );
+		if ( ec && ec->error() )
+			return prop_node();
 
-		if ( doc.first_node() )
+		try
 		{
-			prop_node pn;
-			pn.push_back( doc.first_node()->name(), get_rapid_xml_node( doc.first_node() ) );
-			return pn;
+			rapidxml::xml_document<> doc;
+			doc.parse< 0 >( &file_contents[ 0 ] ); // not officially supported but probably safe
+
+			if ( doc.first_node() )
+			{
+				prop_node pn;
+				pn.push_back( doc.first_node()->name(), get_rapid_xml_node( doc.first_node() ) );
+				return pn;
+			}
+			else return prop_node();
 		}
-		else return prop_node();
+		catch ( std::exception& e )
+		{
+			if ( try_set_error( ec, e.what() ) )
+				return prop_node();
+			else throw e;
+		}
 	}
 
 	FLUT_API void save_xml( const prop_node& pn, const path& filename )
@@ -82,7 +94,6 @@ namespace flut
 		set_rapid_xml_node( doc, &doc, pn );
 		std::ofstream ostr( filename.str() );
 		ostr << doc;
-
 	}
 
 	bool is_valid_prop_label( const string& s )
@@ -126,9 +137,16 @@ namespace flut
 		}
 	}
 
-	FLUT_API prop_node load_prop( const path& filename )
+	FLUT_API prop_node load_prop( const path& filename, error_code* ec )
 	{
-		auto str = load_char_stream( filename.str() );
+		auto str = load_char_stream( filename.str(), ec );
+		if ( !str.good() )
+		{
+			if ( try_set_error( ec, "Could not open " + filename.str() ) )
+				return prop_node();
+			else flut_error( "Could not open " + filename.str() );
+		}
+
 		prop_node root;
 		string t = get_prop_token( str );
 		while ( is_valid_prop_label( t ) )
@@ -193,8 +211,8 @@ namespace flut
 		string assign = readable ? " = " : "=";
 
 		str << indent << try_quoted( label );
-		if ( pn.has_value() )
-			str << assign << try_quoted( pn.get_value() );
+		if ( pn.has_value() || pn.empty() )
+			str << assign << ( pn.empty() ? "\"\"" : try_quoted( pn.get_value() ) );
 		str << newline;
 		if ( pn.size() > 0 )
 		{

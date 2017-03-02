@@ -15,6 +15,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include "error_code.h"
 
 namespace flut
 {
@@ -95,29 +96,19 @@ namespace flut
 	FLUT_API int to_str_precision()
 	{ return to_str_precision_value; }
 
-	string load_string( const path& filename )
+	string load_string( const path& filename, error_code* ec )
 	{
-#if 0
-		// read file contents into char array
-		FILE* f = fopen( filename.c_str(), "rb" );
-		flut_error_if( f == NULL, "Could not open " + quoted( filename ) );
-
-		fseek( f, 0, SEEK_END );
-		int file_len = ftell( f );
-		rewind( f );
-
-		string s( file_len, '\0' );
-		fread( reinterpret_cast< void* >( &s[ 0 ] ), sizeof( char ), file_len, f );
-
-		return s;
-#else
 		// this method uses a stringbuf, which may be slower but more stable
 		std::ifstream ifstr( filename.str() );
-		flut_error_if( !ifstr.good(), "Could not open " + filename.str() );
+		if ( !ifstr.good() )
+		{
+			if ( try_set_error( ec, "Could not open " + filename.str() ) )
+				return "";
+			else flut_error( "Could not open " + filename.str() );
+		}
 		std::stringstream buf;
 		buf << ifstr.rdbuf();
 		return buf.str();
-#endif
 	}
 
 	FLUT_API string encode_char( char c )

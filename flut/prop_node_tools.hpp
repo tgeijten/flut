@@ -2,6 +2,7 @@
 
 #include "prop_node.hpp"
 #include "system/path.hpp"
+#include "error_code.h"
 
 #define INIT_PROP( _pn_, _var_, _default_ ) _var_ = _pn_.get< decltype( _var_ ) >( #_var_, _default_ )
 #define INIT_PROP_NAMED( _pn_, _var_, _name_, _default_ ) _var_ = _pn_.get< decltype( _var_ ) >( _name_, _default_ )
@@ -17,11 +18,11 @@ namespace flut
 	FLUT_API prop_node load_file( const path& filename );
 
 	/// load/save contents from xml
-	FLUT_API prop_node load_xml( const path& filename );
+	FLUT_API prop_node load_xml( const path& filename, error_code* ec = nullptr  );
 	FLUT_API void save_xml( const prop_node& pn, const path& filename );
 
 	/// load/save contents from prop
-	FLUT_API prop_node load_prop( const path& filename );
+	FLUT_API prop_node load_prop( const path& filename, error_code* ec = nullptr );
 	FLUT_API bool save_prop( const prop_node& pn, const path& filename, bool readable = true );
 
 	/// load contents from prop

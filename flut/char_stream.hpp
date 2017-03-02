@@ -4,6 +4,7 @@
 #include "system/types.hpp"
 #include "system/assert.hpp"
 #include "flag_set.hpp"
+#include "error_code.h"
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
@@ -69,7 +70,7 @@ namespace flut
 	};
 
 	/// load file into char buffer
-	FLUT_API char_stream load_char_stream( const string& filename );
+	FLUT_API char_stream load_char_stream( const string& filename, error_code* ec = nullptr );
 }
 
 #ifdef FLUT_COMP_MSVC

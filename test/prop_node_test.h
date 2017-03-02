@@ -37,6 +37,7 @@ namespace flut
 		normalenum e2 = value2;
 
 		flut::prop_node pn;
+		pn.set( "empty", "" );
 		pn.set( "key with spaces", "value with spaces\nand \"special\" \001 characters" );
 		pn.push_back( "test", 1.2 );
 		auto a = pn.get< float >();
