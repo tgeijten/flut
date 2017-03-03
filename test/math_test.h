@@ -91,6 +91,12 @@ void angle_test()
 	auto sin1 = sin( a1_rd );
 	auto sin4 = sin( a4 );
 
+	vec3_< degreef > deg_vec( degreef( 10 ), degreef( 20 ), degreef( 30 ) );
+	vec3_< radianf > rad_vec;
+	rad_vec = deg_vec;
+	FLUT_TEST( equals( rad_vec[ 0 ].value, radianf( degreef( 10 ) ).value ) );
+
+
 	auto qtest = quat_from_euler( degree( 180.0 ), degree( 180 ), degree( 180 ).radian().degree(), euler_order::xyz );
 	auto qtest2 = quat_from_axis_angle( vec3_<float>::unit_x(), a6_df );
 
