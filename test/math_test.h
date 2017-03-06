@@ -17,6 +17,7 @@
 #include "flut/timer.hpp"
 #include "flut/system_tools.hpp"
 #include "flut/system/test_framework.hpp"
+#include "flut/math/bounding_box.hpp"
 
 using std::cout;
 using std::endl;
@@ -47,6 +48,15 @@ void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::rel
 }
 
 double sin_func( double x ) { return std::sin( x ); }
+
+void math_test()
+{
+	bounding_boxf bb;
+	bb += vec3f( -1, 2, -3 );
+	bb += vec3f( 3, -2, 1 );
+	FLUT_TEST( bb.lower_bounds == vec3f( -1, -2, -3 ) );
+	FLUT_TEST( bb.upper_bounds == vec3f( 3, 2, 1 ) );
+}
 
 void function_test()
 {

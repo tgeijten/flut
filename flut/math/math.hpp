@@ -54,6 +54,12 @@ namespace flut
 		/// sign of v: 1 or -1
 		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }
 
+		/// set if smaller
+		template< typename T > T& set_if_smaller( T& value, const T& other ) { if ( other < value ) value = other; return value; }
+
+		/// set if bigger
+		template< typename T > T& set_if_bigger( T& value, const T& other ) { if ( other > value ) value = other; return value; }
+
 		/// return clamped value that is between min and max
 		template< typename T > T clamped( T v, T min, T max )
 		{ if ( v < min ) return min; else if ( v > max ) return max; else return v; }

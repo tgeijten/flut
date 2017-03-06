@@ -62,6 +62,12 @@ namespace flut
 		template< typename T > T is_normalized( vec3_<T> v )
 		{ return equals( v.x * v.x + v.y * v.y + v.z * v.z, T(1) ); }
 
+		/// compare vec3
+		template< typename T > bool operator==( const vec3_<T>& v1, const vec3_<T>& v2 )
+		{ return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z; }
+		template< typename T > bool operator!=( const vec3_<T>& v1, const vec3_<T>& v2 )
+		{ return !( v1 == v2 ); }
+
 		/// Normalize a vec3
 		template< typename T > void normalize( vec3_<T>& v )
 		{ T l = length( v ); if ( l > constants<T>::epsilon() ) { T s = inv( l ); v.x *= s; v.y *= s; v.z *= s; } }

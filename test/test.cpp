@@ -40,6 +40,7 @@ int main( int argc, char* argv[] )
 		flut::buffer_test();
 		sw.add_measure( "buffer" );
 
+		flut::math::math_test();
 		flut::math::function_test();
 		flut::math::angle_test();
 		flut::math::vec_quat_test();
