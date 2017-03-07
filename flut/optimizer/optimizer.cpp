@@ -15,7 +15,7 @@ namespace flut
 	{
 	}
 
-	flut::optimizer::vec_double optimizer::evaluate( const vector< vec_double >& pop )
+	optimizer::vec_double optimizer::evaluate( const vector< vec_double >& pop )
 	{
 		vector< double > results( pop.size(), 0.0 );
 
@@ -51,10 +51,6 @@ namespace flut
 		catch ( std::exception& e )
 		{
 			log::critical( "Error during multi-threaded evaluation: ", e.what() );
-		}
-		catch ( ... )
-		{
-			log::critical( "Unknown error during multi-threaded evaluation" );
 		}
 
 		return results;
