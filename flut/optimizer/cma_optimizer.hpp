@@ -27,13 +27,16 @@ namespace flut
 
 		void set_boundaries( const vector< double >& lower, const vector< double >& upper );
 
-		const std::vector< std::vector< double > >& sample_population();
+		const vector< vector< double > >& sample_population();
 		void update_distribution( const std::vector< double >& results );
 
+		vector< double > current_mean() const;
+		vector< double > current_std() const;
 		int lambda() const;
 		int mu() const;
 		int dim() const;
 		int random_seed() const;
+		const vector< vector < double > >& current_pop() const;
 
 	protected:
 		struct pimpl_t* pimpl;

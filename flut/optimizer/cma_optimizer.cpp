@@ -374,7 +374,7 @@ namespace flut
 		t->rgps.resize( N );
 		t->rgdTmp.resize( N + 1 );
 		t->rgBDz.resize( N );
-		t->current_mean.resize( N + 1 ); // WTF? t->rgxmean[ 0 ] = N; ++t->rgxmean; fixed!
+		t->current_mean.resize( N ); // WTF? t->rgxmean[ 0 ] = N; ++t->rgxmean; fixed!
 		t->rgxold.resize( N + 1 ); // WTF? t->rgxold[ 0 ] = N; ++t->rgxold; fixed!
 		t->current_best.resize( N + 2 ); // WTF? t->rgxbestever[ 0 ] = N; ++t->rgxbestever; fixed!
 		t->rgout.resize( N + 1 ); // WTF? t->rgout[ 0 ] = N; ++t->rgout; fixed!
@@ -1127,8 +1127,19 @@ namespace flut
 	{
 		cmaes_t cmaes;
 		cmaes_boundary_trans_t bounds;
-
 		vector< vector< double > > bounded_pop;
+
+		vector< double > get_bounded( const vector< double >& params )
+		{
+			flut_assert( cmaes.sp.N == params.size() );
+			if ( !bounds.lower_bounds.empty() )
+			{
+				vector< double > bounded_pars( params.size() );
+				cmaes_boundary_trans( &bounds, params, bounded_pars );
+				return bounded_pars;
+			}
+			else return params;
+		}
 	};
 
 	cma_optimizer::cma_optimizer( int d, const vec_double& init_mean, const vec_double& init_std, objective_func_t func, int lam, int seed, cma_weights w ) :
@@ -1198,6 +1209,29 @@ namespace flut
 		else cmaes_UpdateDistribution( &pimpl->cmaes, results );
 	}
 
+	vector< double > cma_optimizer::current_mean() const
+	{
+		return pimpl->get_bounded( pimpl->cmaes.current_mean );
+		vector< double > means( dim() );
+		cmaes_boundary_trans( &pimpl->bounds, pimpl->cmaes.current_mean, means );
+		return means;
+	}
+
+	vector< double > cma_optimizer::current_std() const
+	{
+		auto m = current_mean();
+		vector< double > stds( dim() );
+		for ( index_t pop_idx = 0; pop_idx < current_pop().size(); ++pop_idx )
+		{
+			for ( index_t i = 0; i < dim(); ++i )
+				stds[ i ] += math::squared( current_pop()[ pop_idx ][ i ] - m[ i ] ) / current_pop().size();
+		}
+		for ( index_t i = 0; i < dim(); ++i )
+			stds[ i ] = sqrt( stds[ i ] );
+
+		return stds;
+	}
+
 	int cma_optimizer::lambda() const
 	{
 		return pimpl->cmaes.sp.lambda;
@@ -1216,5 +1250,10 @@ namespace flut
 	int cma_optimizer::random_seed() const
 	{
 		return pimpl->cmaes.rand.aktseed;
+	}
+
+	const vector< vector < double > >& cma_optimizer::current_pop() const
+	{
+		return pimpl->bounded_pop;
 	}
 }
