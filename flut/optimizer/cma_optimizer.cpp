@@ -1132,8 +1132,12 @@ namespace flut
 	};
 
 	cma_optimizer::cma_optimizer( int d, const vec_double& init_mean, const vec_double& init_std, objective_func_t func, int lam, int seed, cma_weights w ) :
-		optimizer( d, func )
+	optimizer( d, func ),
+	pimpl( nullptr )
 	{
+		for ( auto& v : init_std )
+			flut_error_if( v <= 0.0, "initial std must be > 0 for all parameters" );
+
 		pimpl = new pimpl_t;
 
 		cmaes_init( &pimpl->cmaes, d, init_mean, init_std, seed, lam );
@@ -1146,7 +1150,7 @@ namespace flut
 	}
 
 	cma_optimizer::cma_optimizer( int dim, const vec_double& init_mean, const vec_double& init_std, const vec_double& lower_bounds, const vec_double& upper_bounds, objective_func_t func, int lambda, int seed, cma_weights w ) :
-		cma_optimizer( dim, init_mean, init_std, func, lambda, seed, w )
+	cma_optimizer( dim, init_mean, init_std, func, lambda, seed, w )
 	{
 		set_boundaries( lower_bounds, upper_bounds );
 	}
