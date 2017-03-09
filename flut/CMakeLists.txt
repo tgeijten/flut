@@ -7,6 +7,10 @@ file (GLOB FLUT_OPT_SOURCES "optimizer/*.hpp" "optimizer/*.h" "optimizer/*.cpp")
 
 add_library(flut SHARED ${FLUT_SOURCES} ${FLUT_MATH_SOURCES} ${FLUT_BUFFER_SOURCES} ${FLUT_SYSTEM_SOURCES} ${FLUT_OPT_SOURCES})
 
+if (UNIX)
+    target_link_libraries(flut pthread)
+endif()
+
 if (MSVC)
 source_group("flut" FILES ${FLUT_SOURCES})
 source_group("flut\\buffer" FILES ${FLUT_BUFFER_SOURCES})

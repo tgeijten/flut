@@ -14,7 +14,7 @@ find_path(FLUT_INCLUDE_DIR
 # Check required compiler versions
 # ---------------
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-	set(FLUT_REQUIRED_GCC_VERSION 4.9.1)
+	set(FLUT_REQUIRED_GCC_VERSION 5.1.0)
 	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${FLUT_REQUIRED_GCC_VERSION})
 		message(FATAL_ERROR "GNU GCC/G++ version must be at least version: "
 							"${FLUT_REQUIRED_GCC_VERSION}. GCC version is "
@@ -24,21 +24,21 @@ endif()
 	
 # Compiler flags.
 # ---------------
-# Must compile with C++11 with gcc/clang.
+# Must compile with C++14 with gcc/clang.
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
    ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     if(APPLE)
         if(XCODE)
-            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
+            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
             set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
         else()
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
             if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
                 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
             endif()
         endif()
     else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
     endif()
 endif()
 	
