@@ -58,8 +58,6 @@ namespace flut
 		cma_weights weigh_mode;
 	};
 
-
-
 	struct cmaes_t
 	{
 		const char *version;
