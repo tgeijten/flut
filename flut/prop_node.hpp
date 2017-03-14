@@ -133,6 +133,13 @@ namespace flut
 		prop_node& get_child( const key_t& key )
 		{ auto it = find( key ); flut_error_if( it == end(), "Could not find key: " + key ); set_accessed(); return it->second; }
 
+		/// get a child node by index
+		const prop_node& get_child( index_t idx ) const { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
+		prop_node& get_child( index_t idx ) { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
+
+		/// get key by index
+		const key_t& get_key( index_t idx ) const { flut_assert( idx < size() ); set_accessed(); return children[ idx ].first; }
+
 		/// get a child node, return nullptr if not existing
 		const prop_node* try_get_child( const key_t& key ) const
 		{ set_accessed(); auto it = find( key ); return it != end() ? &( it->second ) : nullptr; }
@@ -148,8 +155,8 @@ namespace flut
 		prop_node& operator[]( const key_t& key ) { return get_or_add_child( key ); }
 
 		/// access child by index
-		const prop_node& operator[]( index_t idx ) const { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
-		prop_node& operator[]( index_t idx ) { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
+		const prop_node& operator[]( index_t idx ) const { return get_child( idx ); }
+		prop_node& operator[]( index_t idx ) { return get_child( idx ); }
 
 		/// find a child node
 		iterator find( const key_t& key ) { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
