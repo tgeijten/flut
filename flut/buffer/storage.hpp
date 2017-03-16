@@ -23,7 +23,7 @@ namespace flut
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
 
 		/// find index of a label
-		index_t find_channel( const L& label ) const { auto it = labels_.find( label ); return ( it != labels_.end() ) ? it - labels_.begin(): no_index; }
+		index_t find_channel( const L& label ) const { auto it = std::find( labels_.begin(), labels_.end(), label ); return ( it != labels_.end() ) ? it - labels_.begin(): no_index; }
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
@@ -37,7 +37,7 @@ namespace flut
 		/// check if there is any data
 		bool empty() const { return data_.empty(); }
 
-		/// access value without bounds checking
+		/// access value with bounds checking
 		T& at( index_t frame, index_t channel )
 		{ flut_assert( frame < frame_size() && channel < channel_size() ); return data_[ frame * channel_size() + channel ]; }
 		const T& at( index_t frame, index_t channel ) const
@@ -48,14 +48,14 @@ namespace flut
 		const T& operator()( index_t frame, index_t channel ) const { return at( frame, channel ); }
 
 		/// access value of most recent frame
-		T& operator()( index_t channel ) { return at( frame_size() - 1, channel ); }
-		const T& operator()( index_t channel ) const { return at( frame_size() - 1, channel ); }
+		T& operator[]( index_t channel ) { flut_assert( !empty() ); return at( frame_size() - 1, channel ); }
+		const T& operator[]( index_t channel ) const { flut_assert( !empty() ); return at( frame_size() - 1, channel ); }
 
 		/// access value of most recent frame by channel name, add channel if not existing
-		T& operator()( const L& label ) {
+		T& operator[]( const L& label ) {
 			auto idx = find_channel( label );
 			if ( idx == no_index ) idx = add_channel( label );
-			return *this( idx );
+			return (*this)[ idx ];
 		}
 
 		/// access value of most recent frame by channel name
