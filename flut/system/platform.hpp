@@ -11,3 +11,9 @@
 #else
 #	define FLUT_API
 #endif
+
+#ifdef _DEBUG
+#	define FLUT_IS_DEBUG_BUILD true
+#else
+#	define FLUT_IS_DEBUG_BUILD false
+#endif
