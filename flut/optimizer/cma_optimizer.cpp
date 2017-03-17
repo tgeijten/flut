@@ -1145,7 +1145,7 @@ namespace flut
 	pimpl( nullptr )
 	{
 		for ( auto& v : init_std )
-			flut_error_if( v <= 0.0, "initial std must be > 0 for all parameters" );
+			flut_error_if( v <= 0.0, "Initial std must be > 0" );
 
 		pimpl = new pimpl_t;
 
