@@ -11,6 +11,7 @@
 #include "flut/system/log_sink.hpp"
 #include "factory_test.h"
 #include "optimizer_test.h"
+#include "container_test.h"
 
 using flut::string;
 
@@ -36,6 +37,9 @@ int main( int argc, char* argv[] )
 
 		flut::string_test();
 		sw.add_measure( "string" );
+
+		flut::container_test();
+		sw.add_measure( "container" );
 
 		flut::buffer_test();
 		sw.add_measure( "buffer" );
