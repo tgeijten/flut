@@ -163,8 +163,10 @@ namespace flut
 		prop_node* cur_group = &pn;
 
 		auto str = load_char_stream( filename.str() );
-		for ( string line = trim_str( str.get_line() ); str.good(); line = trim_str( str.get_line() ) )
+		while ( str.good() )
 		{
+			string line = trim_str( str.get_line() );
+
 			if ( line.length() == 0 ) // empty line
 				continue;
 
