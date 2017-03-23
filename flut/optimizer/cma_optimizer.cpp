@@ -333,7 +333,6 @@ namespace flut
 		t->sp.updateCmode.modulo *= t->sp.facupdateCmode;
 		if ( t->sp.updateCmode.maxtime < 0 )
 			t->sp.updateCmode.maxtime = 0.20; /* maximal 20% of CPU-time */
-
 	}
 
 	void cmaes_init_final( cmaes_t *t )
@@ -577,7 +576,8 @@ namespace flut
 #endif 
 	} /* QLalgo2 */
 
-	static void Householder2( int n, std::vector< dbl_vec >& V, dbl_vec& d, dbl_vec& e ) {
+	static void Householder2( int n, std::vector< dbl_vec >& V, dbl_vec& d, dbl_vec& e )
+	{
 		/*
 		   Householder transformation of a symmetric matrix V into tridiagonal form.
 		 -> n             : dimension
@@ -1028,14 +1028,13 @@ namespace flut
 		dbl_vec au; /* add-on to upper boundary preimage, same length as bounds */
 	} cmaes_boundary_trans_t;
 
-	void cmaes_boundary_trans_init( cmaes_boundary_trans_t *t,
-		const dbl_vec& lower_bounds, const dbl_vec& upper_bounds )
+	void cmaes_boundary_trans_init( cmaes_boundary_trans_t *t, const dbl_vec& lower, const dbl_vec& upper )
 	{
-		flut_assert( upper_bounds.size() == lower_bounds.size() );
-		auto l = lower_bounds.size();
+		flut_assert( upper.size() == lower.size() );
+		auto l = lower.size();
 
-		t->lower_bounds = lower_bounds;
-		t->upper_bounds = upper_bounds;
+		t->lower_bounds = lower;
+		t->upper_bounds = upper;
 
 		/* compute boundaries in pre-image space, al and au */
 		t->al.resize( l );
@@ -1248,6 +1247,11 @@ namespace flut
 	int cma_optimizer::random_seed() const
 	{
 		return pimpl->cmaes.rand.aktseed;
+	}
+
+	double cma_optimizer::sigma() const
+	{
+		return pimpl->cmaes.sigma;
 	}
 
 	const vector< vector < double > >& cma_optimizer::current_pop() const

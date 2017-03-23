@@ -4,7 +4,7 @@
 
 namespace flut
 {
-	enum class cma_weights { none = 0, equal = 1, linear = 2, log = 3 };
+	enum class cma_weights { equal = 0, linear = 1, log = 2 };
 
 	class FLUT_API cma_optimizer : public optimizer
 	{
@@ -36,6 +36,7 @@ namespace flut
 		int mu() const;
 		int dim() const;
 		int random_seed() const;
+		double sigma() const;
 		const vector< vector < double > >& current_pop() const;
 
 	protected:
