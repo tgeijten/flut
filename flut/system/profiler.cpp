@@ -2,19 +2,25 @@
 
 namespace flut
 {
-profiler profiler::global_instance_;
+profiler profiler::instance_;
+
+	void profiler::reset()
+	{
+		root_ = u_ptr< section >( new section( nullptr, "root" ) );
+		current_section_ = root_.get();
+		root_->epoch = now();
+	}
 
 	profiler::section* profiler::start_section( const char* name )
 	{
 		auto t = now();
-		auto it = segments_.find( std::make_pair( current_section_, name ) );
-		if ( it == segments_.end() )
+		auto it = std::find_if( current_section_->children.begin(), current_section_->children.end(), [&]( u_ptr< section >& s ) { return s->name == name; } );
+		if ( it == current_section_->children.end() )
 		{
-			section* s = new section( current_section_, name );
-			segments_[ std::make_pair( current_section_, name ) ] = s;
-			current_section_ = s;
+			current_section_->children.emplace_back( new section( current_section_, name ) );
+			current_section_ = current_section_->children.back().get();
 		}
-		else current_section_ = it->second;
+		else current_section_ = it->get();
 
 		current_section_->epoch = now();
 		current_section_->overhead += current_section_->epoch - t;
@@ -30,8 +36,9 @@ profiler profiler::global_instance_;
 
 	prop_node profiler::report()
 	{
+		root_->inclusive_time = now() - root_->epoch;
 		prop_node pn;
-		report_section( &root_, pn );
+		report_section( root_.get(), pn );
 		return pn;
 	}
 
@@ -41,7 +48,7 @@ profiler profiler::global_instance_;
 		for ( auto it = s->children.begin(); it != s->children.end(); ++it )
 			children_time += report_section( it->get(), pn.push_back( s->name ) );
 
-		pn.set_value( stringf( "%6.2f (%5.2f exclusive)", 100.0 * s->inclusive_time / root_.inclusive_time, 100.0 * ( s->inclusive_time - children_time ) / root_.inclusive_time ) );
+		pn.set_value( stringf( "%6.2f (%5.2f exclusive)", 100.0 * s->inclusive_time / root_->inclusive_time, 100.0 * ( s->inclusive_time - children_time ) / root_->inclusive_time ) );
 
 		return s->inclusive_time;
 	}

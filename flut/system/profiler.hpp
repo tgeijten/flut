@@ -6,14 +6,21 @@
 #include "flut/timer.hpp"
 #include "flut/prop_node.hpp"
 
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( push )
+#	pragma warning( disable: 4251 )
+#endif
+
 namespace flut
 {
-	class profiler
+	class FLUT_API profiler
 	{
 	public:
 		struct section
 		{
 			section( section* p, const char* n ) : parent( p ), name( n ), inclusive_time( 0 ), overhead( 0 ), samples( 0 ) {}
+			section( const section& ) = delete;
+			section& operator=( const section& ) = delete;
 			section* parent;
 			const char* name;
 			nanoseconds_t inclusive_time;
@@ -23,26 +30,30 @@ namespace flut
 			std::vector< u_ptr< section > > children;
 		};
 
-		static profiler& instance() { return instance(); }
+		void reset();
 		section* start_section( const char* name );
 		void end_section();
 		nanoseconds_t now() { return timer_.nanoseconds(); }
 		prop_node report();
+		static profiler& instance() { return instance_; }
 
 	private:
-		profiler() : root_( nullptr, "" ), current_section_( &root_ ) {}
+		profiler() { reset(); }
 		nanoseconds_t report_section( const section* s, prop_node& pn );
 
 		timer timer_;
-		static profiler global_instance_;
-		std::map< std::pair< section*, const char* >, section* > segments_;
-		section root_;
+		static profiler instance_;
+		u_ptr< section > root_;
 		section* current_section_;
 	};
 
-	class profile_section
+	struct FLUT_API profile_section
 	{
 		profile_section( const char* name ) { profiler::instance().start_section( name ); }
 		~profile_section() { profiler::instance().end_section(); }
 	};
 }
+
+#ifdef FLUT_COMP_MSVC
+#	pragma warning( pop )
+#endif
