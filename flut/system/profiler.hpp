@@ -30,16 +30,18 @@ namespace flut
 	public:
 		struct section
 		{
-			section( section* p, const char* n ) : parent( p ), name( n ), inclusive_time( 0 ), overhead( 0 ), samples( 0 ) {}
+			section( section* p, const char* n ) : parent( p ), name( n ), total_time( 0 ), overhead( 0 ), samples( 0 ) {}
 			section( const section& ) = delete;
 			section& operator=( const section& ) = delete;
 			section* parent;
 			const char* name;
-			nanoseconds_t inclusive_time;
+			nanoseconds_t total_time;
 			nanoseconds_t overhead;
-			size_t samples;
 			nanoseconds_t epoch;
+			size_t samples;
 			std::vector< u_ptr< section > > children;
+			nanoseconds_t exclusive_time() { nanoseconds_t t = total_time; for ( auto& c : children ) t -= c->total_time; return t; }
+			nanoseconds_t total_overhead() { nanoseconds_t t = overhead; for ( auto& c : children ) t += c->total_overhead(); return t; }
 		};
 
 		void reset();
@@ -51,7 +53,7 @@ namespace flut
 
 	private:
 		profiler() { reset(); }
-		nanoseconds_t report_section( const section* s, prop_node& pn );
+		void report_section( section* s, prop_node& pn );
 
 		timer timer_;
 		static profiler instance_;
