@@ -11,6 +11,18 @@
 #	pragma warning( disable: 4251 )
 #endif
 
+#if FLUT_USE_PROFILER
+#	define FLUT_PROFILE_FUNCTION flut::profile_section unique_profile_section( __FUNCTION__ )
+#	define FLUT_PROFILE_SCOPE( scope_name_arg ) flut::profile_section unique_profile_section( scope_name_arg )
+#	define FLUT_PROFILE_RESET flut::profiler::instance().reset()
+#	define FLUT_PROFILE_REPORT flut::profiler::instance().report()
+#else
+#	define FLUT_PROFILE_FUNCTION
+#	define FLUT_PROFILE_SCOPE( scope_name_arg )
+#	define FLUT_PROFILE_RESET
+#	define FLUT_PROFILE_REPORT flut::prop_node()
+#endif
+
 namespace flut
 {
 	class FLUT_API profiler

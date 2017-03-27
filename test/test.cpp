@@ -28,7 +28,8 @@ int main( int argc, char* argv[] )
 
 		str.set_log_level( flut::log::trace_level );
 
-		flut::timer_test();
+		//flut::timer_test();
+		flut::profile_test();
 
 		flut::stopwatch sw;
 

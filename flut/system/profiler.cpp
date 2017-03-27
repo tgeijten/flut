@@ -14,7 +14,7 @@ profiler profiler::instance_;
 	profiler::section* profiler::start_section( const char* name )
 	{
 		auto t = now();
-		auto it = std::find_if( current_section_->children.begin(), current_section_->children.end(), [&]( u_ptr< section >& s ) { return s->name == name; } );
+		auto it = std::find_if( current_section_->children.begin(), current_section_->children.end(), [&]( u_ptr< section >& s ) { return strcmp( s->name, name ) == 0; } );
 		if ( it == current_section_->children.end() )
 		{
 			current_section_->children.emplace_back( new section( current_section_, name ) );
@@ -45,8 +45,8 @@ profiler profiler::instance_;
 	nanoseconds_t profiler::report_section( const section* s, prop_node& pn )
 	{
 		nanoseconds_t children_time = 0;
-		for ( auto it = s->children.begin(); it != s->children.end(); ++it )
-			children_time += report_section( it->get(), pn.push_back( s->name ) );
+		for ( auto& c : s->children )
+			children_time += report_section( c.get(), pn.push_back( c->name ) );
 
 		pn.set_value( stringf( "%6.2f (%5.2f exclusive)", 100.0 * s->inclusive_time / root_->inclusive_time, 100.0 * ( s->inclusive_time - children_time ) / root_->inclusive_time ) );
 
