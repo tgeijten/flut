@@ -1,100 +1,34 @@
 #include "timer.hpp"
 
-#if defined(_MSC_VER) && ( _MSC_VER <= 1800 ) // MSVC 2013 and lower do not have proper chrono support
-#	define FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-#	define NOMINMAX
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#	include <profileapi.h>
-#else
-#	include <chrono>
-#endif
+#if defined FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <profileapi.h>
 
 namespace flut
 {
-	timer::timer()
+	long long query_windows_performance_counter_frequency()
 	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		LARGE_INTEGER freq;
-		::QueryPerformanceFrequency( &freq );
-		frequency = freq.QuadPart;
-#endif
-		reset();
+		LARGE_INTEGER frequency;
+		QueryPerformanceFrequency( &frequency );
+		return frequency.QuadPart;
 	}
 
-	void timer::reset()
+	inline long long query_windows_performance_counter()
 	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		LARGE_INTEGER e;
-		::QueryPerformanceCounter( &e );
-		epoch = e.QuadPart;
-#else
-		epoch = std::chrono::high_resolution_clock::now();
-#endif
+		LARGE_INTEGER count;
+		QueryPerformanceCounter( &count );
+		return count.QuadPart;
 	}
 
-	long long timer::ticks()
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		LARGE_INTEGER now;
-		::QueryPerformanceCounter( &now );
-		return now.QuadPart - epoch;
-#else
-		return ( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
+	const long long g_frequency = query_windows_performance_counter_frequency();
+	const long long g_epoch = query_windows_performance_counter();
 
-	timer::seconds_t timer::seconds()
+	windows_performance_counter_clock::time_point flut::windows_performance_counter_clock::now()
 	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return seconds_t( ticks() ) / frequency;
-#else
-		return std::chrono::duration< double >( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
-
-	flut::timer::clock_ticks_t timer::milliseconds()
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return ticks() / ( frequency / 1000 );
-#else
-		return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
-
-	flut::timer::clock_ticks_t timer::nanoseconds()
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return ticks() / ( frequency / 1000000 );
-#else
-		return std::chrono::duration_cast<std::chrono::nanoseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
-
-	timer::seconds_t timer::ticks_to_seconds( clock_ticks_t ticks )
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return seconds_t( ticks ) / frequency;
-#else
-		return std::chrono::duration< double >( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
-
-	timer::clock_ticks_t timer::ticks_to_milliseconds( clock_ticks_t ticks )
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return ticks / ( frequency / 1000 );
-#else
-		return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
-	}
-
-	timer::clock_ticks_t timer::ticks_to_nanoseconds( clock_ticks_t ticks )
-	{
-#ifdef FLUT_USE_WINDOWS_PERFORMANCE_COUNTER
-		return ticks / ( frequency / 1000000 );
-#else
-		return std::chrono::duration_cast<std::chrono::nanoseconds>( std::chrono::high_resolution_clock::now() - epoch ).count();
-#endif
+		long long count = query_windows_performance_counter() - g_epoch;
+		return time_point( duration( count * static_cast< rep >( period::den ) / g_frequency ) );
 	}
 }
+#endif

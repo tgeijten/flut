@@ -4,12 +4,12 @@ namespace flut
 {
 	void stopwatch::add_measure( const string& s )
 	{
-		auto now = timer_.ticks();
+		auto now = timer_.seconds();
 		auto iter = std::find_if( measures_.begin(), measures_.end(), [&]( measure_t& m ) { return m.first == s; } );
 		if ( iter == measures_.end() )
 			measures_.push_back( make_pair( s, now - epoch_ ) );
 		else iter->second += now - epoch_;
-		epoch_ = timer_.ticks();
+		epoch_ = timer_.seconds();
 		internal_measure_ += epoch_ - now;
 	}
 
@@ -19,8 +19,8 @@ namespace flut
 
 		prop_node pn;
 		for ( auto& m : measures_ )
-			pn.push_back( m.first, timer_.ticks_to_seconds( m.second ) );
-		pn.push_back( "internal", timer_.ticks_to_seconds( internal_measure_ ) );
+			pn.push_back( m.first, m.second );
+		pn.push_back( "internal", internal_measure_ );
 
 		set_to_str_precision( old_precision );
 
