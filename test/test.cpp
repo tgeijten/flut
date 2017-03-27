@@ -12,6 +12,7 @@
 #include "factory_test.h"
 #include "optimizer_test.h"
 #include "container_test.h"
+#include "timer_test.h"
 
 using flut::string;
 
@@ -24,6 +25,10 @@ int main( int argc, char* argv[] )
 	{
 		flut_logvar2( flut::math::constants<double>::epsilon(), flut::math::constants<double>::relaxed_epsilon() );
 		flut_logvar2( flut::math::constants<float>::epsilon(), flut::math::constants<float>::relaxed_epsilon() );
+
+		str.set_log_level( flut::log::trace_level );
+
+		flut::timer_test();
 
 		flut::stopwatch sw;
 
