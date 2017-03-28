@@ -11,9 +11,12 @@ namespace flut
 		using typename std::vector< std::pair< K, V > >::const_iterator;
 
 		using std::vector< std::pair< K, V > >::empty;
+		using std::vector< std::pair< K, V > >::clear;
 		using std::vector< std::pair< K, V > >::size;
 		using std::vector< std::pair< K, V > >::begin;
 		using std::vector< std::pair< K, V > >::end;
+		using std::vector< std::pair< K, V > >::cbegin;
+		using std::vector< std::pair< K, V > >::cend;
 		using std::vector< std::pair< K, V > >::front;
 		using std::vector< std::pair< K, V > >::back;
 		using std::vector< std::pair< K, V > >::erase;

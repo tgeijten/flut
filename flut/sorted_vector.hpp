@@ -11,6 +11,7 @@ namespace flut
 		using typename std::vector< T >::const_iterator;
 
 		using std::vector< T >::empty;
+		using std::vector< T >::clear;
 		using std::vector< T >::size;
 		using std::vector< T >::begin;
 		using std::vector< T >::end;
