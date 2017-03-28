@@ -7,53 +7,108 @@ profiler profiler::instance_;
 
 	void profiler::reset()
 	{
-		root_ = u_ptr< section >( new section( nullptr, "root" ) );
-		current_section_ = root_.get();
-		root_->epoch = now();
+		duration_of_now = 0;
+		sections_.clear();
+		current_section_ = add_section( "TOTAL", no_index );
+		current_section_->epoch = now();
 	}
 
 	profiler::section* profiler::start_section( const char* name )
 	{
 		auto t = now();
-		auto it = std::find_if( current_section_->children.begin(), current_section_->children.end(), [&]( u_ptr< section >& s ) { return s->name == name; } );
-		if ( it == current_section_->children.end() )
-		{
-			current_section_->children.emplace_back( new section( current_section_, name ) );
-			current_section_ = current_section_->children.back().get();
-		}
-		else current_section_ = it->get();
-
-		current_section_->epoch = now();
-		current_section_->overhead += current_section_->epoch - t;
+		current_section_ = acquire_section( name, current_section_->id );
+		current_section_->epoch = t;
+		current_section_->overhead += now() - t + 2 * duration_of_now;
 
 		return current_section_;
 	}
 
 	void profiler::end_section()
 	{
-		current_section_->total_time += now() - current_section_->epoch;
-		current_section_ = current_section_->parent;
+		auto t = now();
+		auto* s = &sections_[ current_section_->parent_id ];
+		current_section_->total_time += t - current_section_->epoch;
+		current_section_->overhead += duration_of_now;
+		current_section_ = s;
+	}
+
+	flut::profiler::section* profiler::find_section( size_t id )
+	{
+		auto it = std::find_if( sections_.begin(), sections_.end(), [&]( section& s ) { return s.id == id; } );
+		return it != sections_.end() ? &( *it ) : nullptr;
+	}
+
+	flut::profiler::section* profiler::find_section( const char* name, size_t parent_id )
+	{
+		auto it = std::find_if( sections_.begin() + parent_id + 1, sections_.end(), [&]( section& s ) { return s.name == name && s.parent_id == parent_id; } );
+		return it != sections_.end() ? &( *it ) : nullptr;
+	}
+
+	profiler::section* profiler::add_section( const char* name, size_t parent_id )
+	{
+		sections_.emplace_back( name, parent_id );
+		sections_.back().id = sections_.size() - 1;
+		return &sections_.back();
+	}
+
+	profiler::section* profiler::acquire_section( const char* name, size_t parent_id )
+	{
+		if ( section* s = find_section( name, parent_id ) )
+			return s;
+		else return add_section( name, parent_id );
+	}
+
+	std::vector< profiler::section* > profiler::get_children( size_t parent_id )
+	{
+		std::vector< profiler::section* > children;
+		for ( auto& s : sections_ )
+			if ( s.parent_id == parent_id ) children.push_back( &s );
+		return children;
 	}
 
 	prop_node profiler::report()
 	{
-		root_->total_time = now() - root_->epoch;
+		root()->total_time = now() - root()->epoch;
 		prop_node pn;
-		report_section( root_.get(), pn );
+		pn[ "now" ] = duration_of_now;
+		pn[ "sections" ] = sections_.size();
+		report_section( root(), pn );
 		return pn;
 	}
 
 	void profiler::report_section( section* s, prop_node& pn )
 	{
-		double rel_total = 100.0 * s->total_time / root_->total_time;
-		double rel_ex = 100.0 * s->exclusive_time() / root_->total_time;
-		double rel_over = 100.0 * s->total_overhead() / root_->total_time;
+		double root_total = root()->total_time / 1e6;
+		double total = s->total_time / 1e6;
+		double rel_total = 100.0 * total / root_total;
+		double ex = exclusive_time( s ) / 1e6;
+		double rel_ex = 100.0 * ex / root_total;
+		double over = total_overhead( s ) / 1e6;
+		double rel_over = 100.0 * over / total;
 
-		pn.set_value( stringf( "%6.2f (%5.2f exclusive %.2f overhead)", rel_total, rel_ex, rel_over ) );
+		pn[ s->name ] = stringf( "%8.3fms %6.2f%% (exclusive=%5.2f%% overhead=%.3f%%)", total, rel_total, rel_ex, rel_over );
 
-		std::sort( s->children.begin(), s->children.end(), [&]( u_ptr< section >& s1, u_ptr< section >& s2 ) { return s1->total_time > s2->total_time; } );
+		auto children = get_children( s->id );
+		std::sort( children.begin(), children.end(), [&]( section* s1, section* s2 ) { return s1->total_time > s2->total_time; } );
+		for ( auto& c : children )
+			report_section( c, pn[ s->name ] );
+	}
 
-		for ( auto& c : s->children )
-			report_section( c.get(), pn.push_back( c->name ) );
+	flut::nanoseconds_t profiler::exclusive_time( section* s )
+	{
+		nanoseconds_t t = s->total_time;
+		for ( auto& cs : sections_ )
+			if ( cs.parent_id == s->id )
+				t -= cs.total_time;
+		return t;
+	}
+
+	flut::nanoseconds_t profiler::total_overhead( section* s )
+	{
+		nanoseconds_t t = s->overhead;
+		for ( auto& cs : sections_ )
+			if ( cs.parent_id == s->id )
+				t += total_overhead( &cs );
+		return t;
 	}
 }

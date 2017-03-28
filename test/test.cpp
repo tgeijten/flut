@@ -30,10 +30,12 @@ int main( int argc, char* argv[] )
 
 		//flut::timer_test();
 		flut::profile_test();
+		return -1;
 
 		flut::stopwatch sw;
 
-		flut::optimizer_test();
+		flut::container_test();
+		sw.add_measure( "container" );
 
 		flut::factory_test();
 		sw.add_measure( "factory" );
@@ -44,9 +46,6 @@ int main( int argc, char* argv[] )
 		flut::string_test();
 		sw.add_measure( "string" );
 
-		flut::container_test();
-		sw.add_measure( "container" );
-
 		flut::buffer_test();
 		sw.add_measure( "buffer" );
 
@@ -55,6 +54,9 @@ int main( int argc, char* argv[] )
 		flut::math::angle_test();
 		flut::math::vec_quat_test();
 		sw.add_measure( "math" );
+
+		flut::optimizer_test();
+		sw.add_measure( "optimizer" );
 
 		auto pn = sw.get_report();
 		flut::log::info( pn );

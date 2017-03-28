@@ -30,18 +30,17 @@ namespace flut
 	public:
 		struct section
 		{
-			section( section* p, const char* n ) : parent( p ), name( n ), total_time( 0 ), overhead( 0 ), samples( 0 ) {}
-			section( const section& ) = delete;
-			section& operator=( const section& ) = delete;
-			section* parent;
+			section( const char* n, size_t pid ) : name( n ), parent_id( pid ), total_time( 0 ), overhead( 0 ), samples( 0 ) {}
+			size_t parent_id;
+			size_t id;
 			const char* name;
+
+			bool operator<( const section& o ) const { return parent_id == o.parent_id ? name < o.name : parent_id < o.parent_id; }
+
 			nanoseconds_t total_time;
 			nanoseconds_t overhead;
 			nanoseconds_t epoch;
 			size_t samples;
-			std::vector< u_ptr< section > > children;
-			nanoseconds_t exclusive_time() { nanoseconds_t t = total_time; for ( auto& c : children ) t -= c->total_time; return t; }
-			nanoseconds_t total_overhead() { nanoseconds_t t = overhead; for ( auto& c : children ) t += c->total_overhead(); return t; }
 		};
 
 		void reset();
@@ -52,13 +51,23 @@ namespace flut
 		static profiler& instance() { return instance_; }
 
 	private:
+		nanoseconds_t exclusive_time( section* s );
+		nanoseconds_t total_overhead( section* s );
+		section* root() { return &sections_.front(); }
+		section* find_section( size_t id );
+		section* find_section( const char* name, size_t parent_id );
+		section* acquire_section( const char* name, size_t parent_id );
+		section* add_section( const char* name, size_t parent_id );
+		std::vector< section* > get_children( size_t parent_id );
 		profiler() { reset(); }
 		void report_section( section* s, prop_node& pn );
 
+		vector< section > sections_;
+
 		timer timer_;
 		static profiler instance_;
-		u_ptr< section > root_;
 		section* current_section_;
+		nanoseconds_t duration_of_now;
 	};
 
 	struct FLUT_API profile_section
