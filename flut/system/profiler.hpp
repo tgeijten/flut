@@ -30,17 +30,13 @@ namespace flut
 	public:
 		struct section
 		{
-			section( const char* n, size_t pid ) : name( n ), parent_id( pid ), total_time( 0 ), overhead( 0 ), samples( 0 ) {}
-			size_t parent_id;
-			size_t id;
+			section( const char* n, size_t i, size_t pi ) : name( n ), id( i ), parent_id( pi ), total_time( 0 ), overhead( 0 ) {}
 			const char* name;
-
-			bool operator<( const section& o ) const { return parent_id == o.parent_id ? name < o.name : parent_id < o.parent_id; }
-
+			size_t id;
+			size_t parent_id;
 			nanoseconds_t total_time;
 			nanoseconds_t overhead;
 			nanoseconds_t epoch;
-			size_t samples;
 		};
 
 		void reset();

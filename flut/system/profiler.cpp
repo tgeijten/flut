@@ -46,8 +46,7 @@ profiler profiler::instance_;
 
 	profiler::section* profiler::add_section( const char* name, size_t parent_id )
 	{
-		sections_.emplace_back( name, parent_id );
-		sections_.back().id = sections_.size() - 1;
+		sections_.emplace_back( name, sections_.size(), parent_id );
 		return &sections_.back();
 	}
 
@@ -70,8 +69,6 @@ profiler profiler::instance_;
 	{
 		root()->total_time = now() - root()->epoch;
 		prop_node pn;
-		pn[ "now" ] = duration_of_now;
-		pn[ "sections" ] = sections_.size();
 		report_section( root(), pn );
 		return pn;
 	}
@@ -86,7 +83,7 @@ profiler profiler::instance_;
 		double over = total_overhead( s ) / 1e6;
 		double rel_over = 100.0 * over / total;
 
-		pn[ s->name ] = stringf( "%8.3fms %6.2f%% (exclusive=%5.2f%% overhead=%.3f%%)", total, rel_total, rel_ex, rel_over );
+		pn[ s->name ] = stringf( "%8.3fms %6.2f%% (%5.2f%% exclusive %.2f%% overhead)", total, rel_total, rel_ex, rel_over );
 
 		auto children = get_children( s->id );
 		std::sort( children.begin(), children.end(), [&]( section* s1, section* s2 ) { return s1->total_time > s2->total_time; } );
