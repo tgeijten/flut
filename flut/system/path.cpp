@@ -11,8 +11,11 @@ namespace flut
 	path& path::replace_extension( const path& ext )
 	{
 		size_t n = data.find_last_of( '.' );
-		if ( n == string::npos ) data += '.' + ext.data;
-		else data = data.substr( 0, n + 1 ) + ext.data;
+		if ( n != string::npos ) data.erase( n ); // remove existing extension
+
+		if ( !ext.empty() )
+			data += '.' + ext.data;
+
 		return *this;
 	}
 
@@ -23,7 +26,6 @@ namespace flut
 		else data.clear();
 		return *this;
 	}
-
 
 	path& path::replace_filename( const path& f )
 	{

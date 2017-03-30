@@ -29,9 +29,9 @@ namespace flut
 		const string& str() const { return data; }
 		const char* c_str() const { return data.c_str(); }
 
-		path& replace_extension( const path& ext );
+		path& replace_extension( const path& ext = "" );
 		path& remove_filename();
-		path& replace_filename( const path& f );
+		path& replace_filename( const path& f = "" );
 		path& make_preferred();
 		path parent_path() const;
 		path extension() const;
