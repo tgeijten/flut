@@ -9,7 +9,3 @@
 #		define FLUT_USE_ASSERT 1
 #	endif
 #endif
-
-#ifndef FLUT_USE_PROFILER
-#	define FLUT_USE_PROFILER 1
-#endif

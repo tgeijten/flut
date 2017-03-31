@@ -4,6 +4,14 @@
 
 namespace flut
 {
+	template< typename C >
+	typename C::iterator find( C& cont, typename C::value_type& e )
+	{ return std::find( std::begin( cont ), std::end( cont ), e ); }
+
+	template< typename C, typename P >
+	typename C::const_iterator find_if( const C& cont, typename C::value_type& e )
+	{ return std::find( std::begin( cont ), std::end( cont ), e ); }
+
 	template< typename C, typename P >
 	typename C::iterator find_if( C& cont, P pred )
 	{ return std::find_if( std::begin( cont ), std::end( cont ), pred ); }

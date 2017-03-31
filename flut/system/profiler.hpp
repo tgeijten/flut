@@ -11,7 +11,7 @@
 #	pragma warning( disable: 4251 )
 #endif
 
-#if FLUT_USE_PROFILER
+#ifdef FLUT_USE_PROFILER
 #	define FLUT_PROFILE_FUNCTION flut::profile_section unique_profile_section( __FUNCTION__ )
 #	define FLUT_PROFILE_SCOPE( scope_name_arg ) flut::profile_section unique_profile_section( scope_name_arg )
 #	define FLUT_PROFILE_RESET flut::profiler::instance().reset()
@@ -47,6 +47,9 @@ namespace flut
 		static profiler& instance() { return instance_; }
 
 	private:
+		profiler();
+		void report_section( section* s, prop_node& pn );
+
 		nanoseconds_t exclusive_time( section* s );
 		nanoseconds_t total_overhead( section* s );
 		section* root() { return &sections_.front(); }
@@ -55,15 +58,13 @@ namespace flut
 		section* acquire_section( const char* name, size_t parent_id );
 		section* add_section( const char* name, size_t parent_id );
 		std::vector< section* > get_children( size_t parent_id );
-		profiler() { reset(); }
-		void report_section( section* s, prop_node& pn );
 
 		vector< section > sections_;
-
 		timer timer_;
 		static profiler instance_;
 		section* current_section_;
 		nanoseconds_t duration_of_now;
+
 	};
 
 	struct FLUT_API profile_section

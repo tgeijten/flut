@@ -1,9 +1,17 @@
 #include "profiler.hpp"
 #include <algorithm>
+#include <thread>
 
 namespace flut
 {
-profiler profiler::instance_;
+	profiler profiler::instance_;
+	std::thread::id instance_thread_;
+
+	profiler::profiler()
+	{
+		instance_thread_ = std::this_thread::get_id();
+		reset();
+	}
 
 	void profiler::reset()
 	{
@@ -16,6 +24,7 @@ profiler profiler::instance_;
 	profiler::section* profiler::start_section( const char* name )
 	{
 		auto t = now();
+		flut_assert_msg( instance_thread_ == std::this_thread::get_id(), "Invalid thread ID" );
 		current_section_ = acquire_section( name, current_section_->id );
 		current_section_->epoch = t;
 		current_section_->overhead += now() - t + 2 * duration_of_now;
@@ -26,6 +35,7 @@ profiler profiler::instance_;
 	void profiler::end_section()
 	{
 		auto t = now();
+		flut_assert_msg( instance_thread_ == std::this_thread::get_id(), "Invalid thread ID" );
 		auto* s = &sections_[ current_section_->parent_id ];
 		current_section_->total_time += t - current_section_->epoch;
 		current_section_->overhead += duration_of_now;
@@ -67,6 +77,7 @@ profiler profiler::instance_;
 
 	prop_node profiler::report()
 	{
+		flut_assert_msg( instance_thread_ == std::this_thread::get_id(), "Invalid thread ID" );
 		root()->total_time = now() - root()->epoch;
 		prop_node pn;
 		report_section( root(), pn );
