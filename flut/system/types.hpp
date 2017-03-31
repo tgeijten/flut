@@ -18,5 +18,4 @@ namespace flut
 
 	using std::string;
 	using std::vector;
-	template< typename T > using u_ptr = std::unique_ptr< T >;
 }
