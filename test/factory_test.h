@@ -18,8 +18,8 @@ namespace flut
 
 		prop_node pn;
 
-		auto b = fact( "B" )( pn );
-		auto c = fact( "C" )( pn );
+		auto b = fact( "B", pn );
+		auto c = fact( "C", pn );
 
 		FLUT_TEST( b->value == 67 );
 		FLUT_TEST( c->value == -1 );

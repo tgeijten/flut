@@ -36,24 +36,22 @@ namespace flut
 	public:
 		typedef std::function< std::unique_ptr< T >( Args... ) > create_func_t;
 
+		// register class
+		template< typename U > void register_class( const string& name = clean_type_name<U>() )
+		{ factory_functions[ name ] = []( Args... args ) { return std::unique_ptr< T >( new U( args... ) ); }; }
+
 		// get create func
-		create_func_t& get( const string& type ) {
+		const create_func_t& get_func( const string& type ) const {
 			auto it = factory_functions.find( type );
 			flut_error_if( it == factory_functions.end(), "Unregistered type: " + type );
 			return it->second;
 		}
 
-		// aliases
-		create_func_t& operator()( const string& type ) { return get( type ); }
-		create_func_t& operator[]( const string& type ) { return get( type ); }
+		// create class instance
+		std::unique_ptr< T > operator()( const string& type, Args... args ) const
+		{ return get_func( type )( args... ); }
 
-		// register class
-		template< typename U >
-		void register_class( const string& name = clean_type_name<U>() ) {
-			factory_functions[ name ] = []( Args... args ) { return std::unique_ptr< T >( new U( args... ) ); };
-		}
-
-		bool empty() { return factory_functions.empty();  }
+		bool empty() const { return factory_functions.empty();  }
 
 	private:
 		flut::vecmap< string, create_func_t > factory_functions;

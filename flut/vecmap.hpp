@@ -22,11 +22,11 @@ namespace flut
 		using std::vector< std::pair< K, V > >::erase;
 
 		iterator find( const K& key ) {
-			return std::find_if( begin(), end(), [&]( value_type& kvp ) { return kvp.first == key; } );
+			return std::find_if( begin(), end(), [&]( const value_type& kvp ) { return kvp.first == key; } );
 		}
 
 		const_iterator find( const K& key ) const {
-			return std::find_if( cbegin(), cend(), [&]( value_type& kvp ) { return kvp.first == key; } );
+			return std::find_if( cbegin(), cend(), [&]( const value_type& kvp ) { return kvp.first == key; } );
 		}
 
 		V& operator[]( const K& key ) {
@@ -38,9 +38,15 @@ namespace flut
 			else return it->second;
 		}
 
-		const V& operator[]( const K& key ) const {
+		V& at( const K& key ) {
 			auto it = find( key );
-			flut_error_if( it == end(), "Could not find key" );
+			flut_error_if( it == end(), "Could not find key: " + to_str( key ) );
+			return it->second;
+		}
+
+		const V& at( const K& key ) const {
+			auto it = find( key );
+			flut_error_if( it == end(), "Could not find key: " + to_str( key ) );
 			return it->second;
 		}
 	};
