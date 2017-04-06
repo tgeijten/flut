@@ -1,6 +1,6 @@
 #pragma once
 
-#include "flut/vecmap.hpp"
+#include "flut/flat_map.hpp"
 #include "flut/system/types.hpp"
 #include "flut/sorted_vector.hpp"
 
@@ -25,7 +25,7 @@ namespace flut
 		for ( auto& e : sv )
 			cout << e.e << e.s << endl;
 
-		vecmap< string, int > vm;
+		flat_map< string, int > vm;
 		vm[ "Appel" ] = 1;
 		vm[ "Peer" ] = 2;
 		vm[ "Banaan" ] = 3;

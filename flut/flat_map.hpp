@@ -6,7 +6,7 @@
 namespace flut
 {
 	template< typename K, typename V >
-	class vecmap : private std::vector< std::pair< K, V > >
+	class flat_map : private std::vector< std::pair< K, V > >
 	{
 	public:
 		using typename std::vector< std::pair< K, V > >::value_type;

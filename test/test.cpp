@@ -13,6 +13,7 @@
 #include "optimizer_test.h"
 #include "container_test.h"
 #include "timer_test.h"
+#include "flut/system/profiler.hpp"
 
 using flut::string;
 
@@ -28,9 +29,10 @@ int main( int argc, char* argv[] )
 
 		str.set_log_level( flut::log::trace_level );
 
-		//flut::timer_test();
+		flut::timer_test();
+#ifdef FLUT_USE_PROFILER
 		flut::profile_test();
-		return -1;
+#endif
 
 		flut::stopwatch sw;
 
@@ -55,8 +57,8 @@ int main( int argc, char* argv[] )
 		flut::math::vec_quat_test();
 		sw.add_measure( "math" );
 
-		flut::optimizer_test();
-		sw.add_measure( "optimizer" );
+		//flut::optimizer_test();
+		//sw.add_measure( "optimizer" );
 
 		auto pn = sw.get_report();
 		flut::log::info( pn );

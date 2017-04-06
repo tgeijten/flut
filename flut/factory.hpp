@@ -4,7 +4,7 @@
 #include <memory>
 #include "system/assert.hpp"
 #include "system/platform.hpp"
-#include "vecmap.hpp"
+#include "flat_map.hpp"
 
 // need for demangling with GCC
 #ifndef FLUT_COMP_MSVC
@@ -55,6 +55,6 @@ namespace flut
 		bool empty() const { return factory_functions.empty();  }
 
 	private:
-		flut::vecmap< std::string, create_func_t > factory_functions;
+		flut::flat_map< std::string, create_func_t > factory_functions;
 	};
 }

@@ -5,13 +5,38 @@
 #include "flut/system/log.hpp"
 #include "flut/buffer/interpolation.hpp"
 #include "flut/buffer/buffer_base.hpp"
-#include "flut/buffer/storage.hpp"
 #include "flut/buffer/circular_frame_buffer.hpp"
+#include "flut/circular_deque.hpp"
+#include "flut/storage.hpp"
 
 namespace flut
 {
 	void buffer_test()
 	{
+		// circular_deque test
+		circular_deque< int > cd( 10 );
+		for ( int i = 0; i < 30; ++i )
+		{
+			cd.push_back( i );
+			if ( cd.size() == 10 )
+			{
+				FLUT_TEST( cd.front() == i - 9 );
+				cd.pop_front();
+			}
+		}
+
+		// circular_deque test
+		cd.clear();
+		for ( int i = 0; i < 30; ++i )
+		{
+			cd.push_front( i );
+			if ( cd.size() == 10 )
+			{
+				FLUT_TEST( cd.back() == i - 9 );
+				cd.pop_back();
+			}
+		}
+
 		// regular buffer test
 		storage< float, string > buf( 0 );
 
