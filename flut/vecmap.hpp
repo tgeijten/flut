@@ -1,5 +1,8 @@
 #pragma once
 
+#include <algorithm>
+#include <vector>
+
 namespace flut
 {
 	template< typename K, typename V >
