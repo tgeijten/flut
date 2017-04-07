@@ -45,6 +45,9 @@ namespace flut
 		/// inverse of sqrt
 		template< typename T > T invsqrt( T v ) { return T(1) / sqrt( v ); }
 
+		/// sqrt based on sign: if v >= 0 sqrt( v ) else -sqrt( -v )
+		template< typename T > T signed_sqrt( T v ) { return v >= T(0) ? sqrt( v ) : -sqrt( -v ); }
+
 		/// squared
 		template< typename T > T squared( T v ) { return v * v; }
 
