@@ -19,8 +19,8 @@ namespace flut
 		T& operator[]( size_t i ) { return data_[ i ]; }
 		const T& operator[]( size_t i ) const { return data_[ i ]; }
 
-		T& at( size_t i ) { flut_error_if( i >= size_, "dynarray index out of bounds" ); return data_[ i ]; }
-		const T& at( size_t i ) const { flut_error_if( i >= size_, "dynarray index out of bounds" ); return data_[ i ]; }
+		T& at( size_t i ) { flut_error_if( i >= size(), "dynarray index out of bounds" ); return data_[ i ]; }
+		const T& at( size_t i ) const { flut_error_if( i >= size(), "dynarray index out of bounds" ); return data_[ i ]; }
 
 		T* begin() { return data_.get(); }
 		const T* begin() const { return data_.get(); }
