@@ -12,19 +12,18 @@
 
 namespace flut
 {
-	typedef std::function< double( const std::vector< double >& ) > objective_func_t;
-
 	class FLUT_API optimizer
 	{
 	public:
-		typedef vector< double > vec_double;
+		typedef vector< double > search_point_t;
+		typedef std::function< double( const search_point_t& ) > objective_func_t;
 
-		static double no_objective_func( const vec_double& ) { flut_error( "No objective function" ); }
+		static double no_objective_func( const search_point_t& ) { flut_error( "No objective function" ); }
 
 		optimizer( int dim, objective_func_t func = no_objective_func );
 		virtual ~optimizer();
 
-		virtual vec_double evaluate( const vector< vec_double >& pop );
+		virtual search_point_t evaluate( const vector< search_point_t >& pop );
 
 		bool is_better( double a, double b ) { return maximize() ? a > b : a < b; }
 

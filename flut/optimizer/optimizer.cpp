@@ -15,7 +15,7 @@ namespace flut
 	{
 	}
 
-	optimizer::vec_double optimizer::evaluate( const vector< vec_double >& pop )
+	optimizer::search_point_t optimizer::evaluate( const vector< search_point_t >& pop )
 	{
 		vector< double > results( pop.size(), 0.0 );
 
