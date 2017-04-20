@@ -49,7 +49,7 @@ namespace flut
 		double *arFunvals = cmaes_init( &evo, dim, &init_mean[ 0 ], &init_std[ 0 ], seed, lambda, "no" );
 
 		// init cma_optimizer
-		cma_optimizer cma( dim, init_mean, init_std, fitfun, lambda, seed );
+		cma_optimizer cma( dim, fitfun, init_mean, init_std, lambda, seed );
 		cma.set_max_threads( 10 );
 
 		/* Iterate until stop criterion holds */
@@ -106,7 +106,7 @@ namespace flut
 		std::vector< double > init_std( dim, 0.3 );
 
 		// init cma_optimizer
-		cma_optimizer cma( dim, init_mean, init_std, slow_func, lambda, seed );
+		cma_optimizer cma( dim, slow_func, init_mean, init_std, lambda, seed );
 		cma.set_max_threads( 3 );
 
 		for ( int gen = 0; gen < 10; ++gen )

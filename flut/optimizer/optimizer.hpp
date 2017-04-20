@@ -17,7 +17,6 @@ namespace flut
 	public:
 		typedef vector< double > search_point_t;
 		typedef std::function< double( const search_point_t& ) > objective_func_t;
-
 		static double no_objective_func( const search_point_t& ) { flut_error( "No objective function" ); }
 
 		optimizer( int dim, objective_func_t func = no_objective_func );

@@ -1139,7 +1139,7 @@ namespace flut
 		}
 	};
 
-	cma_optimizer::cma_optimizer( int d, const search_point_t& init_mean, const search_point_t& init_std, objective_func_t func, int lam, int seed, cma_weights w ) :
+	cma_optimizer::cma_optimizer( int d, objective_func_t func, const search_point_t& init_mean, const search_point_t& init_std, int lam, int seed, cma_weights w ) :
 	optimizer( d, func ),
 	pimpl( nullptr )
 	{
@@ -1157,8 +1157,8 @@ namespace flut
 			ind.resize( dim() );
 	}
 
-	cma_optimizer::cma_optimizer( int dim, const search_point_t& init_mean, const search_point_t& init_std, const search_point_t& lower_bounds, const search_point_t& upper_bounds, objective_func_t func, int lambda, int seed, cma_weights w ) :
-	cma_optimizer( dim, init_mean, init_std, func, lambda, seed, w )
+	cma_optimizer::cma_optimizer( int dim, objective_func_t func, const search_point_t& init_mean, const search_point_t& init_std, const search_point_t& lower_bounds, const search_point_t& upper_bounds, int lambda, int seed, cma_weights w ) :
+	cma_optimizer( dim, func, init_mean, init_std, lambda, seed, w )
 	{
 		set_boundaries( lower_bounds, upper_bounds );
 	}
