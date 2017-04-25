@@ -1,7 +1,8 @@
 #pragma once
 
 #include "flut/math/vec3.hpp"
-#include "flut/math/quat_tmp.hpp"
+#include "flut/math/quat.hpp"
+#include "flut/math/experimental/quat_tmp.hpp"
 
 using flut::math::vec3;
 using flut::math::quat;

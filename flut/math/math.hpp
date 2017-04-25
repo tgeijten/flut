@@ -71,6 +71,17 @@ namespace flut
 		template< typename T > void clamp( T& v, const T& min, const T& max )
 		{ if ( v < min ) v = min; else if ( v > max ) v = max; } /// TODO: use efficient instructions instead of relying on the compiler for optimization
 
+		/// limit transform function
+		template< typename T > T limit_transfer( T x, T limit ) { return limit - limit * limit / ( x + limit ); }
+
+		/// clamp with smooth boundary transformation
+		template< typename T > T soft_clamped( const T& v, const T& min, const T& max, const T& boundary ) {
+			auto r = boundary * ( max - min );
+			if ( v > max - r ) return max - r + limit_transfer( v - max + r, r );
+			else if ( v < min + r )	return min + r - limit_transfer( min + r - v, r );
+			else return v;
+		}
+
 		/// check if an integer value is a power of two
 		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
 

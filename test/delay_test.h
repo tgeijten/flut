@@ -1,7 +1,7 @@
 #pragma once
 
 #include "flut/math/delayer.hpp"
-#include "flut/buffer/storage.hpp"
+#include "flut/storage.hpp"
 #include "flut/math/math.hpp"
 #include "flut/system/log.hpp"
 

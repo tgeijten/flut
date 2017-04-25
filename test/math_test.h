@@ -9,6 +9,7 @@
 #include <random>
 #include <algorithm>
 #include "flut/system/log.hpp"
+#include "flut/storage.hpp"
 #include "flut/math/angle.hpp"
 #include "flut/math/unit_value.hpp"
 #include "flut/flag_set.hpp"
@@ -18,6 +19,7 @@
 #include "flut/system_tools.hpp"
 #include "flut/system/test_framework.hpp"
 #include "flut/math/bounding_box.hpp"
+#include "flut/math/math.hpp"
 
 using std::cout;
 using std::endl;
@@ -112,6 +114,23 @@ void angle_test()
 
 	//flut_logvar4( a1.value, a2.value, a3.value, a4.value );
 	flut_logvar4( sizeof( a1_rd ), sizeof( a2_dd ), sizeof( a3 ), sizeof( a4 ) );
+}
+
+void clamp_test()
+{
+	storage< double > sto;
+	for ( double x = -100; x < 100; x += 1 )
+	{
+		sto.add_frame();
+		double a = soft_clamped( x, 10.0, 20.0, 0.1 );
+		double b = soft_clamped( x, -50.0, 50.0, 0.1 );
+		double c = soft_clamped( x, -200.0, 0.0, 0.1 );
+		sto[ "x" ] = x;
+		sto[ "10..20" ] = a;
+		sto[ "-50..50" ] = b;
+		sto[ "-200..0" ] = c;
+	}
+	std::ofstream( "X:/clamp_test.txt" ) << sto;
 }
 
 void vec_quat_test()

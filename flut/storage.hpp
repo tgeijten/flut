@@ -48,8 +48,8 @@ namespace flut
 		const T& operator()( index_t frame, index_t channel ) const { return at( frame, channel ); }
 
 		/// access value of most recent frame
-		T& operator[]( index_t channel ) { flut_assert( !empty() ); return at( frame_size() - 1, channel ); }
-		const T& operator[]( index_t channel ) const { flut_assert( !empty() ); return at( frame_size() - 1, channel ); }
+		T& operator[]( index_t channel ) { flut_assert( !data_.empty() ); return at( frame_size() - 1, channel ); }
+		const T& operator[]( index_t channel ) const { flut_assert( !data_.empty() ); return at( frame_size() - 1, channel ); }
 
 		/// access value of most recent frame by channel name, add channel if not existing
 		T& operator[]( const L& label ) {
