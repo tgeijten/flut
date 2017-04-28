@@ -27,12 +27,13 @@ namespace flut
 
 		// circular_deque test
 		cd.clear();
+		cd.reserve( 0 );
 		for ( int i = 0; i < 30; ++i )
 		{
 			cd.push_front( i );
-			if ( cd.size() == 10 )
+			if ( cd.size() == 20 )
 			{
-				FLUT_TEST( cd.back() == i - 9 );
+				FLUT_TEST( cd.back() == i - 19 );
 				cd.pop_back();
 			}
 		}

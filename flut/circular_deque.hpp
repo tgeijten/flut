@@ -9,11 +9,17 @@ namespace flut
 	class circular_deque
 	{
 	public:
-		circular_deque( size_t buf_size = 0 ) : front_( 0 ), size_( 0 ), capacity_( buf_size ), buffer_( buf_size > 0 ? new T[ buf_size ] : nullptr ) {}
+		circular_deque( size_t buf_size = 0 ) : front_( 0 ), size_( 0 ), buffer_( buf_size ) {}
 		~circular_deque() {}
 
-		void push_back( const T& value ) { flut_assert( size_ < capacity() ); ++size_; back() = value; }
-		void push_front( const T& value ) { flut_assert( size_ < capacity() );  ++size_; front_ = ( front_ + capacity() - 1 ) % capacity(); front() = value; }
+		void push_back( const T& value ) {
+			if ( ++size_ > capacity() ) buffer_.insert( buffer_.begin() + ( front_ + size_ - 1 ), value );
+			else back() = value;
+		}
+		void push_front( const T& value ) {
+			if ( ++size_ > capacity() ) buffer_.insert( buffer_.begin() + front_, value );
+			else { front_ = ( front_ + capacity() - 1 ) % capacity(); front() = value; }
+		}
 
 		void pop_back() { flut_assert( size_ > 0 ); --size_; }
 		void pop_front() { flut_assert( size_ > 0 ); front_ = ( front_ + 1 ) % capacity(); --size_; }
@@ -29,14 +35,13 @@ namespace flut
 		bool empty() const { return size_ == 0; }
 		void clear() { front_ = size_ = 0; }
 
-		void reserve( size_t s ) { if ( s != capacity_ ) { buffer_ = ( s > 0 ) ? std::unique_ptr< T[] >( new T[ s ] ) : nullptr; capacity_ = s; } }
-		size_t capacity() const { return capacity_; }
+		void reserve( size_t s ) { buffer_.resize( s ); }
+		size_t capacity() const { return buffer_.size(); }
 
 	private:
 		size_t front_;
 		size_t size_;
 
-		size_t capacity_;
-		std::unique_ptr< T[] > buffer_;
+		std::vector< T > buffer_;
 	};
 }
