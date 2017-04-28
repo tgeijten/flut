@@ -218,6 +218,8 @@ namespace flut
 
 	template< typename T > prop_node make_prop_node( const T& value ) { return prop_node_cast< T >::to( value ); }
 
+	FLUT_API const prop_node& empty_prop_node();
+
 	/// stream operator
 	FLUT_API std::ostream& to_stream( std::ostream& str, const prop_node& pn, int depth = 0, int key_align = 0 );
 	inline std::ostream& operator<<( std::ostream& str, const prop_node& pn ) { return to_stream( str, pn ); }

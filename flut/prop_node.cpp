@@ -7,6 +7,12 @@
 
 namespace flut
 {
+	prop_node g_empty_prop_node;
+	FLUT_API const prop_node& empty_prop_node()
+	{
+		return g_empty_prop_node;
+	}
+
 	int get_align_width( const prop_node& pn, int depth )
 	{
 		int width = 0;
