@@ -39,6 +39,7 @@ namespace flut
 		prop_node( value_t&& v ) : accessed_flag( false ), value( std::move( v ) ) {}
 		prop_node( const prop_node& other ) : accessed_flag( false ), value( other.value ), children( other.children ) {}
 		prop_node( prop_node&& other ) : accessed_flag( false ), value( std::move( other.value ) ), children( std::move( other.children ) ) {}
+		prop_node( const prop_node* other ) : accessed_flag( false ), value( other ? other->value : value_t() ), children( other ? other->children : container_t() ) {}
 
 		/// destructor (non-virtual)
 		~prop_node() {}
