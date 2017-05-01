@@ -74,20 +74,14 @@ namespace flut
 #endif
 	}
 
-	bool matches_pattern( const string& str, const string& pattern, const char* pattern_delim_chars )
+	bool pattern_match( const string& str, const string& pattern )
 	{
-		std::vector<std::string> patterns = split_str( pattern, pattern_delim_chars );
-		for ( auto p : patterns ) {
 #ifdef FLUT_COMP_MSVC
-			flut_assert_msg( strcmp( pattern_delim_chars, ";" ) == 0, "Pattern delimiter must be ';' for MSVC" );
-			if ( PathMatchSpecEx( str.c_str(), p.c_str(), PMSF_NORMAL ) == S_OK )
-				return true;
+		flut_assert_msg( str.find_first_of( ";" ) == string::npos, "pattern_match patterns cannot contain ';' on MSVC" );
+		return PathMatchSpecEx( str.c_str(), pattern.c_str(), PMSF_NORMAL ) == S_OK;
 #else
-			if ( fnmatch( p.c_str(), str.c_str(), FNM_NOESCAPE ) == 0 )
-				return true;
+		return fnmatch( p.c_str(), str.c_str(), FNM_NOESCAPE ) == 0;
 #endif
-		}
-		return false;
 	}
 
 	FLUT_API int set_to_str_precision( int p )

@@ -51,8 +51,8 @@ namespace flut
 	/// get formatted string (printf style)
 	FLUT_API string stringf( const char* format, ... );
 
-	/// match pattern (glob, i.e. name* or name?), can use multiple delimited patterns, default delimiter = ';'
-	FLUT_API bool matches_pattern( const string& str, const string& pattern, const char* pattern_delim_chars = ";" );
+	/// match pattern (glob, i.e. name* or name?)
+	FLUT_API bool pattern_match( const string& str, const string& pattern );
 
 	/// set precision used in to_str calls, returns previous precision
 	FLUT_API int set_to_str_precision( int p );
