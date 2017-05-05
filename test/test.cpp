@@ -58,8 +58,8 @@ int main( int argc, char* argv[] )
 		flut::math::vec_quat_test();
 		sw.add_measure( "math" );
 
-		//flut::optimizer_test();
-		//sw.add_measure( "optimizer" );
+		flut::optimizer_test();
+		sw.add_measure( "optimizer" );
 
 		auto pn = sw.get_report();
 		flut::log::info( pn );

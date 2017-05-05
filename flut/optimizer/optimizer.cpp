@@ -1,21 +1,22 @@
 #include "optimizer.hpp"
 #include <future>
 #include "flut/system/log.hpp"
+#include <xfunctional>
 
 namespace flut
 {
+	no_objective optimizer::no_objective_;
 
-	optimizer::optimizer( int d, objective_func_t f ) :
-	dim_( d ),
-	func_( f )
-	{
-	}
+
+	optimizer::optimizer( const objective& o ) :
+	objective_( o )
+	{ }
 
 	optimizer::~optimizer()
 	{
 	}
 
-	optimizer::search_point_t optimizer::evaluate( const vector< search_point_t >& pop )
+	fitness_vec_t optimizer::evaluate( const vector< param_vec_t >& pop )
 	{
 		vector< double > results( pop.size(), 0.0 );
 
@@ -41,7 +42,7 @@ namespace flut
 				}
 
 				// add new thread
-				threads.push_back( std::make_pair( std::async( std::launch::async, func_, pop[ eval_idx ] ), eval_idx ) );
+				threads.push_back( std::make_pair( std::async( std::launch::async, [&]( const param_vec_t& p ) { return objective_.evaluate( p ); }, pop[ eval_idx ] ), eval_idx ) );
 			}
 
 			// wait for remaining threads

@@ -1139,38 +1139,25 @@ namespace flut
 		}
 	};
 
-	cma_optimizer::cma_optimizer( int d, objective_func_t func, const search_point_t& init_mean, const search_point_t& init_std, int lam, int seed, cma_weights w ) :
-	optimizer( d, func ),
-	pimpl( nullptr )
+	cma_optimizer::cma_optimizer( const objective& obj, int l, int seed, cma_weights w ) :
+	optimizer( obj )
 	{
-		for ( auto& v : init_std )
-			flut_error_if( v <= 0.0, "Initial std must be > 0" );
-
 		pimpl = new pimpl_t;
 
-		cmaes_init( &pimpl->cmaes, d, init_mean, init_std, seed, lam );
+		cmaes_init( &pimpl->cmaes, (int)objective_.dim(), objective_.starting_point(), objective_.starting_point_std(), seed, l );
 		cmaes_readpara_SupplementDefaults( &pimpl->cmaes );
 		cmaes_init_final( &pimpl->cmaes );
 
 		pimpl->bounded_pop.resize( lambda() );
 		for ( auto& ind : pimpl->bounded_pop )
 			ind.resize( dim() );
-	}
 
-	cma_optimizer::cma_optimizer( int dim, objective_func_t func, const search_point_t& init_mean, const search_point_t& init_std, const search_point_t& lower_bounds, const search_point_t& upper_bounds, int lambda, int seed, cma_weights w ) :
-	cma_optimizer( dim, func, init_mean, init_std, lambda, seed, w )
-	{
-		set_boundaries( lower_bounds, upper_bounds );
+		cmaes_boundary_trans_init( &pimpl->bounds, objective_.lower_bounds(), objective_.upper_bounds() );
 	}
 
 	cma_optimizer::~cma_optimizer()
 	{
 		delete pimpl;
-	}
-
-	void cma_optimizer::set_boundaries( const vector< double >& lower, const vector< double >& upper )
-	{
-		cmaes_boundary_trans_init( &pimpl->bounds, lower, upper );
 	}
 
 	const std::vector< std::vector< double > >& cma_optimizer::sample_population()
@@ -1196,10 +1183,10 @@ namespace flut
 
 	void cma_optimizer::update_distribution( const std::vector< double >& results )
 	{
-		if ( maximize() )
+		if ( objective_.maximize() )
 		{
 			// negate first, since c-cmaes always minimizes
-			search_point_t neg_results( results.size() );
+			vector< fitness_t > neg_results( results.size() );
 			std::transform( results.begin(), results.end(), neg_results.begin(), [&]( const double& v ) { return -v; } );
 			cmaes_UpdateDistribution( &pimpl->cmaes, neg_results );
 		}

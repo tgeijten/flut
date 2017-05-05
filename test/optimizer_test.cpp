@@ -49,7 +49,8 @@ namespace flut
 		double *arFunvals = cmaes_init( &evo, dim, &init_mean[ 0 ], &init_std[ 0 ], seed, lambda, "no" );
 
 		// init cma_optimizer
-		cma_optimizer cma( dim, fitfun, init_mean, init_std, lambda, seed );
+		function_objective obj( dim, fitfun, init_mean, init_std );
+		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 10 );
 
 		/* Iterate until stop criterion holds */
@@ -99,14 +100,13 @@ namespace flut
 	void optimizer_thread_test()
 	{
 		// setup mean / std / N
-		int dim = 10;
+		size_t dim = 10;
 		int seed = 123;
 		int lambda = 0;
-		std::vector< double > init_mean( dim, 0.0 );
-		std::vector< double > init_std( dim, 0.3 );
 
 		// init cma_optimizer
-		cma_optimizer cma( dim, slow_func, init_mean, init_std, lambda, seed );
+		function_objective obj( dim, slow_func, param_vec_t( dim, 0.0 ), param_vec_t( dim, 0.3 ) );
+		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 3 );
 
 		for ( int gen = 0; gen < 10; ++gen )

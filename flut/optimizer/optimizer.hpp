@@ -4,6 +4,7 @@
 #include "flut/system/path.hpp"
 #include "flut/system/types.hpp"
 #include <functional>
+#include "objective.hpp"
 
 #if defined(_MSC_VER)
 #	pragma warning( push )
@@ -15,34 +16,34 @@ namespace flut
 	class FLUT_API optimizer
 	{
 	public:
-		typedef vector< double > search_point_t;
-		typedef std::function< double( const search_point_t& ) > objective_func_t;
-		static double no_objective_func( const search_point_t& ) { flut_error( "No objective function" ); }
-
-		optimizer( int dim, objective_func_t func = no_objective_func );
+		optimizer( const objective& o = no_objective_ );
 		virtual ~optimizer();
 
-		virtual search_point_t evaluate( const vector< search_point_t >& pop );
-
-		bool is_better( double a, double b ) { return maximize() ? a > b : a < b; }
-
-		bool maximize() const { return maximize_; }
-		void set_maximize( bool m ) { maximize_ = m; }
+		virtual fitness_vec_t evaluate( const vector< param_vec_t >& pop );
 		
 		int max_threads() const { return max_threads_; }
 		void set_max_threads( int val ) { max_threads_ = val; }
 
-	protected:
+		struct generation_result {
+			float best;
+			float median;
+			float average;
+		};
 
-		// parameter settings
-		bool maximize_ = false;
-		int dim_ = -1;
+		const vector< generation_result >& history() { return history_; }
+
+	protected:
 
 		// evaluation settings
 		int max_threads_ = 1;
 
+		vector< generation_result > history_;
+
 		// objective
-		objective_func_t func_;
+		const objective& objective_;
+
+	private:
+		static no_objective no_objective_;
 	};
 }
 
