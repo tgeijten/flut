@@ -1,12 +1,9 @@
 #pragma once
 
-#define flut_result( A_, B_ ) typename ::flut::math::result< A_, B_ >::type
+#define flut_result_type( A_, B_ ) decltype( A_(1) + B(1) )
 
 namespace flut
 {
-	namespace math
-	{
-		/// result types
-		template< typename A, typename B > struct result { typedef decltype( A(1) + B(1) ) type; };
-	}
+	/// result types
+	template< typename A, typename B > struct result_type { typedef decltype( A(1) + B(1) ) type; };
 }

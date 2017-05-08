@@ -52,6 +52,7 @@ int main( int argc, char* argv[] )
 		sw.add_measure( "buffer" );
 
 		flut::math::clamp_test();
+		flut::math::linear_regression_test();
 		flut::math::math_test();
 		flut::math::function_test();
 		flut::math::angle_test();

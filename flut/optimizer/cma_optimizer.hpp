@@ -13,8 +13,8 @@ namespace flut
 		virtual ~cma_optimizer();
 
 		// optimization
-		const vector< vector< double > >& sample_population();
-		void update_distribution( const std::vector< double >& results );
+		const vector< param_vec_t >& sample_population();
+		void update_distribution( const std::vector< fitness_t >& results );
 
 		// analysis
 		param_vec_t current_mean() const;

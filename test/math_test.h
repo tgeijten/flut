@@ -20,6 +20,8 @@
 #include "flut/system/test_framework.hpp"
 #include "flut/math/bounding_box.hpp"
 #include "flut/math/math.hpp"
+#include "flut/math/linear_regression.hpp"
+#include "flut/math/range.hpp"
 
 using std::cout;
 using std::endl;
@@ -130,8 +132,36 @@ void clamp_test()
 		sto[ "-50..50" ] = b;
 		sto[ "-200..0" ] = c;
 	}
-	std::ofstream( "X:/clamp_test.txt" ) << sto;
+	//std::ofstream( "X:/clamp_test.txt" ) << sto;
 }
+
+void linear_regression_test()
+{
+	std::vector< double > x;
+	std::vector< double > y;
+	for ( int i = -100; i < 50; ++i )
+	{
+		x.push_back( i );
+		y.push_back( i * 2.5 + 4.0 );
+	}
+
+	//flut::linear_regression lg( x.begin(), x.end(), y.begin(), y.end() );
+
+	auto lg1 = do_linear_regression( x, y );
+	FLUT_TEST( equals( lg1.slope(), 2.5 ) );
+	FLUT_TEST( equals( lg1.offset(), 4.0 ) );
+
+	x.clear();
+	y.clear();
+	auto xr = irange< -50, 100, 2 >();
+	for ( auto xre : xr )
+		y.push_back( xre * -1.5 - 100 );
+
+	auto lg2 = do_linear_regression( xr, y );
+	FLUT_TEST( equals( lg2.slope(), -1.5 ) );
+	FLUT_TEST( equals( lg2.offset(), -100.0 ) );
+}
+
 
 void vec_quat_test()
 {

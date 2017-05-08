@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <cstring>
+#include <numeric>
 
 namespace flut
 {
@@ -1181,7 +1182,7 @@ namespace flut
 		return pimpl->bounded_pop;
 	}
 
-	void cma_optimizer::update_distribution( const std::vector< double >& results )
+	void cma_optimizer::update_distribution( const std::vector< fitness_t >& results )
 	{
 		if ( objective_.maximize() )
 		{
@@ -1191,6 +1192,12 @@ namespace flut
 			cmaes_UpdateDistribution( &pimpl->cmaes, neg_results );
 		}
 		else cmaes_UpdateDistribution( &pimpl->cmaes, results );
+
+		// add results to history
+		fitness_vec_t sorted_results = results;
+		std::sort( sorted_results.begin(), sorted_results.end() );
+		fitness_t avg = std::accumulate( sorted_results.begin(), sorted_results.end(), 0.0 ) / sorted_results.size();
+		history_.push_back( fitness_report{ sorted_results.front(), flut::median( sorted_results ), avg } );
 	}
 
 	vector< double > cma_optimizer::current_mean() const

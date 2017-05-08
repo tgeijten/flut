@@ -27,9 +27,9 @@ namespace flut
 		};
 
 		struct fitness_report {
-			fitness_t best = 0.0;
-			fitness_t median = 0.0;
-			fitness_t average = 0.0;
+			fitness_t best;
+			fitness_t median;
+			fitness_t average;
 		};
 
 		optimizer( const objective& o );

@@ -45,6 +45,15 @@ namespace flut
 		else return it - vec.begin();
 	}
 
+	template< typename T >
+	T median( const vector< T >& vec )
+	{
+		auto s = vec.size();
+		flut_assert( s > 0 );
+		if ( ( s & 1 ) == 0 ) return vec[ s / 2 ];
+		else return ( vec[ s / 2 ] + vec[ s / 2 - 1 ] ) / T(2);
+	}
+
 	template< typename It, typename Pr >
 	struct view_if
 	{
