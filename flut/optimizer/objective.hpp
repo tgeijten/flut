@@ -27,14 +27,9 @@ namespace flut
 		virtual bool minimize() const { return true; }
 		bool maximize() const { return !minimize(); }
 		bool is_better( fitness_t a, fitness_t b ) const { return minimize() ? a < b : a > b; }
+		fitness_t worst_fitness() const { return minimize() ? std::numeric_limits< fitness_t >::max() : std::numeric_limits< fitness_t >::lowest(); }
 
 		virtual fitness_t evaluate( const param_vec_t& point ) const = 0;
-	};
-
-	class no_objective : public objective
-	{
-		virtual size_t dim() const override { flut_error( "No objective defined" ); }
-		virtual double evaluate( const param_vec_t& point ) const override { flut_error( "No objective defined" ); }
 	};
 
 	class function_objective : public objective

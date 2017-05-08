@@ -1,31 +1,42 @@
 #include "optimizer.hpp"
 #include <future>
 #include "flut/system/log.hpp"
-#include <xfunctional>
+#include <cmath>
 
 namespace flut
 {
-	no_objective optimizer::no_objective_;
-
-
 	optimizer::optimizer( const objective& o ) :
-	objective_( o )
-	{ }
+	objective_( o ),
+	current_fitness_( o.worst_fitness() )
+	{}
 
 	optimizer::~optimizer()
+	{}
+
+	bool optimizer::test_stop( const stop_condition& stop ) const
 	{
+		if ( current_generation() >= stop.max_generations )
+			return true;
+
+		if ( !std::isnan( stop.fitness ) && objective_.is_better( current_fitness(), stop.fitness ) )
+			return true;
+
+		// none of the criteria is met -> return false
+		return false;
 	}
 
 	fitness_vec_t optimizer::evaluate( const vector< param_vec_t >& pop )
 	{
-		vector< double > results( pop.size(), 0.0 );
-
+		vector< double > results( pop.size(), objective_.worst_fitness() );
 		try
 		{
 			vector< std::pair< std::future< double >, index_t > > threads;
 
 			for ( index_t eval_idx = 0; eval_idx < pop.size(); ++eval_idx )
 			{
+				if ( abort_flag_.load() )
+					break;
+
 				// first make sure enough threads are available
 				while ( threads.size() >= max_threads() )
 				{
@@ -33,7 +44,7 @@ namespace flut
 					{
 						if ( it->first.wait_for( std::chrono::milliseconds( 1 ) ) == std::future_status::ready )
 						{
-							// a thread is finished, lets add it to the results and make room for a new thread
+							// a thread is finished, add it to the results and make room for a new thread
 							results[ it->second ] = it->first.get();
 							it = threads.erase( it );
 						}
@@ -47,7 +58,7 @@ namespace flut
 
 			// wait for remaining threads
 			for ( auto& f : threads )
-				results[ f.second ] = f.first.get();
+				results[ f.second ] = f.first.valid() ? f.first.get() : objective_.worst_fitness();
 		}
 		catch ( std::exception& e )
 		{

@@ -8,7 +8,7 @@ namespace flut
 	namespace math
 	{
 		/// constants
-		template< typename T > struct constants
+		template< typename T > struct numeric_const
 		{
 			static T pi() { return T( 3.14159265358979 ); }
 			static T half_pi() { return T( 0.5 ) * T( 3.14159265358979 ); }
@@ -20,24 +20,25 @@ namespace flut
 			static T max() { return std::numeric_limits< T >::max(); }
 			static T min() { return std::numeric_limits< T >::min(); }
 			static T lowest() { return std::numeric_limits< T >::lowest(); }
+			static T nan() { return std::numeric_limits< T >::quiet_NaN(); }
 		};
 
-		typedef constants< int > consti;
-		typedef constants< float > constf;
-		typedef constants< double > constd;
+		typedef numeric_const< int > num_const_i;
+		typedef numeric_const< float > num_const_f;
+		typedef numeric_const< double > num_const_d;
 
-		const real_t real_pi = constants< real_t >::pi();
-		const float float_pi = constants< float >::pi();
-		const double double_pi = constants< double >::pi();
+		const real_t real_pi = numeric_const< real_t >::pi();
+		const float float_pi = numeric_const< float >::pi();
+		const double double_pi = numeric_const< double >::pi();
 
 		/// convert rad to deg
-		template< typename T > T rad_to_deg( T rad_value ) { return ( T( 180 ) / constants<T>::pi() ) * rad_value; }
+		template< typename T > T rad_to_deg( T rad_value ) { return ( T( 180 ) / numeric_const<T>::pi() ) * rad_value; }
 
 		/// convert deg to rad
-		template< typename T > T deg_to_rad( T deg_value ) { return ( constants<T>::pi() / T( 180 ) ) * deg_value; }
+		template< typename T > T deg_to_rad( T deg_value ) { return ( numeric_const<T>::pi() / T( 180 ) ) * deg_value; }
 
 		/// compare floating point variables using relaxed_epsilon
-		template< typename T > bool equals( T v1, T v2, T e = constants<T>::relaxed_epsilon() ) { return std::abs( v1 - v2 ) <= std::abs( v1 ) * e; }
+		template< typename T > bool equals( T v1, T v2, T e = numeric_const<T>::relaxed_epsilon() ) { return std::abs( v1 - v2 ) <= std::abs( v1 ) * e; }
 
 		/// inverse of v (1 / v)
 		template< typename T > T inv( T v ) { return T(1) / v; }

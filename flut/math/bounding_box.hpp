@@ -9,7 +9,7 @@ namespace flut
 		template< typename T >
 		struct bounding_box_
 		{
-			bounding_box_() : lower_bounds( constants<T>::max() ), upper_bounds( constants<T>::lowest() ) {}
+			bounding_box_() : lower_bounds( numeric_const<T>::max() ), upper_bounds( numeric_const<T>::lowest() ) {}
 			bounding_box_( const vec3_<T>& p ) : lower_bounds( p ), upper_bounds( p ) {}
 			bounding_box_( const vec3_<T>& lower, const vec3_<T>& upper ) : lower_bounds( lower ), upper_bounds( upper ) {}
 
