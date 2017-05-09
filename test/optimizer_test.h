@@ -2,7 +2,7 @@
 
 #include "flut/system/test_framework.hpp"
 #include "c-cmaes/cmaes_interface.h"
-#include "flut/optimizer/cma_optimizer.hpp"
+#include "flut/optimization/cma_optimizer.hpp"
 
 /* the objective (fitness) function to be minimized */
 double fitfun_c( double const *x, int N );
