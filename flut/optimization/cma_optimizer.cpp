@@ -1144,8 +1144,19 @@ namespace flut
 	optimizer( obj )
 	{
 		pimpl = new pimpl_t;
+		auto n = objective_.dim();
 
-		cmaes_init( &pimpl->cmaes, (int)objective_.dim(), objective_.starting_point(), objective_.starting_point_std(), seed, l );
+		std::vector< double > mean( n ), std( n ), lb( n ), ub( n );
+		for ( index_t i = 0; i < n; ++i )
+		{
+			auto& p = objective_.info()[ i ];
+			mean[ i ] = p.mean;
+			std[ i ] = p.std;
+			lb[ i ] = p.min;
+			ub[ i ] = p.max;
+		}
+
+		cmaes_init( &pimpl->cmaes, (int)objective_.dim(), mean, std, seed, l );
 		cmaes_readpara_SupplementDefaults( &pimpl->cmaes );
 		cmaes_init_final( &pimpl->cmaes );
 
@@ -1153,7 +1164,7 @@ namespace flut
 		for ( auto& ind : pimpl->bounded_pop )
 			ind.resize( dim() );
 
-		cmaes_boundary_trans_init( &pimpl->bounds, objective_.lower_bounds(), objective_.upper_bounds() );
+		cmaes_boundary_trans_init( &pimpl->bounds, lb, ub );
 	}
 
 	cma_optimizer::~cma_optimizer()

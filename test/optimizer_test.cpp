@@ -49,7 +49,7 @@ namespace flut
 		double *arFunvals = cmaes_init( &evo, dim, &init_mean[ 0 ], &init_std[ 0 ], seed, lambda, "no" );
 
 		// init cma_optimizer
-		function_objective obj( dim, fitfun, init_mean, init_std );
+		function_objective obj( dim, fitfun, true, init_mean, init_std );
 		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 10 );
 
@@ -105,7 +105,7 @@ namespace flut
 		int lambda = 0;
 
 		// init cma_optimizer
-		function_objective obj( dim, slow_func, param_vec_t( dim, 0.0 ), param_vec_t( dim, 0.3 ) );
+		function_objective obj( dim, slow_func, true, param_vec_t( dim, 0.0 ), param_vec_t( dim, 0.3 ) );
 		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 3 );
 
