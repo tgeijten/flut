@@ -13,7 +13,7 @@ namespace flut
 	optimizer::~optimizer()
 	{}
 
-	bool optimizer::test_stop( const stop_condition& stop ) const
+	bool optimizer::test_stop_condition( const stop_condition& stop ) const
 	{
 		if ( current_generation() >= stop.max_generations )
 			return true;

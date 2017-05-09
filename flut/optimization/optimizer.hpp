@@ -37,7 +37,7 @@ namespace flut
 
 		virtual void run( const stop_condition& stop = stop_condition() ) { FLUT_NOT_IMPLEMENTED; }
 		virtual void abort() { FLUT_NOT_IMPLEMENTED; }
-		bool test_stop( const stop_condition& stop ) const;
+		bool test_stop_condition( const stop_condition& stop ) const;
 
 		virtual fitness_vec_t evaluate( const vector< param_vec_t >& pop );
 		
