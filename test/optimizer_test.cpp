@@ -105,7 +105,7 @@ namespace flut
 		int lambda = 0;
 
 		// init cma_optimizer
-		function_objective obj( dim, slow_func, true, param_vec_t( dim, 0.0 ), param_vec_t( dim, 0.3 ) );
+		function_objective obj( dim, slow_func, true, par_vec( dim, 0.0 ), par_vec( dim, 0.3 ) );
 		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 3 );
 

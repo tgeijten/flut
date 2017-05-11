@@ -39,7 +39,7 @@ namespace flut
 		virtual void abort() { FLUT_NOT_IMPLEMENTED; }
 		bool test_stop_condition( const stop_condition& stop ) const;
 
-		virtual fitness_vec_t evaluate( const vector< param_vec_t >& pop );
+		virtual fitness_vec_t evaluate( const vector< par_vec >& pop );
 		
 		int max_threads() const { return max_threads_; }
 		void set_max_threads( int val ) { max_threads_ = val; }
@@ -47,7 +47,7 @@ namespace flut
 		const vector< fitness_report >& history() const { return history_; }
 		size_t current_generation() const { return history_.size(); }
 		fitness_t current_fitness() const { return current_fitness_; }
-		const param_vec_t& current_best() const { return current_best_; }
+		const par_vec& current_best() const { return current_best_; }
 
 	protected:
 		// evaluation settings
@@ -56,7 +56,7 @@ namespace flut
 
 		vector< fitness_report > history_;
 		fitness_t current_fitness_;
-		param_vec_t current_best_;
+		par_vec current_best_;
 
 		const objective& objective_;
 	};

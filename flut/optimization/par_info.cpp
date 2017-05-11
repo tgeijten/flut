@@ -1,24 +1,24 @@
-#include "param_set.hpp"
+#include "par_info.hpp"
 
 #include "flut/container_tools.hpp"
+#include "flut/system/assert.hpp"
 #include <fstream>
 
 namespace flut
 {
-
-	flut::index_t param_info::add( const string& name, param_t mean, param_t std, param_t min, param_t max )
+	flut::index_t par_info::add( const string& name, par_value mean, par_value std, par_value min, par_value max )
 	{
-		params_.emplace_back( param{ name, mean, std, min, max } );
+		params_.emplace_back( parameter{ name, mean, std, min, max } );
 		return params_.size() - 1;
 	}
 
-	flut::index_t param_info::get_index( const string& name )
+	flut::index_t par_info::get_index( const string& name )
 	{
 		auto it = find( name );
 		return ( it != params_.end() ) ? it - params_.begin() : no_index;
 	}
 
-	flut::index_t param_info::get_index( const string& name, param_t mean, param_t std, param_t min, param_t max )
+	flut::index_t par_info::get_index( const string& name, par_value mean, par_value std, par_value min, par_value max )
 	{
 		auto idx = get_index( name );
 		if ( idx != no_index )
@@ -28,12 +28,12 @@ namespace flut
 		else return no_index;
 	}
 
-	vector< flut::param_info::param >::iterator param_info::find( const string& name )
+	vector< flut::par_info::parameter >::iterator par_info::find( const string& name )
 	{
-		return find_if( params_, [&]( param& p ) { return p.name == name; } );
+		return find_if( params_, [&]( parameter& p ) { return p.name == name; } );
 	}
 
-	size_t param_info::import( const path& filename, bool import_std )
+	size_t par_info::import( const path& filename, bool import_std )
 	{
 		size_t params_set = 0;
 		size_t params_not_found = 0;
@@ -60,22 +60,9 @@ namespace flut
 		return params_set;
 	}
 
-	void param_info::set_global_std( double factor, double offset )
+	void par_info::set_global_std( double factor, double offset )
 	{
 		for ( auto& p : params_ )
 			p.std = factor * fabs( p.mean ) + offset;
-	}
-
-	param_t param_set::get( const string& name, param_t mean, param_t std, param_t min, param_t max )
-	{
-		auto idx = info_.get_index( name, mean, std, min, max );
-		if ( idx < values_.size() )
-			return values_[ idx ];
-		else return mean;
-	}
-
-	param_t param_set::get( const string& name, const prop_node& prop )
-	{
-		return 0.0;
 	}
 }

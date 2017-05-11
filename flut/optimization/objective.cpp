@@ -14,7 +14,7 @@ namespace flut
 		return minimize() ? math::numeric_const< fitness_t >::max() : math::numeric_const< fitness_t >::lowest();
 	}
 
-	function_objective::function_objective( size_t d, function_t func, bool minimize, const param_vec_t& start, const param_vec_t& start_std, const param_vec_t& upper, const param_vec_t& lower ) :
+	function_objective::function_objective( size_t d, function_t func, bool minimize, const par_vec& start, const par_vec& start_std, const par_vec& upper, const par_vec& lower ) :
 	func_( func ),
 	minimize_( minimize )
 	{
