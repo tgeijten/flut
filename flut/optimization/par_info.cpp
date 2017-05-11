@@ -6,19 +6,19 @@
 
 namespace flut
 {
-	flut::index_t par_info::add( const string& name, par_value mean, par_value std, par_value min, par_value max )
+	flut::index_t par_info::add( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
 		params_.emplace_back( parameter{ name, mean, std, min, max } );
 		return params_.size() - 1;
 	}
 
-	flut::index_t par_info::get_index( const string& name )
+	flut::index_t par_info::get_index( const string& name ) const
 	{
 		auto it = find( name );
 		return ( it != params_.end() ) ? it - params_.begin() : no_index;
 	}
 
-	flut::index_t par_info::get_index( const string& name, par_value mean, par_value std, par_value min, par_value max )
+	flut::index_t par_info::get_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
 		auto idx = get_index( name );
 		if ( idx != no_index )
@@ -28,7 +28,7 @@ namespace flut
 		else return no_index;
 	}
 
-	vector< flut::par_info::parameter >::iterator par_info::find( const string& name )
+	vector< flut::par_info::parameter >::iterator par_info::find( const string& name ) const
 	{
 		return find_if( params_, [&]( parameter& p ) { return p.name == name; } );
 	}
@@ -64,5 +64,11 @@ namespace flut
 	{
 		for ( auto& p : params_ )
 			p.std = factor * fabs( p.mean ) + offset;
+	}
+
+	const flut::par_info& par_info::empty()
+	{
+		static const par_info empty_par_info;
+		return empty_par_info;
 	}
 }

@@ -19,6 +19,6 @@ namespace flut
 	minimize_( minimize )
 	{
 		for ( size_t i = 0; i < d; ++i )
-			param_info_.add( stringf( "%d", i ), start[ i ], start_std[ i ], i < lower.size() ? lower[ i ] : -1e15, i < lower.size() ? lower[ i ] : 1e15 );
+			par_info_.add( stringf( "%d", i ), start[ i ], start_std[ i ], i < lower.size() ? lower[ i ] : -1e15, i < lower.size() ? lower[ i ] : 1e15 );
 	}
 }

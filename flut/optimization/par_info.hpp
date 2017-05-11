@@ -31,18 +31,20 @@ namespace flut
 		const vector< parameter >& get_params() const { return params_; }
 		const parameter& operator[]( index_t i ) const { return params_[ i ]; }
 
-		index_t add( const string& name, par_value mean, par_value std, par_value min, par_value max );
+		index_t add( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
 
-		index_t get_index( const string& name );
-		index_t get_index( const string& name, par_value mean, par_value std, par_value min, par_value max );
+		index_t get_index( const string& name ) const;
+		index_t get_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
 
-		vector< parameter >::iterator find( const string& name );
+		vector< parameter >::iterator find( const string& name ) const;
 
 		vector< parameter >::const_iterator begin() const { return params_.begin(); }
 		vector< parameter >::const_iterator end() const { return params_.end(); }
 
 		size_t import( const path& filename, bool import_std );
 		void set_global_std( double factor, double offset );
+
+		const static par_info& empty();
 
 	private:
 		mutable std::vector< parameter > params_;
