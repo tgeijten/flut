@@ -6,34 +6,39 @@
 
 namespace flut
 {
-	flut::index_t par_info::add( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
+	par_info_set::par_info_vec::iterator par_info_set::find( const string& name ) const
 	{
-		params_.emplace_back( parameter{ name, mean, std, min, max } );
-		return params_.size() - 1;
+		return find_if( params_, [&]( par_info& p ) { return p.name == name; } );
 	}
 
-	flut::index_t par_info::get_index( const string& name ) const
+	index_t par_info_set::find_index( const string& name ) const
+	{
+		return get_index( find( name ) );
+	}
+
+	void par_info_set::push_back( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
+	{
+		flut_error_if( finalized(), "Cannot add parameter after par_info has been finalized" );
+		params_.emplace_back( par_info{ name, mean, std, min, max } );
+	}
+
+	par_info_set::par_info_vec::iterator par_info_set::acquire( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
 		auto it = find( name );
-		return ( it != params_.end() ) ? it - params_.begin() : no_index;
+		if ( it == params_.end() )
+		{
+			push_back( name, mean, std, min, max );
+			return params_.end() - 1;
+		}
+		else return it;
 	}
 
-	flut::index_t par_info::get_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
+	index_t par_info_set::acquire_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
-		auto idx = get_index( name );
-		if ( idx != no_index )
-			return idx;
-		else if ( under_construction_ )
-			return add( name, mean, std, min, max );
-		else return no_index;
+		return get_index( acquire( name, mean, std, min, max ) );
 	}
 
-	vector< flut::par_info::parameter >::iterator par_info::find( const string& name ) const
-	{
-		return find_if( params_, [&]( parameter& p ) { return p.name == name; } );
-	}
-
-	size_t par_info::import( const path& filename, bool import_std )
+	size_t par_info_set::import( const path& filename, bool import_std )
 	{
 		size_t params_set = 0;
 		size_t params_not_found = 0;
@@ -60,15 +65,15 @@ namespace flut
 		return params_set;
 	}
 
-	void par_info::set_global_std( double factor, double offset )
+	void par_info_set::set_global_std( double factor, double offset )
 	{
 		for ( auto& p : params_ )
 			p.std = factor * fabs( p.mean ) + offset;
 	}
 
-	const flut::par_info& par_info::empty()
+	const flut::par_info_set& par_info_set::empty_instance()
 	{
-		static const par_info empty_par_info;
+		static const par_info_set empty_par_info( false );
 		return empty_par_info;
 	}
 }

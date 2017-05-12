@@ -18,7 +18,8 @@ namespace flut
 	func_( func ),
 	minimize_( minimize )
 	{
+		// create par_info
 		for ( size_t i = 0; i < d; ++i )
-			par_info_.add( stringf( "%d", i ), start[ i ], start_std[ i ], i < lower.size() ? lower[ i ] : -1e15, i < lower.size() ? lower[ i ] : 1e15 );
+			par_info_.push_back( stringf( "%d", i ), start[ i ], start_std[ i ], i < lower.size() ? lower[ i ] : -1e15, i < lower.size() ? lower[ i ] : 1e15 );
 	}
 }

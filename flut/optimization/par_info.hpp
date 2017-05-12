@@ -15,10 +15,10 @@ namespace flut
 	using par_value = double;
 	using par_vec = vector< par_value >;
 
-	class FLUT_API par_info
+	class FLUT_API par_info_set
 	{
 	public:
-		struct parameter
+		struct par_info
 		{
 			string name;
 			par_value mean;
@@ -27,27 +27,43 @@ namespace flut
 			par_value max;
 		};
 
+		using par_info_vec = vector< par_info >;
+
+		par_info_set( bool under_construction = true ) : under_construction_( under_construction ) {}
+
+		/// access by index
+		const par_info& operator[]( index_t i ) const { return params_[ i ]; }
+
+		/// access by name
+		par_info_vec::iterator find( const string& name ) const;
+		index_t find_index( const string& name ) const;
+
+		/// add entry
+		void push_back( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
+		par_info_vec::iterator acquire( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
+		index_t acquire_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
+
+		/// iterator access
+		par_info_vec::const_iterator begin() const { return params_.begin(); }
+		par_info_vec::const_iterator end() const { return params_.end(); }
+
+		/// properties
 		size_t size() const { return params_.size(); }
-		const vector< parameter >& get_params() const { return params_; }
-		const parameter& operator[]( index_t i ) const { return params_[ i ]; }
+		bool empty() const { return params_.empty(); }
 
-		index_t add( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
-
-		index_t get_index( const string& name ) const;
-		index_t get_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const;
-
-		vector< parameter >::iterator find( const string& name ) const;
-
-		vector< parameter >::const_iterator begin() const { return params_.begin(); }
-		vector< parameter >::const_iterator end() const { return params_.end(); }
-
+		/// import / export
 		size_t import( const path& filename, bool import_std );
 		void set_global_std( double factor, double offset );
 
-		const static par_info& empty();
+		/// static empty member
+		const static par_info_set& empty_instance();
+		index_t get_index( par_info_vec::iterator it ) const { return it != params_.end() ? it - params_.begin() : no_index; }
+
+		bool finalized() const { return !under_construction_; }
+		void finalize() { under_construction_ = false; }
 
 	private:
-		mutable std::vector< parameter > params_;
+		mutable par_info_vec params_;
 		bool under_construction_;
 	};
 }

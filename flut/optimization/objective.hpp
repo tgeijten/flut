@@ -22,8 +22,8 @@ namespace flut
 		virtual ~objective() {}
 
 		virtual size_t dim() const { return par_info_.size(); }
-		const par_info& info() const { return par_info_; }
-		par_info& info() { return par_info_; }
+		const par_info_set& info() const { return par_info_; }
+		par_info_set& info() { return par_info_; }
 
 		virtual bool minimize() const { return true; }
 		bool maximize() const { return !minimize(); }
@@ -34,7 +34,7 @@ namespace flut
 		virtual fitness_t evaluate( const par_vec& point ) const = 0;
 
 	protected:
-		par_info par_info_;
+		par_info_set par_info_;
 	};
 
 	class FLUT_API function_objective : public objective
