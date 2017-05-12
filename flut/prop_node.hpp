@@ -63,6 +63,14 @@ namespace flut
 		template< typename T > T get( const key_t& key, const T& def ) const
 		{ const auto it = find( key ); if ( it != end() ) return it->second.get< T >(); else return def; }
 
+		/// get the value of a child node for a range of keys, or a default value if it doesn't exist
+		template< typename T > T get_any( std::initializer_list< key_t > keys, const T& def ) const
+		{ for ( auto& key : keys ) { const auto it = find( key ); if ( it != end() ) return it->second.get< T >(); } return def; }
+
+		/// get the value of a child node for a range of keys, or a default value if it doesn't exist
+		template< typename T > T get_any( std::initializer_list< key_t > keys ) const
+		{ for ( auto& key : keys ) { const auto it = find( key ); if ( it != end() ) return it->second.get< T >(); } flut_error( "No matching key found" ); }
+
 		/// see if this prop_node has a value
 		bool has_value() const { return !value.empty(); }
 

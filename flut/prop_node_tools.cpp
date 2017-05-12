@@ -105,15 +105,14 @@ namespace flut
 	{
 		while ( true )
 		{
-			string t = str.get_token( "={};" );
-			if ( t.empty() ) return t;
-			if ( t[ 0 ] == ';' )
+			string t = str.get_token( "={}%", "\"'" );
+			if ( t == "%" )
 			{
 				// comment: skip rest of line
 				str.get_line();
 				continue;
 			}
-			else return t;
+			else return trim_str( t );
 		}
 	}
 
@@ -139,7 +138,7 @@ namespace flut
 
 	FLUT_API prop_node load_prop( const path& filename, error_code* ec )
 	{
-		auto str = load_char_stream( filename.str(), ec );
+		auto str = char_stream( load_string( filename.str(), ec ), "\n\r\t\v;" );
 		if ( !str.good() )
 		{
 			if ( try_set_error( ec, "Could not open " + filename.str() ) )

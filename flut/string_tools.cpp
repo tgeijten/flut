@@ -21,18 +21,16 @@ namespace flut
 {
 	int to_str_precision_value = 4;
 
-	string trim_str( const string& s )
+	string trim_str( const string& s, const char* space_chars )
 	{
-		const char* space_chars = " \t\r\n\f\v";
 		auto left = s.find_first_not_of( space_chars );
 		if ( left == string::npos ) return string( "" ); // string has no non-whitespace characters
 		auto right = s.find_last_not_of( space_chars );
 		return s.substr( left, 1 + right - left );
 	}
 
-	string trim_right_str( const string& s )
+	string trim_right_str( const string& s, const char* space_chars )
 	{
-		const char* space_chars = " \t\r\n\f\v";
 		auto right = s.find_last_not_of( space_chars );
 		return s.substr( 0, 1 + right );
 	}

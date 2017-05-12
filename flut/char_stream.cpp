@@ -4,26 +4,20 @@
 
 namespace flut
 {
-
-	char_stream::char_stream()
-	{
-		init_buffer( str_buffer.c_str(), str_buffer.size() );
-	}
-
-	char_stream::char_stream( const char* buf )
+	char_stream::char_stream( const char* buf, const char* delim ) : delimiters_( delim )
 	{
 		init_buffer( buf, strlen( buf ) );
 	}
 
-	char_stream::char_stream( string&& other ) : str_buffer( std::move( other ) )
+	char_stream::char_stream( string&& other, const char* delim ) : str_buffer( std::move( other ) ), delimiters_( delim )
 	{
 		init_buffer( str_buffer.c_str(), str_buffer.size() );
 	}
 
 	flut::char_stream& char_stream::operator>>( string& s )
 	{
-		for ( end_pos = const_cast<char*>( cur_pos ); *end_pos && !isspace( *end_pos ); ++end_pos );
-		s = string( cur_pos, size_t( end_pos - cur_pos ) );
+		for ( cur_pos_end = const_cast<char*>( cur_pos ); *cur_pos_end && !isspace( *cur_pos_end ); ++cur_pos_end );
+		s = string( cur_pos, size_t( cur_pos_end - cur_pos ) );
 		process_end_pos();
 		return *this;
 	}
@@ -32,70 +26,69 @@ namespace flut
 	{
 		size_t len = strcspn( cur_pos, "\r\n" );
 		string s = string( cur_pos, len );
-		end_pos = const_cast<char*>(cur_pos) + len;
+		cur_pos_end = const_cast<char*>(cur_pos) + len;
 		process_end_pos();
 		return s;
 	}
 
-	flut::string char_stream::get_token( const char* operators )
+	flut::string char_stream::get_token( const char* operators, const char* quotations )
 	{
-		if ( peekc() == '\"' )
+		string s;
+		for ( cur_pos_end = const_cast<char*>( cur_pos ); cur_pos_end != buffer_end; ++cur_pos_end )
 		{
-			// this is a token between quotes
-			getc();
-			string s;
-			while ( good() )
+			if ( strchr( quotations, peekc() ) )
 			{
-				char c = peekc();
-				if ( c == '\"' )
+				// this is a part between quites, decode accordingly
+				char quote_char = getc();
+				while ( good() )
 				{
-					getc();
-					skip_whitespace();
-					break; // end quote
-				}
-				else if ( c == '\\' )
-				{
-					int len;
-					s += decode_char( cur_pos, buffer_end - cur_pos, &len );
-					for ( ; len > 0; --len ) getc();
-				}
-				else s += getc();
-			}
-
-			return s;
-		}
-		else
-		{
-			// get normal token
-			for ( end_pos = const_cast<char*>( cur_pos ); *end_pos; ++end_pos )
-			{
-				if ( isspace( *end_pos ) )
-					break;
-				if ( strchr( operators, *end_pos ) )
-				{
-					// it's an operator, see if its the first one
-					if ( cur_pos == end_pos )
-						++end_pos;
-					break;
+					char c = peekc();
+					if ( c == quote_char ) // end of quote
+					{
+						getc();
+						skip_delimiters();
+						break; // end quote
+					}
+					else if ( c == '\\' )
+					{
+						int len;
+						s += decode_char( cur_pos, buffer_end - cur_pos, &len );
+						for ( ; len > 0; --len ) getc();
+					}
+					else s += getc();
 				}
 			}
-			string s = string( cur_pos, size_t( end_pos - cur_pos ) );
-			process_end_pos();
-			return s;
+			else if ( strchr( operators, *cur_pos_end ) )
+			{
+				if ( cur_pos == cur_pos_end && s.empty() )
+					s = *cur_pos_end++; // token consists of an operator char
+				else s += string( cur_pos, size_t( cur_pos_end - cur_pos ) );
+				cur_pos = cur_pos_end;
+				break;
+			}
+			else if ( strchr( delimiters_, *cur_pos_end ) )
+			{
+				s += string( cur_pos, size_t( cur_pos_end - cur_pos ) );
+				cur_pos = cur_pos_end;
+				break;
+			}
 		}
+		skip_delimiters();
+		test_eof();
+		return s;
 	}
 
 	void char_stream::init_buffer( const char* b, size_t len )
 	{
 		flut_assert( b != 0 );
 		cur_pos = buffer = b;
-		end_pos = nullptr;
+		cur_pos_end = nullptr;
 		buffer_end = buffer + len;
-		skip_whitespace();
+		skip_delimiters();
 	}
 
-	flut::char_stream load_char_stream( const string& filename, error_code* ec )
+	flut::char_stream load_char_stream( const string& filename, const char* delimiters, error_code* ec )
 	{
-		return char_stream( load_string( filename, ec ) );
+		return char_stream( load_string( filename, ec ), delimiters );
 	}
 }

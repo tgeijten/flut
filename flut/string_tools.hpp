@@ -29,10 +29,10 @@ namespace flut
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
 	/// remove leading and trailing spaces and newlines
-	FLUT_API string trim_str( const string& str );
+	FLUT_API string trim_str( const string& str, const char* trim_chars = " \t\r\n\f\v" );
 
 	/// remove trailing spaces and newlines
-	FLUT_API string trim_right_str( const string& str );
+	FLUT_API string trim_right_str( const string& str, const char* trim_chars = " \t\r\n\f\v" );
 
 	/// split a string into a vector of strings
 	FLUT_API vector< string > split_str( const string& s, const string& sep_chars );
@@ -65,9 +65,9 @@ namespace flut
 	template< typename T > T from_str( const string& s ) { return string_cast< T >::from( s ); }
 
 	/// convert space-delimited string to vector of elements
-	template< typename T > vector< T > from_vec_str( const string& s, size_t size ) {
-		char_stream str( s.c_str() );
-		vector< T > vec; if ( size != no_index ) vec.reserve( size );
+	template< typename T > vector< T > str_to_vec( const string& s, size_t max_values, const char* delim = default_delimiters() ) {
+		char_stream str( s.c_str(), delim );
+		vector< T > vec; if ( max_values != no_index ) vec.reserve( max_values );
 		while ( str.good() ) { T elem; str >> elem; if ( !str.fail() ) vec.push_back( elem ); }
 		return vec;
 	}
