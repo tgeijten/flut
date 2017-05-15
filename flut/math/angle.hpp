@@ -26,8 +26,8 @@ namespace flut
 			/// default constructor
 			explicit angle_() : value( T(0) ) {}
 
-			/// explicit constructor
-			explicit angle_( const T& v ) : value( v ) {}
+			/// constructor taking any value type
+			template< typename T2 > explicit angle_( const T2& v ) : value( T( v ) ) {}
 
 			/// copy constructor
 			explicit angle_( const angle_<U, T>& a ) : value( a.value ) {}

@@ -6,23 +6,23 @@
 
 namespace flut
 {
-	par_info_set::par_info_vec::iterator par_info_set::find( const string& name ) const
+	par_info::par_info_vec::iterator par_info::find( const string& name ) const
 	{
-		return find_if( params_, [&]( par_info& p ) { return p.name == name; } );
+		return find_if( params_, [&]( parameter& p ) { return p.name == name; } );
 	}
 
-	index_t par_info_set::find_index( const string& name ) const
+	index_t par_info::find_index( const string& name ) const
 	{
 		return get_index( find( name ) );
 	}
 
-	void par_info_set::push_back( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
+	void par_info::push_back( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
 		flut_error_if( finalized(), "Cannot add parameter after par_info has been finalized" );
-		params_.emplace_back( par_info{ name, mean, std, min, max } );
+		params_.emplace_back( parameter{ name, mean, std, min, max } );
 	}
 
-	par_info_set::par_info_vec::iterator par_info_set::acquire( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
+	par_info::par_info_vec::iterator par_info::acquire( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
 		auto it = find( name );
 		if ( it == params_.end() )
@@ -33,12 +33,12 @@ namespace flut
 		else return it;
 	}
 
-	index_t par_info_set::acquire_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
+	index_t par_info::acquire_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
 	{
 		return get_index( acquire( name, mean, std, min, max ) );
 	}
 
-	size_t par_info_set::import( const path& filename, bool import_std )
+	size_t par_info::import( const path& filename, bool import_std )
 	{
 		size_t params_set = 0;
 		size_t params_not_found = 0;
@@ -65,15 +65,15 @@ namespace flut
 		return params_set;
 	}
 
-	void par_info_set::set_global_std( double factor, double offset )
+	void par_info::set_global_std( double factor, double offset )
 	{
 		for ( auto& p : params_ )
 			p.std = factor * fabs( p.mean ) + offset;
 	}
 
-	const flut::par_info_set& par_info_set::empty_instance()
+	const flut::par_info& par_info::empty_instance()
 	{
-		static const par_info_set empty_par_info( false );
+		static const par_info empty_par_info( false );
 		return empty_par_info;
 	}
 }

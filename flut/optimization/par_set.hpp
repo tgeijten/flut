@@ -15,12 +15,12 @@ namespace flut
 	class FLUT_API par_set
 	{
 	public:
-		par_set( const par_info_set& inf = par_info_set::empty_instance(), par_vec values = par_vec() );
+		par_set( const par_info& inf = par_info::empty_instance(), par_vec values = par_vec() );
 
 		par_value get( const string& name, par_value mean, par_value std, par_value min = -1e15, par_value max = 1e15 );
 		par_value get( const string& name, const prop_node& prop );
 
-		const par_info_set& info() const { return info_; }
+		const par_info& info() const { return info_; }
 		size_t size() const { return info_.size(); }
 
 		const par_value& operator[]( index_t i ) const{ return values_[ i ]; }
@@ -32,12 +32,14 @@ namespace flut
 		friend FLUT_API std::ostream& operator<<( std::ostream& str, const par_set& ps );
 		friend FLUT_API std::istream& operator>>( std::istream& str, par_set& ps );
 
+		void round_values();
+
 	private:
-		void set_value( const string& name, par_value value );
+		par_value rounded( par_value );
 		par_value* try_get( const string& full_name );
 		par_value try_add( const string& name, par_value mean, par_value std, par_value min, par_value max );
 
-		const par_info_set& info_;
+		const par_info& info_;
 		par_vec values_;
 		flat_map< string, par_value > fixed_values_;
 		string prefix_;

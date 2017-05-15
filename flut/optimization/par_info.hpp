@@ -15,10 +15,10 @@ namespace flut
 	using par_value = double;
 	using par_vec = vector< par_value >;
 
-	class FLUT_API par_info_set
+	class FLUT_API par_info
 	{
 	public:
-		struct par_info
+		struct parameter
 		{
 			string name;
 			par_value mean;
@@ -27,12 +27,12 @@ namespace flut
 			par_value max;
 		};
 
-		using par_info_vec = vector< par_info >;
+		using par_info_vec = vector< parameter >;
 
-		par_info_set( bool under_construction = true ) : under_construction_( under_construction ) {}
+		par_info( bool under_construction = true ) : under_construction_( under_construction ) {}
 
 		/// access by index
-		const par_info& operator[]( index_t i ) const { return params_[ i ]; }
+		const parameter& operator[]( index_t i ) const { return params_[ i ]; }
 
 		/// access by name
 		par_info_vec::iterator find( const string& name ) const;
@@ -56,7 +56,7 @@ namespace flut
 		void set_global_std( double factor, double offset );
 
 		/// static empty member
-		const static par_info_set& empty_instance();
+		const static par_info& empty_instance();
 		index_t get_index( par_info_vec::iterator it ) const { return it != params_.end() ? it - params_.begin() : no_index; }
 
 		bool finalized() const { return !under_construction_; }

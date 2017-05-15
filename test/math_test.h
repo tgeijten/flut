@@ -153,7 +153,7 @@ void linear_regression_test()
 
 	x.clear();
 	y.clear();
-	auto xr = irange< -50, 100, 2 >();
+	auto xr = make_range( -50, 100, 2 );
 	for ( auto xre : xr )
 		y.push_back( xre * -1.5 - 100 );
 

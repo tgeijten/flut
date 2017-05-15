@@ -1,6 +1,7 @@
 #pragma once
 
 #include "flut/system/types.hpp"
+#include "system/assert.hpp"
 
 namespace flut
 {
@@ -53,6 +54,10 @@ namespace flut
 		if ( ( s & 1 ) == 0 ) return vec[ s / 2 ];
 		else return ( vec[ s / 2 ] + vec[ s / 2 - 1 ] ) / T(2);
 	}
+
+	template< typename T >
+	index_t back_index( const vector< T >& vec )
+	{ flut_assert( vec.size() > 0 ) return vec.size() - 1; }
 
 	template< typename It, typename Pr >
 	struct view_if

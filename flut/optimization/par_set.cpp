@@ -5,7 +5,7 @@
 
 namespace flut
 {
-	par_set::par_set( const par_info_set& inf, par_vec values ) : info_( inf ), values_( values )
+	par_set::par_set( const par_info& inf, par_vec values ) : info_( inf ), values_( values )
 	{
 		if ( values_.empty() )
 		{
@@ -14,6 +14,7 @@ namespace flut
 			for ( auto& p : info_ )
 				values_.push_back( p.mean );
 		}
+		round_values();
 
 		flut_assert( info_.size() == values_.size() );
 	}
@@ -38,7 +39,7 @@ namespace flut
 		if ( !info_.finalized() )
 		{
 			info_.push_back( full_name, mean, std, min, max );
-			values_.push_back( mean );
+			values_.push_back( rounded( mean ) );
 			return values_.back();
 		}
 		else return mean;
@@ -86,12 +87,18 @@ namespace flut
 		}
 	}
 
-	void par_set::set_value( const string& name, par_value value )
+	void par_set::round_values()
 	{
-		auto idx = info_.find_index( name );
-		if ( idx != no_index )
-			values_[ idx ] = value;
-		else fixed_values_[ name ] = value;
+		for ( auto& v : values_ )
+			v = rounded( v );
+	}
+
+	flut::par_value par_set::rounded( par_value v )
+	{
+		std::stringstream str;
+		str << std::setprecision( 8 ) << v;
+		str >> v;
+		return v;
 	}
 
 	std::istream& operator>>( std::istream& str, par_set& ps )
@@ -102,7 +109,12 @@ namespace flut
 			double value, mean, std;
 			str >> name >> value >> mean >> std;
 			if ( !str.fail() )
-				ps.set_value( name, value );
+			{
+				auto idx = ps.info_.find_index( name );
+				if ( idx != no_index )
+					ps.values_[ idx ] = value;
+				else ps.fixed_values_[ name ] = value;
+			}
 		}
 
 		return str;
