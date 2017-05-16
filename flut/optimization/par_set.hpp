@@ -41,6 +41,8 @@ namespace flut
 
 		const par_info& info_;
 		par_vec values_;
+
+		// TODO: move to info?
 		flat_map< string, par_value > fixed_values_;
 		string prefix_;
 		std::vector< size_t > prefixes_sizes;
