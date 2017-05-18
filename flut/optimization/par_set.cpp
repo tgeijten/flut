@@ -126,7 +126,7 @@ namespace flut
 		{
 			auto& inf = ps.info()[ idx ];
 			str << std::left << std::setw( 20 ) << inf.name << "\t";
-			str << std::setprecision( 8 ) << ps[ idx ] << "\t" << inf.mean << "\t" << inf.std << "\t" << std::endl;
+			str << std::setprecision( 8 ) << ps.get( idx ) << "\t" << inf.mean << "\t" << inf.std << "\t" << std::endl;
 		}
 		return str;
 	}

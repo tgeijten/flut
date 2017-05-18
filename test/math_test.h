@@ -21,7 +21,7 @@
 #include "flut/math/bounding_box.hpp"
 #include "flut/math/math.hpp"
 #include "flut/math/linear_regression.hpp"
-#include "flut/math/range.hpp"
+#include "flut/math/irange.hpp"
 
 using std::cout;
 using std::endl;
@@ -153,7 +153,7 @@ void linear_regression_test()
 
 	x.clear();
 	y.clear();
-	auto xr = make_range( -50, 100, 2 );
+	auto xr = make_irange( -50, 100, 2 );
 	for ( auto xre : xr )
 		y.push_back( xre * -1.5 - 100 );
 

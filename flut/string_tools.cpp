@@ -21,7 +21,7 @@ namespace flut
 {
 	int to_str_precision_value = 4;
 
-	string trim_str( const string& s, const char* space_chars )
+	FLUT_API string trim_str( const string& s, const char* space_chars )
 	{
 		auto left = s.find_first_not_of( space_chars );
 		if ( left == string::npos ) return string( "" ); // string has no non-whitespace characters
@@ -29,13 +29,13 @@ namespace flut
 		return s.substr( left, 1 + right - left );
 	}
 
-	string trim_right_str( const string& s, const char* space_chars )
+	FLUT_API string trim_right_str( const string& s, const char* space_chars )
 	{
 		auto right = s.find_last_not_of( space_chars );
 		return s.substr( 0, 1 + right );
 	}
 
-	vector< string > split_str( const string& s, const string& sep_chars )
+	FLUT_API vector< string > split_str( const string& s, const string& sep_chars )
 	{
 		std::vector< string > strings;
 		size_t ofs = s.find_first_not_of( sep_chars.c_str(), 0 );
@@ -203,7 +203,7 @@ namespace flut
 		return sout;
 	}
 
-	flut::string get_filename_ext( const string& str )
+	FLUT_API string get_filename_ext( const string& str )
 	{
 		size_t n = str.find_last_of( '.' );
 		if ( n != string::npos ) {
@@ -214,21 +214,21 @@ namespace flut
 		return string(); // no extension found
 	}
 
-	flut::string get_filename_without_ext( const string& str )
+	FLUT_API string get_filename_without_ext( const string& str )
 	{
 		auto ext_len = get_filename_ext( str ).size();
 		if ( ext_len > 0 ) ++ext_len; // add dot
 		return str.substr( 0, str.size() - ext_len );
 	}
 
-	flut::string get_filename_folder( const string& str )
+	FLUT_API string get_filename_folder( const string& str )
 	{
 		size_t n = str.find_last_of( "/\\" );
 		if ( n != string::npos ) return str.substr( 0, n + 1 );
 		else return str;
 	}
 
-	flut::string get_filename_without_folder( const string& str )
+	FLUT_API string get_filename_without_folder( const string& str )
 	{
 		size_t n = str.find_last_of( "/\\" );
 		if ( n != string::npos ) return str.substr( n + 1, string::npos );

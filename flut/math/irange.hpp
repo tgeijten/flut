@@ -5,10 +5,10 @@
 namespace flut
 {
 	template< typename T >
-	struct range
+	struct irange
 	{
-		range() : begin_( T( 0 ) ), end_( T( 0 ) ) {}
-		range( T b, T e ) : begin_( b ), end_( e ) {}
+		irange() : begin_( T( 0 ) ), end_( T( 0 ) ) {}
+		irange( T b, T e ) : begin_( b ), end_( e ) {}
 
 		struct iterator : public std::iterator< std::forward_iterator_tag, int >
 		{
@@ -30,10 +30,10 @@ namespace flut
 	};
 
 	template< typename T >
-	struct step_range
+	struct irange_step
 	{
-		step_range( T b, T e, T s = T( 1 ) ) : begin_( b ), end_( e ), step_( s ) {}
-		step_range( const range< T >& r, T s = T( 1 ) ) : begin_( r.begin_ ), end_( r.end_ ), step_( s ) {}
+		irange_step( T b, T e, T s = T( 1 ) ) : begin_( b ), end_( e ), step_( s ) {}
+		irange_step( const irange< T >& r, T s = T( 1 ) ) : begin_( r.begin_ ), end_( r.end_ ), step_( s ) {}
 
 		struct iterator : public std::iterator< std::forward_iterator_tag, int >
 		{
@@ -55,7 +55,7 @@ namespace flut
 	};
 
 	// TODO: SFINAE to make sure it's integer
-	template< typename T > range< T > make_range( T b, T e ) { return range< T >( b, e ); }
-	template< typename T > step_range< T > make_range( T b, T e, T s ) { return step_range< T >( b, e, s ); }
-	template< typename T > step_range< T > make_range( const range< T >& r, T s ) { return step_range< T >( r, s ); }
+	template< typename T > irange< T > make_irange( T b, T e ) { return irange< T >( b, e ); }
+	template< typename T > irange_step< T > make_irange( T b, T e, T s ) { return irange_step< T >( b, e, s ); }
+	template< typename T > irange_step< T > make_irange( const irange< T >& r, T s ) { return irange_step< T >( r, s ); }
 }

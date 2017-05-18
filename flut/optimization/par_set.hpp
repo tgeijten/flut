@@ -19,11 +19,10 @@ namespace flut
 
 		par_value get( const string& name, par_value mean, par_value std, par_value min = -1e15, par_value max = 1e15 );
 		par_value get( const string& name, const prop_node& prop );
+		par_value get( index_t i ) const { return values_[ i ]; }
 
 		const par_info& info() const { return info_; }
 		size_t size() const { return info_.size(); }
-
-		const par_value& operator[]( index_t i ) const{ return values_[ i ]; }
 
 		void push_prefix( const string& s ) { prefixes_sizes.push_back( prefix_.size() ); prefix_ += s; }
 		void pop_prefix() { prefix_.resize( prefixes_sizes.back() ); prefixes_sizes.pop_back(); }
