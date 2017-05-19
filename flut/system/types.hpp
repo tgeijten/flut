@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <utility>
 
 namespace flut
 {
@@ -17,5 +18,6 @@ namespace flut
 	const index_t no_index = index_t( std::string::npos );
 
 	using std::string;
+	using std::pair;
 	using std::vector;
 }

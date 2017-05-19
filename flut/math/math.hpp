@@ -64,27 +64,31 @@ namespace flut
 		/// set if bigger
 		template< typename T > T& set_if_bigger( T& value, const T& other ) { if ( other > value ) value = other; return value; }
 
-		/// return clamped value that is between min and max
-		template< typename T > T clamped( T v, T min, T max )
-		{ if ( v < min ) return min; else if ( v > max ) return max; else return v; }
+		/// check if an integer value is a power of two
+		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
 
 		/// clamp a value so that it is between min and max
-		template< typename T > void clamp( T& v, const T& min, const T& max )
-		{ if ( v < min ) v = min; else if ( v > max ) v = max; } /// TODO: use efficient instructions instead of relying on the compiler for optimization
+		template< typename T > T& clamp( T& v, const T& min, const T& max )
+		{ if ( v < min ) v = min; else if ( v > max ) v = max; return v; } // TODO: use efficient instructions
+
+		/// return clamped value that is between min and max
+		template< typename T > T clamped( T v, const T& min, const T& max )
+		{ return clamp( v, min, max ); }
 
 		/// limit transform function
 		template< typename T > T limit_transfer( T x, T limit ) { return limit - limit * limit / ( x + limit ); }
 
 		/// clamp with smooth boundary transformation
-		template< typename T > T soft_clamped( const T& v, const T& min, const T& max, const T& boundary ) {
+		template< typename T > T soft_clamp( T& v, const T& min, const T& max, const T& boundary ) {
 			auto r = boundary * ( max - min );
-			if ( v > max - r ) return max - r + limit_transfer( v - max + r, r );
-			else if ( v < min + r )	return min + r - limit_transfer( min + r - v, r );
-			else return v;
+			if ( v > max - r ) v = max - r + limit_transfer( v - max + r, r );
+			else if ( v < min + r )	v = min + r - limit_transfer( min + r - v, r );
+			return v;
 		}
 
-		/// check if an integer value is a power of two
-		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
+		template< typename T > T soft_clamped( T v, const T& min, const T& max, const T& boundary )
+		{ return soft_clamp( v, min, max, boundary ); }
+
 
 		/// check a value is within a range
 		template< typename T > bool is_between( T v, T min, T max ) { return ( v >= min && v <= max ); }
