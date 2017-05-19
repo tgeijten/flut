@@ -1149,11 +1149,10 @@ namespace flut
 		std::vector< double > mean( n ), std( n ), lb( n ), ub( n );
 		for ( index_t i = 0; i < n; ++i )
 		{
-			auto& p = objective_.info()[ i ];
-			mean[ i ] = p.mean;
-			std[ i ] = p.std;
-			lb[ i ] = p.min;
-			ub[ i ] = p.max;
+			mean[ i ] = objective_.parameter_init()[ i ].first;
+			std[ i ] = objective_.parameter_init()[ i ].second;
+			lb[ i ] = objective_.parameter_bounds()[ i ].lower;
+			ub[ i ] = objective_.parameter_bounds()[ i ].upper;
 		}
 
 		cmaes_init( &pimpl->cmaes, (int)objective_.dim(), mean, std, seed, l );

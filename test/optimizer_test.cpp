@@ -43,13 +43,14 @@ namespace flut
 		int lambda = 0;
 		std::vector< double > init_mean( dim, 0.0 );
 		std::vector< double > init_std( dim, 0.3 );
+		std::vector< par_mean_std > init_mean_std( dim, par_mean_std( 0.0, 0.3 ) );
 
 		// init c-cmaes
 		cmaes_t evo;
 		double *arFunvals = cmaes_init( &evo, dim, &init_mean[ 0 ], &init_std[ 0 ], seed, lambda, "no" );
 
 		// init cma_optimizer
-		function_objective obj( dim, fitfun, true, init_mean, init_std );
+		function_objective obj( size_t( dim ), fitfun, true, init_mean_std );
 		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 10 );
 
@@ -105,7 +106,7 @@ namespace flut
 		int lambda = 0;
 
 		// init cma_optimizer
-		function_objective obj( dim, slow_func, true, par_vec( dim, 0.0 ), par_vec( dim, 0.3 ) );
+		function_objective obj( dim, slow_func, true, vector< par_mean_std >( dim, par_mean_std( 0.0, 0.3 ) ) );
 		cma_optimizer cma( obj, lambda, seed );
 		cma.set_max_threads( 3 );
 

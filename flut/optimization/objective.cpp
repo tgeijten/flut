@@ -14,12 +14,11 @@ namespace flut
 		return minimize() ? math::numeric_const< fitness_t >::max() : math::numeric_const< fitness_t >::lowest();
 	}
 
-	function_objective::function_objective( size_t d, function_t func, bool minimize, const par_vec& start, const par_vec& start_std, const par_vec& upper, const par_vec& lower ) :
-	func_( func ),
-	minimize_( minimize )
-	{
-		// create par_info
-		for ( size_t i = 0; i < d; ++i )
-			par_info_.push_back( stringf( "%d", i ), start[ i ], start_std[ i ], i < lower.size() ? lower[ i ] : -1e15, i < lower.size() ? lower[ i ] : 1e15 );
-	}
+	function_objective::function_objective( size_t d, function_t func, bool minimize, const vector< par_mean_std >& init, const vector< par_bounds >& b ) :
+		dim_( d ),
+		func_( func ),
+		minimize_( minimize ),
+		init_( init ),
+		bounds_( b )
+	{}
 }
