@@ -54,6 +54,7 @@ namespace flut
 		/// import / export
 		size_t import( const path& filename, bool import_std );
 		void set_global_std( double factor, double offset );
+		void set_mean_std( const vector< par_value >& mean, const vector< par_value >& std );
 
 		/// static empty member
 		const static par_info& empty_instance();
