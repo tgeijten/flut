@@ -15,6 +15,8 @@ namespace flut
 	{
 		if ( auto* p = pn.try_get_child( name ) )
 			return ps.get( name, *p );
+		else if ( auto* p = pn.try_get_child_delimited( name ) )
+			return ps.get( name, *p );
 		else return def;
 	}
 
@@ -25,6 +27,16 @@ namespace flut
 		r.x = T( try_get_par( ps, name + ".x", pn, (par_value)def.x ) );
 		r.y = T( try_get_par( ps, name + ".y", pn, (par_value)def.y ) );
 		r.z = T( try_get_par( ps, name + ".z", pn, (par_value)def.z ) );
+		return r;
+	}
+
+	template< typename T, size_t N >
+	inline std::array< T, N > try_get_par( par_set& ps, const string& name, const prop_node& pn, const std::array< T, N >& def )
+	{
+		std::array< T, N > r;
+		for ( int i = 0; i < N; ++i )
+			r[ i ] = T( try_get_par( ps, name + stringf( ".%d", i ), pn, def[ i ] ) );
+
 		return r;
 	}
 }

@@ -54,7 +54,7 @@ namespace flut
 		bool operator!=( const prop_node& other ) { return !( *this == other ); }
 
 		/// get the value of this node
-		template< typename T > T get() const { set_accessed(); return prop_node_cast< T >::from( *this ); }
+		template< typename T > T get() const { access(); return prop_node_cast< T >::from( *this ); }
 
 		/// get the value of a child node
 		template< typename T > T get( const key_t& key ) const { return get_child( key ).get< T >(); }
@@ -87,7 +87,7 @@ namespace flut
 		void clear() { value.clear(); children.clear(); }
 
 		/// access value_t value
-		const value_t& get_value() const { set_accessed(); return value; }
+		const value_t& get_value() const { access(); return value; }
 
 		/// set the value of this node
 		template< typename T > prop_node& set_value( const T& v ) { value = string_cast< T >::to( v ); return *this; }
@@ -138,26 +138,35 @@ namespace flut
 
 		/// get a child node, throws exception if not existing
 		const prop_node& get_child( const key_t& key ) const
-		{ auto it = find( key ); flut_error_if( it == end(), "Could not find key: " + key ); set_accessed(); return it->second; }
+		{ auto it = find( key ); flut_error_if( it == end(), "Could not find key: " + key ); access(); return it->second; }
 		prop_node& get_child( const key_t& key )
-		{ auto it = find( key ); flut_error_if( it == end(), "Could not find key: " + key ); set_accessed(); return it->second; }
+		{ auto it = find( key ); flut_error_if( it == end(), "Could not find key: " + key ); access(); return it->second; }
 
 		/// get a child node by index
-		const prop_node& get_child( index_t idx ) const { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
-		prop_node& get_child( index_t idx ) { flut_assert( idx < size() ); set_accessed(); return children[ idx ].second; }
+		const prop_node& get_child( index_t idx ) const { flut_assert( idx < size() ); access(); return children[ idx ].second; }
+		prop_node& get_child( index_t idx ) { flut_assert( idx < size() ); access(); return children[ idx ].second; }
 
 		/// get key by index
-		const key_t& get_key( index_t idx ) const { flut_assert( idx < size() ); set_accessed(); return children[ idx ].first; }
+		const key_t& get_key( index_t idx ) const { flut_assert( idx < size() ); access(); return children[ idx ].first; }
 
 		/// get a child node, return nullptr if not existing
 		const prop_node* try_get_child( const key_t& key ) const
-		{ set_accessed(); auto it = find( key ); return it != end() ? &( it->second ) : nullptr; }
+		{ access(); auto it = find( key ); return it != end() ? &( it->second.access() ) : nullptr; }
 		prop_node* try_get_child( const key_t& key )
-		{ set_accessed(); auto it = find( key ); return it != end() ? &( it->second ) : nullptr; }
+		{ access(); auto it = find( key ); return it != end() ? &( it->second.access() ) : nullptr; }
+		const prop_node* try_get_child_delimited( const key_t& key, const char delim = '.' ) const {
+			auto p = key.find_first_of( delim );
+			if ( p == string::npos ) return try_get_child( key );
+			else if ( const prop_node* c = try_get_child( key.substr( 0, p ) ) )
+			return c->try_get_child_delimited( mid_str( key, p + 1 ), delim );
+			else return nullptr;
+		}
+
+
 
 		/// get a child node or add it if not existing
 		prop_node& get_or_add_child( const key_t& key )
-		{ set_accessed(); auto it = find( key ); if ( it != end() ) return it->second; else return push_back( key ); }
+		{ access(); auto it = find( key ); if ( it != end() ) return it->second.access(); else return push_back( key ); }
 
 		/// access child by name
 		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }
@@ -172,9 +181,9 @@ namespace flut
 		const_iterator find( const key_t& key ) const { return std::find_if( begin(), end(), [&]( const pair_t& e ) { return e.first == key; } ); }
 
 		/// begin of child nodes
-		iterator begin() { set_accessed(); return children.begin(); }
-		const_iterator begin() const { set_accessed(); return children.begin(); }
-		const_iterator cbegin() const { set_accessed(); return children.cbegin(); }
+		iterator begin() { access(); return children.begin(); }
+		const_iterator begin() const { access(); return children.begin(); }
+		const_iterator cbegin() const { access(); return children.cbegin(); }
 
 		/// end of child nodes
 		iterator end() { return children.end(); }
@@ -187,9 +196,11 @@ namespace flut
 		/// see if this node has been accessed (touched)
 		bool is_accessed() const { return accessed_flag; }
 		size_t count_unaccessed() const { size_t t = is_accessed() ? 0 : 1; for ( auto& c : children ) t += c.second.count_unaccessed(); return t; }
-		void set_accessed() const { accessed_flag = true; }
 
 	private:
+		const prop_node& access() const { accessed_flag = true; return *this; }
+		prop_node& access() { accessed_flag = true; return *this; }
+
 		mutable bool accessed_flag;
 		value_t value;
 		container_t children;
