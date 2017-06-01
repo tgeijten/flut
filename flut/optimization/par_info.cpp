@@ -71,6 +71,16 @@ namespace flut
 			p.std = factor * fabs( p.mean ) + offset;
 	}
 
+	void par_info::set_mean_std( const vector< par_value >& mean, const vector< par_value >& std )
+	{
+		flut_assert( mean.size() == size() && std.size() == size() );
+		for ( index_t i = 0; i < size(); ++i )
+		{
+			params_[ i ].mean = mean[ i ];
+			params_[ i ].std = std[ i ];
+		}
+	}
+
 	const flut::par_info& par_info::empty_instance()
 	{
 		static const par_info empty_par_info( false );
