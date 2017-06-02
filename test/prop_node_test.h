@@ -76,7 +76,5 @@ namespace flut
 			log::info( pn );
 			log::info( pn_loaded );
 		}
-
-		log::trace( pn );
 	}
 }

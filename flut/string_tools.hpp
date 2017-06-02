@@ -40,13 +40,13 @@ namespace flut
 	/// split string into trimmed key / value pair
 	FLUT_API std::pair< string, string > key_value_str( const string& s, const string& sep_char = "=" );
 
-	inline bool scan_str_impl( std::stringstream& str ) { return true; }
-	template< typename T, typename... Args > bool scan_str_impl( std::stringstream& str, T& v, Args&... args )
-	{ str >> v; if ( str.good() ) return scan_str_impl( str, args... ); else return false; }
+	inline int scan_str_impl( char_stream& str ) { return 0; }
+	template< typename T, typename... Args > int scan_str_impl( char_stream& str, T& v, Args&... args )
+	{ str >> v; return str.good() ? scan_str_impl( str, args... ) + 1 : 0; }
 
 	/// read variables from string
-	template< typename... Args > bool scan_str( const string& s, Args&... args )
-	{ std::stringstream str( s ); return scan_str_impl( str, args... ); }
+	template< typename... Args > int scan_str( const string& s, Args&... args )
+	{ char_stream str( s.c_str() ); return scan_str_impl( str, args... ); }
 
 	/// get formatted string (printf style)
 	FLUT_API string stringf( const char* format, ... );
@@ -68,7 +68,7 @@ namespace flut
 	template< typename T > vector< T > str_to_vec( const string& s, size_t max_values, const char* delim = default_delimiters() ) {
 		char_stream str( s.c_str(), delim );
 		vector< T > vec; if ( max_values != no_index ) vec.reserve( max_values );
-		while ( str.good() ) { T elem; str >> elem; if ( !str.fail() ) vec.push_back( elem ); }
+		while ( str.good() && vec.size() < max_values ) { T elem; str >> elem; if ( !str.fail() ) vec.push_back( elem ); }
 		return vec;
 	}
 

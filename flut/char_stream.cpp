@@ -36,9 +36,10 @@ namespace flut
 		string s;
 		for ( cur_pos_end = const_cast<char*>( cur_pos ); cur_pos_end != buffer_end; ++cur_pos_end )
 		{
-			if ( strchr( quotations, peekc() ) )
+			if ( strchr( quotations, *cur_pos_end ) )
 			{
-				// this is a part between quites, decode accordingly
+				// this is a part between quotes, decode accordingly
+				cur_pos = cur_pos_end;
 				char quote_char = getc();
 				while ( good() )
 				{
@@ -46,8 +47,7 @@ namespace flut
 					if ( c == quote_char ) // end of quote
 					{
 						getc();
-						skip_delimiters();
-						break; // end quote
+						break;
 					}
 					else if ( c == '\\' )
 					{
@@ -57,6 +57,9 @@ namespace flut
 					}
 					else s += getc();
 				}
+
+				// cur_pos_end should be 'cur_pos' in next iteration
+				cur_pos_end = const_cast<char*>( cur_pos ) - 1;
 			}
 			else if ( strchr( operators, *cur_pos_end ) )
 			{
