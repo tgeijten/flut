@@ -60,32 +60,32 @@ namespace flut
 			{
 				/* generate lambda new search points, sample population */
 				double* const* pop;
-				printf( "C%03d: ", gen );
+				//printf( "C%03d: ", gen );
 				pop = cmaes_SamplePopulation( &evo ); /* do not change content of pop */
 
 				/* evaluate the new search points using fitfun */
 				for ( int i = 0; i < cmaes_Get( &evo, "lambda" ); ++i ) {
 					arFunvals[ i ] = fitfun_c( pop[ i ], (int)cmaes_Get( &evo, "dim" ) );
-					printf( "%.2f ", arFunvals[ i ] );
+					//printf( "%.2f ", arFunvals[ i ] );
 				}
 
 				/* update the search distribution used for cmaes_SamplePopulation() */
 				cmaes_UpdateDistribution( &evo, arFunvals );
-				printf( "\n" );
+				//printf( "\n" );
 			}
 
 			// update cma_optimizer
 			{
-				printf( "D%03d: ", gen );
+				//printf( "D%03d: ", gen );
 				auto& cma_pop = cma.sample_population();
 				auto results = cma.evaluate( cma_pop );
 				for ( int i = 0; i < cma.lambda(); ++i ) {
-					printf( "%.2f ", results[ i ] );
+					//printf( "%.2f ", results[ i ] );
 				}
 
 				/* update the search distribution used for cmaes_SamplePopulation() */
 				cma.update_distribution( results );
-				printf( "\n" );
+				//printf( "\n" );
 			}
 		}
 

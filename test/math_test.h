@@ -22,6 +22,7 @@
 #include "flut/math/math.hpp"
 #include "flut/math/linear_regression.hpp"
 #include "flut/math/irange.hpp"
+#include "flut/math/optional_pod.hpp"
 
 using std::cout;
 using std::endl;
@@ -60,6 +61,25 @@ void math_test()
 	bb += vec3f( 3, -2, 1 );
 	FLUT_TEST( bb.lower_bounds == vec3f( -1, -2, -3 ) );
 	FLUT_TEST( bb.upper_bounds == vec3f( 3, 2, 1 ) );
+}
+
+void optional_test()
+{
+	optional_pod< char > a;
+	FLUT_TEST( !a );
+	*a = 123;
+	FLUT_TEST( a );
+	FLUT_TEST( *a == 123 );
+	*a = -128;
+	FLUT_TEST( !a );
+
+	optional_pod< double > b;
+	FLUT_TEST( !b );
+	*b = 1.234;
+	FLUT_TEST( b );
+	FLUT_TEST( *b == 1.234 );
+	*b = std::numeric_limits< double >::quiet_NaN();
+	FLUT_TEST( !b );
 }
 
 void function_test()

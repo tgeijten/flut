@@ -10,17 +10,18 @@ namespace flut
 		/// constants
 		template< typename T > struct numeric_const
 		{
-			static T pi() { return T( 3.14159265358979 ); }
+			static constexpr T pi() { return T( 3.14159265358979 ); }
 			static T half_pi() { return T( 0.5 ) * T( 3.14159265358979 ); }
 			static T two_pi() { return T( 2 ) * T( 3.14159265358979 ); }
 			static T epsilon() { return std::numeric_limits< T >::epsilon(); }
 			static T relaxed_epsilon() { return T( 4 * std::numeric_limits< T >::epsilon() ); }
 			static T one() { return T( 1 ); }
 			static T zero() { return T( 0 ); }
-			static T max() { return std::numeric_limits< T >::max(); }
-			static T min() { return std::numeric_limits< T >::min(); }
-			static T lowest() { return std::numeric_limits< T >::lowest(); }
-			static T nan() { return std::numeric_limits< T >::quiet_NaN(); }
+			static T max() { return std::numeric_limits<T>::max(); }
+			static T min() { return std::numeric_limits<T>::min(); }
+			static T lowest() { return std::numeric_limits<T>::lowest(); }
+			static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
+			static constexpr T rare() { return std::numeric_limits<T>::is_signed ? std::numeric_limits<T>::lowest() : std::numeric_limits<T>::max(); }
 		};
 
 		typedef numeric_const< int > num_const_i;
