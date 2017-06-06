@@ -1,7 +1,7 @@
 #pragma once
 
 #include "par_set.hpp"
-#include "../math/vec3_type.hpp"
+#include "flut/math/vec3_type.hpp"
 
 #define INIT_PAR( _pn_, _ps_, _var_, _default_ ) \
 	_var_ = (decltype( _var_ ))::flut::try_get_par( _ps_, #_var_, _pn_, decltype( _var_ )( _default_ ) )
@@ -11,7 +11,7 @@
 
 namespace flut
 {
-	inline par_value try_get_par( par_set& ps, const string& name, const prop_node& pn, const par_value& def )
+	inline par_value try_get_par( par_interface& ps, const string& name, const prop_node& pn, const par_value& def )
 	{
 		if ( auto* p = pn.try_get_child( name ) )
 			return ps.get( name, *p );
@@ -21,7 +21,7 @@ namespace flut
 	}
 
 	template< typename T >
-	inline math::vec3_<T> try_get_par( par_set& ps, const string& name, const prop_node& pn, const math::vec3_<T>& def )
+	inline math::vec3_<T> try_get_par( par_interface& ps, const string& name, const prop_node& pn, const math::vec3_<T>& def )
 	{
 		math::vec3_<T> r;
 		r.x = T( try_get_par( ps, name + ".x", pn, (par_value)def.x ) );
@@ -31,7 +31,7 @@ namespace flut
 	}
 
 	template< typename T, size_t N >
-	inline std::array< T, N > try_get_par( par_set& ps, const string& name, const prop_node& pn, const std::array< T, N >& def )
+	inline std::array< T, N > try_get_par( par_interface& ps, const string& name, const prop_node& pn, const std::array< T, N >& def )
 	{
 		std::array< T, N > r;
 		for ( int i = 0; i < N; ++i )

@@ -6,6 +6,29 @@
 
 namespace flut
 {
+	optional_par_value par_info::try_get( const string& name ) const
+	{
+		auto it = find( name );
+		if ( it != params_.end() )
+			return it->mean;
+		else return try_get_fixed( name );
+	}
+
+	flut::optional_par_value par_info::try_get_fixed( const string& name ) const
+	{
+		auto it = fixed_values_.find( name );
+		if ( it != fixed_values_.end() )
+			return it->second;
+		else return optional_par_value();
+	}
+
+	par_value par_info::add( const string& name, par_value mean, par_value std, par_value min, par_value max )
+	{
+		flut_assert( find( name ) == params_.end() );
+		params_.emplace_back( parameter{ name, mean, std, min, max } );
+		return params_.back().mean;
+	}
+
 	par_info::par_info_vec::iterator par_info::find( const string& name ) const
 	{
 		return find_if( params_, [&]( parameter& p ) { return p.name == name; } );
@@ -14,28 +37,6 @@ namespace flut
 	index_t par_info::find_index( const string& name ) const
 	{
 		return get_index( find( name ) );
-	}
-
-	void par_info::push_back( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
-	{
-		flut_error_if( finalized(), "Cannot add parameter after par_info has been finalized" );
-		params_.emplace_back( parameter{ name, mean, std, min, max } );
-	}
-
-	par_info::par_info_vec::iterator par_info::acquire( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
-	{
-		auto it = find( name );
-		if ( it == params_.end() )
-		{
-			push_back( name, mean, std, min, max );
-			return params_.end() - 1;
-		}
-		else return it;
-	}
-
-	index_t par_info::acquire_index( const string& name, par_value mean, par_value std, par_value min, par_value max ) const
-	{
-		return get_index( acquire( name, mean, std, min, max ) );
 	}
 
 	size_t par_info::import( const path& filename, bool import_std )
@@ -65,6 +66,25 @@ namespace flut
 		return params_set;
 	}
 
+	size_t par_info::import_fixed( const path& filename )
+	{
+		fixed_values_.clear();
+
+		flut::char_stream str( filename );
+		while ( str.good() )
+		{
+			string name;
+			double value, mean, std;
+			str >> name >> value >> mean >> std;
+			if ( !str.fail() )
+			{
+				if ( find( name ) == params_.end() )
+					fixed_values_[ name ] = value;
+			}
+		}
+		return fixed_values_.size();
+	}
+
 	void par_info::set_global_std( double factor, double offset )
 	{
 		for ( auto& p : params_ )
@@ -83,7 +103,7 @@ namespace flut
 
 	const flut::par_info& par_info::empty_instance()
 	{
-		static const par_info empty_par_info( false );
+		static const par_info empty_par_info;
 		return empty_par_info;
 	}
 }

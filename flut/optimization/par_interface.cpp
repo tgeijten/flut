@@ -2,13 +2,39 @@
 
 namespace flut
 {
-	par_value par_interface::get( const string& name, const prop_node& prop )
-	{
-		return 0.0;
-	}
-
 	par_value par_interface::get( const string& name, par_value mean, par_value std, par_value min, par_value max )
 	{
-		return 0.0;
+		auto full_name = prefix() + name;
+
+		// check if we already have a value for this name
+		if ( auto v = try_get( full_name ) )
+			return *v;
+
+		// make a new parameter if we are allowed to
+		return add( full_name, mean, std, min, max );
+	}
+
+	par_value par_interface::get( const string& name, const prop_node& pn )
+	{
+		auto full_name = prefix() + name;
+
+		// check if we already have a value for this name
+		if ( auto val = try_get( full_name ) )
+			return *val;
+
+		// interpret the struct
+		auto vec = str_to_vec< par_value >( pn.get_value(), 4, " \t," );
+		switch ( vec.size() )
+		{
+		case 0: return add( full_name,
+					pn.get_any< par_value >( { "mean", "init_mean" } ),
+					pn.get_any< par_value >( { "std", "init_std" } ),
+					pn.get< par_value >( "min", -1e18 ),
+					pn.get< par_value >( "max", 1e18 ) ); // no values, use children
+		case 1: return vec[ 0 ]; // we have only a value
+		case 2: return add( full_name, vec[ 0 ], vec[ 1 ], -1e18, 1e18 );
+		case 4: return add( full_name, vec[ 0 ], vec[ 1 ], vec[ 2 ], vec[ 3 ] );
+		default: flut_error( "Invalid number of values in parameter" );
+		}
 	}
 }
