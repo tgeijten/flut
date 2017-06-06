@@ -37,4 +37,11 @@ namespace flut
 		default: flut_error( "Invalid number of values in parameter" );
 		}
 	}
+
+	par_value par_interface::get_or( const string& name, const prop_node* prop, const par_value& default_value )
+	{
+		if ( prop )
+			return get( name, *prop );
+		else return default_value;
+	}
 }
