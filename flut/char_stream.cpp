@@ -14,6 +14,10 @@ namespace flut
 		init_buffer( str_buffer.c_str(), str_buffer.size() );
 	}
 
+	char_stream::char_stream( const path& filename, const char* delim ) :
+	char_stream( load_string( filename ), delim )
+	{}
+
 	flut::char_stream& char_stream::operator>>( string& s )
 	{
 		for ( cur_pos_end = const_cast<char*>( cur_pos ); *cur_pos_end && !isspace( *cur_pos_end ); ++cur_pos_end );

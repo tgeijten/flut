@@ -5,6 +5,7 @@
 #include "system/assert.hpp"
 #include "flag_set.hpp"
 #include "error_code.h"
+#include "system/path.hpp"
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
@@ -19,14 +20,15 @@ namespace flut
 	class FLUT_API char_stream
 	{
 	public:
-		/// construct empty char_stream
-		//char_stream();
-
 		/// construct char_stream using given zero terminated char buffer
 		char_stream( const char* buf, const char* delim = default_delimiters() );
 
 		/// construct char_stream from rvalue string
 		char_stream( string&& other, const char* delim = default_delimiters() );
+
+		/// construct char_stream with contents read from file
+		char_stream( const path& filename, const char* delim = default_delimiters() );
+
 		~char_stream() {}
 
 		char_stream& operator>>( float& v ) { v = strtof( cur_pos, &cur_pos_end ); process_end_pos(); return *this; }
