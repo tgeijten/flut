@@ -1,6 +1,6 @@
 #pragma once
 
-#include "par_set.hpp"
+#include "par_instance.hpp"
 #include "flut/math/vec3_type.hpp"
 
 #define INIT_PAR( _pn_, _ps_, _var_, _default_ ) \

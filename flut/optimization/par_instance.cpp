@@ -1,11 +1,11 @@
-#include "par_set.hpp"
+#include "par_instance.hpp"
 
 #include "flut/container_tools.hpp"
 #include <fstream>
 
 namespace flut
 {
-	par_set::par_set( const par_info& inf ) : info_( inf )
+	par_instance::par_instance( const par_info& inf ) : info_( inf )
 	{
 		// init with mean values
 		values_.reserve( info_.size() );
@@ -14,18 +14,18 @@ namespace flut
 		round_values();
 	}
 
-	par_set::par_set( const par_info& inf, par_vec values ) : info_( inf ), values_( values )
+	par_instance::par_instance( const par_info& inf, par_vec values ) : info_( inf ), values_( values )
 	{
 		flut_assert( info_.size() == values_.size() );
 		round_values();
 	}
 
-	par_set::par_set( const par_info& inf, const path& filename ) : par_set( inf )
+	par_instance::par_instance( const par_info& inf, const path& filename ) : par_instance( inf )
 	{
 		import_values( filename );
 	}
 
-	optional_par_value par_set::try_get( const string& full_name ) const
+	optional_par_value par_instance::try_get( const string& full_name ) const
 	{
 		// see if this is a parameter
 		auto idx = info_.find_index( full_name );
@@ -34,12 +34,12 @@ namespace flut
 		else return info_.try_get_fixed( full_name );
 	}
 
-	par_value par_set::add( const string& full_name, par_value mean, par_value std, par_value min, par_value max )
+	par_value par_instance::add( const string& full_name, par_value mean, par_value std, par_value min, par_value max )
 	{
 		flut_error( "Cannot add parameter" );
 	}
 
-	size_t par_set::import_values( const path& filename )
+	size_t par_instance::import_values( const path& filename )
 	{
 		size_t params_read = 0;
 		std::ifstream str( filename.str() );
@@ -61,13 +61,13 @@ namespace flut
 		return params_read;
 	}
 
-	void par_set::round_values()
+	void par_instance::round_values()
 	{
 		for ( auto& v : values_ )
 			v = rounded( v );
 	}
 
-	flut::par_value par_set::rounded( par_value v )
+	flut::par_value par_instance::rounded( par_value v )
 	{
 		std::stringstream str;
 		str << std::setprecision( 8 ) << v;
@@ -75,7 +75,7 @@ namespace flut
 		return v;
 	}
 
-	std::ostream& operator<<( std::ostream& str, const par_set& ps )
+	std::ostream& operator<<( std::ostream& str, const par_instance& ps )
 	{
 		for ( index_t idx = 0; idx < ps.size(); ++idx )
 		{

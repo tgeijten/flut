@@ -1,6 +1,6 @@
 #pragma once
 
-#include "par_set.hpp"
+#include "par_instance.hpp"
 #include "objective.hpp"
 
 namespace flut
@@ -16,12 +16,12 @@ namespace flut
 			int instance;
 			int generation;
 			par_info info;
-			vector< par_set > par_sets;
+			vector< par_instance > par_sets;
 			vector< fitness_t > fitnesses;
 		};
 
-		virtual void report_generation( const vector< par_set >& par_sets, const vector< fitness_t >& fitnesses ) {}
-		virtual void report_new_best( const par_set& ps, fitness_t fitness ) {}
+		virtual void report_generation( const vector< par_instance >& par_sets, const vector< fitness_t >& fitnesses ) {}
+		virtual void report_new_best( const par_instance& ps, fitness_t fitness ) {}
 
 	protected:
 	private:

@@ -62,7 +62,7 @@ namespace flut
 		const static par_info& empty_instance();
 		index_t get_index( par_info_vec::iterator it ) const { return it != params_.end() ? it - params_.begin() : no_index; }
 
-		class par_set make_mean_instance() const;
+		class par_instance make_mean_instance() const;
 
 	private:
 		mutable par_info_vec params_;

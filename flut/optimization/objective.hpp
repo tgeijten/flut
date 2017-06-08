@@ -2,7 +2,7 @@
 
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
-#include "par_set.hpp"
+#include "par_instance.hpp"
 #include <functional>
 
 #if defined(_MSC_VER)

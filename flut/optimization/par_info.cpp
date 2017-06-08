@@ -2,7 +2,7 @@
 
 #include "flut/container_tools.hpp"
 #include "flut/system/assert.hpp"
-#include "flut/optimization/par_set.hpp"
+#include "flut/optimization/par_instance.hpp"
 #include <fstream>
 
 namespace flut
@@ -108,8 +108,8 @@ namespace flut
 		return empty_par_info;
 	}
 
-	par_set par_info::make_mean_instance() const
+	par_instance par_info::make_mean_instance() const
 	{
-		return par_set( *this );
+		return par_instance( *this );
 	}
 }
