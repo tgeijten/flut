@@ -32,6 +32,7 @@ namespace flut
 
 		par_info() {}
 
+		virtual size_t dim() const override { return params_.size(); }
 		virtual par_value add( const string& name, par_value mean, par_value std, par_value min = -1e15, par_value max = 1e15 ) override;
 		virtual optional_par_value try_get( const string& name ) const override;
 		optional_par_value try_get_fixed( const string& name ) const;
@@ -52,7 +53,7 @@ namespace flut
 		bool empty() const { return params_.empty(); }
 
 		/// import / export
-		size_t import( const path& filename, bool import_std );
+		size_t import_mean_std( const path& filename, bool import_std );
 		size_t import_fixed( const path& filename );
 		void set_global_std( double factor, double offset );
 		void set_mean_std( const vector< par_value >& mean, const vector< par_value >& std );
@@ -60,6 +61,8 @@ namespace flut
 		/// static empty member
 		const static par_info& empty_instance();
 		index_t get_index( par_info_vec::iterator it ) const { return it != params_.end() ? it - params_.begin() : no_index; }
+
+		class par_set make_mean_instance() const;
 
 	private:
 		mutable par_info_vec params_;

@@ -26,15 +26,18 @@ namespace flut
 		auto vec = str_to_vec< par_value >( pn.get_value(), 4, " \t," );
 		switch ( vec.size() )
 		{
-		case 0: return add( full_name,
-					pn.get_any< par_value >( { "mean", "init_mean" } ),
+		case 0:
+		{
+			if ( pn.get< bool >( "is_free", true ) )
+				return add( full_name, pn.get_any< par_value >( { "mean", "init_mean" } ),
 					pn.get_any< par_value >( { "std", "init_std" } ),
-					pn.get< par_value >( "min", -1e18 ),
-					pn.get< par_value >( "max", 1e18 ) ); // no values, use children
-		case 1: return vec[ 0 ]; // we have only a value
+					pn.get< par_value >( "min", -1e18 ), pn.get< par_value >( "max", 1e18 ) );
+			else return pn.get_any< par_value >( { "mean", "init_mean" } ); // is_free = 0, return mean
+		}
+		case 1: return vec[ 0 ]; // we have only a value, this is no parameter
 		case 2: return add( full_name, vec[ 0 ], vec[ 1 ], -1e18, 1e18 );
 		case 4: return add( full_name, vec[ 0 ], vec[ 1 ], vec[ 2 ], vec[ 3 ] );
-		default: flut_error( "Invalid number of values in parameter" );
+		default: flut_error( "Invalid number of values" );
 		}
 	}
 

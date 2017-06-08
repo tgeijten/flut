@@ -23,6 +23,7 @@ namespace flut
 
 		virtual size_t dim() const { return par_info_.size(); }
 		const par_info& info() const { return par_info_; }
+		par_info& info() { return par_info_; }
 
 		virtual bool minimize() const { return true; }
 		bool maximize() const { return !minimize(); }

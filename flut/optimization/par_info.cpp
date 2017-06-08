@@ -2,6 +2,7 @@
 
 #include "flut/container_tools.hpp"
 #include "flut/system/assert.hpp"
+#include "flut/optimization/par_set.hpp"
 #include <fstream>
 
 namespace flut
@@ -39,7 +40,7 @@ namespace flut
 		return get_index( find( name ) );
 	}
 
-	size_t par_info::import( const path& filename, bool import_std )
+	size_t par_info::import_mean_std( const path& filename, bool import_std )
 	{
 		size_t params_set = 0;
 		size_t params_not_found = 0;
@@ -105,5 +106,10 @@ namespace flut
 	{
 		static const par_info empty_par_info;
 		return empty_par_info;
+	}
+
+	par_set par_info::make_mean_instance() const
+	{
+		return par_set( *this );
 	}
 }
