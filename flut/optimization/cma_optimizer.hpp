@@ -14,7 +14,7 @@ namespace flut
 
 		// optimization
 		const vector< par_vec >& sample_population();
-		void update_distribution( const std::vector< fitness_t >& results );
+		void update_distribution( const fitness_vec_t& results );
 
 		// analysis
 		par_vec current_mean() const;

@@ -24,8 +24,8 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		flut_logvar2( flut::math::numeric_const<double>::epsilon(), flut::math::numeric_const<double>::relaxed_epsilon() );
-		flut_logvar2( flut::math::numeric_const<float>::epsilon(), flut::math::numeric_const<float>::relaxed_epsilon() );
+		flut_logvar2( flut::num_const<double>::epsilon(), flut::num_const<double>::relaxed_epsilon() );
+		flut_logvar2( flut::num_const<float>::epsilon(), flut::num_const<float>::relaxed_epsilon() );
 
 		str.set_log_level( flut::log::trace_level );
 

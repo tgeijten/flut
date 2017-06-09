@@ -70,7 +70,7 @@ namespace flut
 
 		/// Normalize a vec3
 		template< typename T > void normalize( vec3_<T>& v )
-		{ T l = length( v ); if ( l > numeric_const<T>::epsilon() ) { T s = inv( l ); v.x *= s; v.y *= s; v.z *= s; } }
+		{ T l = length( v ); if ( l > num_const<T>::epsilon() ) { T s = inv( l ); v.x *= s; v.y *= s; v.z *= s; } }
 
 		/// Get normalized vec3
 		template< typename T > vec3_<T> normalized( vec3_<T> v )

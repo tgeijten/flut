@@ -7,7 +7,7 @@ namespace flut
 {
 	optimizer::optimizer( const objective& o ) :
 	objective_( o ),
-	current_fitness_( o.worst_fitness() )
+	current_fitness_( o.info().worst_fitness() )
 	{}
 
 	optimizer::~optimizer()
@@ -18,7 +18,7 @@ namespace flut
 		if ( current_generation() >= stop.max_generations )
 			return true;
 
-		if ( !std::isnan( stop.fitness ) && objective_.is_better( current_fitness(), stop.fitness ) )
+		if ( !std::isnan( stop.fitness ) && objective_.info().is_better( current_fitness(), stop.fitness ) )
 			return true;
 
 		// none of the criteria is met -> return false
@@ -27,7 +27,7 @@ namespace flut
 
 	fitness_vec_t optimizer::evaluate( const vector< par_vec >& pop )
 	{
-		vector< double > results( pop.size(), objective_.worst_fitness() );
+		vector< double > results( pop.size(), objective_.info().worst_fitness() );
 		try
 		{
 			vector< std::pair< std::future< double >, index_t > > threads;
@@ -58,7 +58,7 @@ namespace flut
 
 			// wait for remaining threads
 			for ( auto& f : threads )
-				results[ f.second ] = f.first.valid() ? f.first.get() : objective_.worst_fitness();
+				results[ f.second ] = f.first.valid() ? f.first.get() : objective_.info().worst_fitness();
 		}
 		catch ( std::exception& e )
 		{

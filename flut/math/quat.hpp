@@ -52,7 +52,7 @@ namespace flut
 		template< typename T > quat_<T>& normalize( quat_<T>& q )
 		{
 			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w );
-			if ( l > numeric_const<T>::epsilon() )
+			if ( l > num_const<T>::epsilon() )
 			{ T invl = inv( l ); q.x *= invl; q.y *= invl; q.z *= invl; q.w *= invl; }
 			return q;
 		}
@@ -61,7 +61,7 @@ namespace flut
 		template< typename T > quat_<T> normalized( quat_<T> q )
 		{
 			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w );
-			if ( l > numeric_const<T>::epsilon() )
+			if ( l > num_const<T>::epsilon() )
 			{ T invl = inv( l ); q.w *= invl; q.x *= invl; q.y *= invl; q.z *= invl; }
 			return q;
 		}
@@ -159,7 +159,7 @@ namespace flut
 		{
 			//flut_assert( is_normalized( q ) );
 			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
-			if ( l > numeric_const<T>::epsilon() )
+			if ( l > num_const<T>::epsilon() )
 			{
 				T f = T(2) * std::acos( q.w ) / l;
 				return vec3_<T>( f * q.x, f * q.y, f * q.z );
@@ -172,7 +172,7 @@ namespace flut
 		{
 			//flut_assert( is_normalized( q ) );
 			T l = sqrt( q.x * q.x + q.y * q.y + q.z * q.z );
-			if ( l > numeric_const<T>::epsilon() )
+			if ( l > num_const<T>::epsilon() )
 			{
 				T s = T(1) / l;
 				return std::pair< vec3_<T>, radian_<T> >{ vec3f( s * q.x, s * q.y, s * q.z ), radian_<T>( T(2) * std::acos( q.w ) ) };

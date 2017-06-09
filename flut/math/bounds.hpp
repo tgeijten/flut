@@ -7,7 +7,7 @@ namespace flut
 	class bounds
 	{
 	public:
-		bounds( const T& upper_bound = math::numeric_const< T >::max(), const T& lower_bound = math::numeric_const< T >::lowest() ) : lower( lower ), upper( upper ) {};
+		bounds( const T& upper_bound = num_const< T >::max(), const T& lower_bound = num_const< T >::lowest() ) : lower( lower ), upper( upper ) {};
 		bounds( const prop_node& props );
 
 		bool is_within( const T& value ) { return ( value >= lower ) && ( value <= upper ); }
@@ -29,7 +29,7 @@ namespace flut
 
 	template< typename T >
 	flut::bounds<T>::bounds( const prop_node& props ) {
-		lower = props.get_any< T >( { "min", "lower" }, numeric_const<T>::lowest() );
-		upper = props.get_any<T>( { "max", "upper" }, numeric_const< T >::max() );
+		lower = props.get_any< T >( { "min", "lower" }, num_const<T>::lowest() );
+		upper = props.get_any<T>( { "max", "upper" }, num_const< T >::max() );
 	}
 }

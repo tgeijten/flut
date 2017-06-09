@@ -23,7 +23,7 @@ namespace flut
 			size_t max_generations = 10000;
 			size_t progress_window_size = 0;
 			fitness_t min_progress = 0;
-			fitness_t fitness = math::num_const_d::nan();
+			fitness_t fitness = num_const< fitness_t >::nan();
 		};
 
 		struct fitness_report {

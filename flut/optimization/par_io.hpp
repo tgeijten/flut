@@ -14,11 +14,11 @@ namespace flut
 	using par_value = double;
 	using optional_par_value = optional_double;
 
-	class FLUT_API par_interface
+	class FLUT_API par_io
 	{
 	public:
-		par_interface() {}
-		virtual ~par_interface() {}
+		par_io() {}
+		virtual ~par_io() {}
 
 		virtual size_t dim() const = 0;
 		virtual optional_par_value try_get( const string& name ) const = 0;
@@ -39,11 +39,11 @@ namespace flut
 
 	struct scoped_prefix
 	{
-		scoped_prefix( par_interface& ps, const string& prefix ) : ps_( ps ) { ps_.push_prefix( prefix ); }
-		operator par_interface&( ) { return ps_; }
+		scoped_prefix( par_io& ps, const string& prefix ) : ps_( ps ) { ps_.push_prefix( prefix ); }
+		operator par_io&( ) { return ps_; }
 		~scoped_prefix() { ps_.pop_prefix(); }
 	private:
-		par_interface& ps_;
+		par_io& ps_;
 	};
 }
 

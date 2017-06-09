@@ -1144,7 +1144,7 @@ namespace flut
 	optimizer( obj )
 	{
 		pimpl = new pimpl_t;
-		auto n = objective_.dim();
+		auto n = objective_.info().dim();
 
 		std::vector< double > mean( n ), std( n ), lb( n ), ub( n );
 		for ( index_t i = 0; i < n; ++i )
@@ -1156,7 +1156,7 @@ namespace flut
 			ub[ i ] = p.max;
 		}
 
-		cmaes_init( &pimpl->cmaes, (int)objective_.dim(), mean, std, seed, l );
+		cmaes_init( &pimpl->cmaes, (int)n, mean, std, seed, l );
 		cmaes_readpara_SupplementDefaults( &pimpl->cmaes );
 		cmaes_init_final( &pimpl->cmaes );
 
@@ -1193,9 +1193,9 @@ namespace flut
 		return pimpl->bounded_pop;
 	}
 
-	void cma_optimizer::update_distribution( const std::vector< fitness_t >& results )
+	void cma_optimizer::update_distribution( const fitness_vec_t& results )
 	{
-		if ( objective_.maximize() )
+		if ( objective_.info().maximize() )
 		{
 			// negate first, since c-cmaes always minimizes
 			vector< fitness_t > neg_results( results.size() );
@@ -1221,6 +1221,7 @@ namespace flut
 
 	vector< double > cma_optimizer::current_std() const
 	{
+		// TODO: get this from the covariance matrix
 		auto m = current_mean();
 		vector< double > stds( dim() );
 		for ( index_t pop_idx = 0; pop_idx < current_pop().size(); ++pop_idx )

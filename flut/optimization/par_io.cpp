@@ -1,8 +1,8 @@
-#include "par_interface.hpp"
+#include "par_io.hpp"
 
 namespace flut
 {
-	par_value par_interface::get( const string& name, par_value mean, par_value std, par_value min, par_value max )
+	par_value par_io::get( const string& name, par_value mean, par_value std, par_value min, par_value max )
 	{
 		auto full_name = prefix() + name;
 
@@ -14,7 +14,7 @@ namespace flut
 		return add( full_name, mean, std, min, max );
 	}
 
-	par_value par_interface::get( const string& name, const prop_node& pn )
+	par_value par_io::get( const string& name, const prop_node& pn )
 	{
 		auto full_name = prefix() + name;
 
@@ -41,7 +41,7 @@ namespace flut
 		}
 	}
 
-	par_value par_interface::get_or( const string& name, const prop_node* prop, const par_value& default_value )
+	par_value par_io::get_or( const string& name, const prop_node* prop, const par_value& default_value )
 	{
 		if ( prop )
 			return get( name, *prop );

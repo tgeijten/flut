@@ -9,9 +9,9 @@ namespace flut
 
 	template< typename T > struct optional_pod< T, typename std::enable_if< std::is_integral<T>::value >::type >
 	{
-		optional_pod() : value( math::numeric_const<T>::rare() ) {}
+		optional_pod() : value( num_const<T>::rare() ) {}
 		optional_pod( const T& v ) : value( v ) {}
-		operator bool() const { return value != math::numeric_const<T>::rare(); }
+		operator bool() const { return value != num_const<T>::rare(); }
 		T& operator*() { return value; }
 		const T& operator*() const { return value; }
 		T value;

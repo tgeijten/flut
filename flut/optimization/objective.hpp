@@ -2,7 +2,7 @@
 
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
-#include "par_instance.hpp"
+#include "search_point.hpp"
 #include <functional>
 
 #if defined(_MSC_VER)
@@ -12,29 +12,20 @@
 
 namespace flut
 {
-	using fitness_t = double;
-	using fitness_vec_t = vector< fitness_t >;
-
 	class FLUT_API objective
 	{
 	public:
 		objective() {}
 		virtual ~objective() {}
 
-		virtual size_t dim() const { return par_info_.size(); }
-		const par_info& info() const { return par_info_; }
-		par_info& info() { return par_info_; }
-
-		virtual bool minimize() const { return true; }
-		bool maximize() const { return !minimize(); }
-
-		bool is_better( fitness_t a, fitness_t b ) const;
-		fitness_t worst_fitness() const;
+		const objective_info& info() const { return info_; }
+		objective_info& info() { return info_; }
+		size_t dim() const { return info_.dim(); }
 
 		virtual fitness_t evaluate( const par_vec& point ) const = 0;
 
 	protected:
-		par_info par_info_;
+		objective_info info_;
 	};
 
 	class FLUT_API function_objective : public objective
@@ -47,10 +38,8 @@ namespace flut
 			const par_vec& upper = par_vec(), const par_vec& lower = par_vec() );
 
 		virtual fitness_t evaluate( const par_vec& point ) const override { return func_( point ); }
-		virtual bool minimize() const override { return minimize_; }
 
 		function_t func_;
-		bool minimize_ = true;
 	};
 }
 
