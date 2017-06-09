@@ -7,7 +7,8 @@ namespace flut
 {
 	optimizer::optimizer( const objective& o ) :
 	objective_( o ),
-	current_fitness_( o.info().worst_fitness() )
+	current_fitness_( o.info().worst_fitness() ),
+	generation_count_( 0 )
 	{}
 
 	optimizer::~optimizer()
@@ -15,7 +16,7 @@ namespace flut
 
 	bool optimizer::test_stop_condition( const stop_condition& stop ) const
 	{
-		if ( current_generation() >= stop.max_generations )
+		if ( generation_count() >= stop.max_generations )
 			return true;
 
 		if ( !std::isnan( stop.fitness ) && objective_.info().is_better( current_fitness(), stop.fitness ) )

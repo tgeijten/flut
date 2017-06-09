@@ -1204,11 +1204,8 @@ namespace flut
 		}
 		else cmaes_UpdateDistribution( &pimpl->cmaes, results );
 
-		// add results to history
-		fitness_vec_t sorted_results = results;
-		std::sort( sorted_results.begin(), sorted_results.end() );
-		fitness_t avg = std::accumulate( sorted_results.begin(), sorted_results.end(), 0.0 ) / sorted_results.size();
-		history_.push_back( fitness_report{ sorted_results.front(), flut::median( sorted_results ), avg } );
+		// update generation count
+		++generation_count_;
 	}
 
 	vector< double > cma_optimizer::current_mean() const

@@ -26,26 +26,21 @@ namespace flut
 			fitness_t fitness = num_const< fitness_t >::nan();
 		};
 
-		struct fitness_report {
-			fitness_t best;
-			fitness_t median;
-			fitness_t average;
-		};
-
 		optimizer( const objective& o );
 		virtual ~optimizer();
 
 		virtual void run( const stop_condition& stop = stop_condition() ) { FLUT_NOT_IMPLEMENTED; }
-		virtual void abort() { FLUT_NOT_IMPLEMENTED; }
-		bool test_stop_condition( const stop_condition& stop ) const;
 
-		virtual fitness_vec_t evaluate( const vector< par_vec >& pop );
+		void abort() { abort_flag_ = true; }
+		bool test_abort() const { return abort_flag_; }
+
+		bool test_stop_condition( const stop_condition& stop ) const;
+		fitness_vec_t evaluate( const vector< par_vec >& pop );
 		
 		int max_threads() const { return max_threads_; }
 		void set_max_threads( int val ) { max_threads_ = val; }
 
-		const vector< fitness_report >& history() const { return history_; }
-		size_t current_generation() const { return history_.size(); }
+		size_t generation_count() const { return generation_count_; }
 		fitness_t current_fitness() const { return current_fitness_; }
 		const par_vec& current_best() const { return current_best_; }
 
@@ -54,7 +49,7 @@ namespace flut
 		int max_threads_ = 1;
 		std::atomic_bool abort_flag_ = false;
 
-		vector< fitness_report > history_;
+		size_t generation_count_;
 		fitness_t current_fitness_;
 		par_vec current_best_;
 
