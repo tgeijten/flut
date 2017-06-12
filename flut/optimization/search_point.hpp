@@ -26,6 +26,7 @@ namespace flut
 		virtual par_value add( const string& name, par_value mean, par_value std, par_value min, par_value max ) override;
 
 		const par_value& operator[]( index_t i ) const { return values_[ i ]; }
+		par_value& operator[]( index_t i ) { return values_[ i ]; }
 		using par_io::get;
 
 		const objective_info& info() const { return info_; }
@@ -36,6 +37,7 @@ namespace flut
 
 		void round_values();
 		const par_vec& values() const { return values_; }
+		par_vec& values() { return values_; }
 
 	private:
 		par_value rounded( par_value );

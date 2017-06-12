@@ -35,7 +35,7 @@ namespace flut
 		bool test_abort() const { return abort_flag_; }
 
 		bool test_stop_condition( const stop_condition& stop ) const;
-		fitness_vec_t evaluate( const vector< par_vec >& pop );
+		fitness_vec_t evaluate( const vector< search_point >& pop );
 		
 		int max_threads() const { return max_threads_; }
 		void set_max_threads( int val ) { max_threads_ = val; }

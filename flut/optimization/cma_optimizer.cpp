@@ -1125,7 +1125,7 @@ namespace flut
 	{
 		cmaes_t cmaes;
 		cmaes_boundary_trans_t bounds;
-		vector< vector< double > > bounded_pop;
+		vector< search_point > bounded_pop;
 
 		vector< double > get_bounded( const vector< double >& params )
 		{
@@ -1160,9 +1160,7 @@ namespace flut
 		cmaes_readpara_SupplementDefaults( &pimpl->cmaes );
 		cmaes_init_final( &pimpl->cmaes );
 
-		pimpl->bounded_pop.resize( lambda() );
-		for ( auto& ind : pimpl->bounded_pop )
-			ind.resize( dim() );
+		pimpl->bounded_pop.resize( lambda(), search_point( objective_.info() ) );
 
 		cmaes_boundary_trans_init( &pimpl->bounds, lb, ub );
 	}
@@ -1172,7 +1170,7 @@ namespace flut
 		delete pimpl;
 	}
 
-	const std::vector< std::vector< double > >& cma_optimizer::sample_population()
+	const std::vector< search_point >& cma_optimizer::sample_population()
 	{
 		auto& pop = cmaes_SamplePopulation( &pimpl->cmaes );
 		for ( index_t pop_idx = 0; pop_idx < pop.size(); ++pop_idx )
@@ -1180,7 +1178,7 @@ namespace flut
 			if ( pimpl->bounds.lower_bounds.size() > 0 )
 			{
 				// apply transform
-				cmaes_boundary_trans( &pimpl->bounds, pop[ pop_idx ], pimpl->bounded_pop[ pop_idx ] );
+				cmaes_boundary_trans( &pimpl->bounds, pop[ pop_idx ], pimpl->bounded_pop[ pop_idx ].values() );
 			}
 			else
 			{
@@ -1257,7 +1255,7 @@ namespace flut
 		return pimpl->cmaes.sigma;
 	}
 
-	const vector< vector < double > >& cma_optimizer::current_pop() const
+	const vector< search_point >& cma_optimizer::current_pop() const
 	{
 		return pimpl->bounded_pop;
 	}

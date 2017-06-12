@@ -22,7 +22,7 @@ namespace flut
 		objective_info& info() { return info_; }
 		size_t dim() const { return info_.dim(); }
 
-		virtual fitness_t evaluate( const par_vec& point ) const = 0;
+		virtual fitness_t evaluate( const search_point& point ) const = 0;
 
 	protected:
 		objective_info info_;
@@ -37,7 +37,7 @@ namespace flut
 			const par_vec& start = par_vec(), const par_vec& start_std = par_vec(),
 			const par_vec& upper = par_vec(), const par_vec& lower = par_vec() );
 
-		virtual fitness_t evaluate( const par_vec& point ) const override { return func_( point ); }
+		virtual fitness_t evaluate( const search_point& point ) const override { return func_( point.values() ); }
 
 		function_t func_;
 	};

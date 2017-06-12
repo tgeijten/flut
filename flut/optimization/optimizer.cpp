@@ -26,7 +26,7 @@ namespace flut
 		return false;
 	}
 
-	fitness_vec_t optimizer::evaluate( const vector< par_vec >& pop )
+	fitness_vec_t optimizer::evaluate( const vector< search_point >& pop )
 	{
 		vector< double > results( pop.size(), objective_.info().worst_fitness() );
 		try
@@ -54,7 +54,7 @@ namespace flut
 				}
 
 				// add new thread
-				threads.push_back( std::make_pair( std::async( std::launch::async, [&]( const par_vec& p ) { return objective_.evaluate( p ); }, pop[ eval_idx ] ), eval_idx ) );
+				threads.push_back( std::make_pair( std::async( std::launch::async, [&]( const search_point& p ) { return objective_.evaluate( p ); }, pop[ eval_idx ] ), eval_idx ) );
 			}
 
 			// wait for remaining threads
