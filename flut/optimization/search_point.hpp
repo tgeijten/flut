@@ -35,11 +35,11 @@ namespace flut
 
 		friend FLUT_API std::ostream& operator<<( std::ostream& str, const search_point& ps );
 
-		void round_values();
+		void set_values( const par_vec& values );
 		const par_vec& values() const { return values_; }
-		par_vec& values() { return values_; }
 
 	private:
+		void round_values();
 		par_value rounded( par_value );
 
 		const objective_info& info_;

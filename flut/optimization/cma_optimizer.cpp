@@ -1178,13 +1178,14 @@ namespace flut
 			if ( pimpl->bounds.lower_bounds.size() > 0 )
 			{
 				// apply transform
-				cmaes_boundary_trans( &pimpl->bounds, pop[ pop_idx ], pimpl->bounded_pop[ pop_idx ].values() );
+				dbl_vec bounded_values( dim() );
+				cmaes_boundary_trans( &pimpl->bounds, pop[ pop_idx ], bounded_values );
+				pimpl->bounded_pop[ pop_idx ].set_values( bounded_values );
 			}
 			else
 			{
 				// simply copy
-				for ( index_t idx = 0; idx < dim(); ++idx )
-					pimpl->bounded_pop[ pop_idx ][ idx ] = pop[ pop_idx ][ idx ];
+				pimpl->bounded_pop[ pop_idx ].set_values( pop[ pop_idx ] );
 			}
 		}
 

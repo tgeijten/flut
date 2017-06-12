@@ -67,6 +67,13 @@ namespace flut
 		return params_read;
 	}
 
+	void search_point::set_values( const par_vec& values )
+	{
+		flut_assert( values_.size() == values.size() );
+		for ( size_t idx = 0; idx < values.size(); ++idx )
+			values_[ idx ] = rounded( values[ idx ] );
+	}
+
 	void search_point::round_values()
 	{
 		for ( auto& v : values_ )
