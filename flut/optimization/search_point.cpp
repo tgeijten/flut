@@ -98,4 +98,27 @@ namespace flut
 		}
 		return str;
 	}
+
+	pair< par_vec, par_vec > FLUT_API compute_mean_std( const search_point_vec& pop )
+	{
+		const auto& info = pop.front().info();
+
+		vector< par_value > mean( info.dim() );
+		for ( auto& ind : pop )
+		{
+			for ( index_t i = 0; i < info.dim(); ++i )
+				mean[ i ] += ind[ i ] / pop.size();
+		}
+
+		vector< par_value > stds( info.dim() );
+		for ( index_t pop_idx = 0; pop_idx < pop.size(); ++pop_idx )
+		{
+			for ( index_t i = 0; i < info.dim(); ++i )
+				stds[ i ] += math::squared( pop[ pop_idx ][ i ] - mean[ i ] ) / pop.size();
+		}
+		for ( index_t i = 0; i < info.dim(); ++i )
+			stds[ i ] = sqrt( stds[ i ] );
+
+		return std::make_pair( std::move( mean ), std::move( stds ) );
+	}
 }

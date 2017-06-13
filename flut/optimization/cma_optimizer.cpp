@@ -1125,7 +1125,7 @@ namespace flut
 	{
 		cmaes_t cmaes;
 		cmaes_boundary_trans_t bounds;
-		vector< search_point > bounded_pop;
+		search_point_vec bounded_pop;
 
 		vector< double > get_bounded( const vector< double >& params )
 		{
@@ -1170,7 +1170,7 @@ namespace flut
 		delete pimpl;
 	}
 
-	const std::vector< search_point >& cma_optimizer::sample_population()
+	const search_point_vec& cma_optimizer::sample_population()
 	{
 		auto& pop = cmaes_SamplePopulation( &pimpl->cmaes );
 		for ( index_t pop_idx = 0; pop_idx < pop.size(); ++pop_idx )
@@ -1202,17 +1202,11 @@ namespace flut
 			cmaes_UpdateDistribution( &pimpl->cmaes, neg_results );
 		}
 		else cmaes_UpdateDistribution( &pimpl->cmaes, results );
-
-		// update generation count
-		++generation_count_;
 	}
 
 	vector< double > cma_optimizer::current_mean() const
 	{
 		return pimpl->get_bounded( pimpl->cmaes.current_mean );
-		vector< double > means( dim() );
-		cmaes_boundary_trans( &pimpl->bounds, pimpl->cmaes.current_mean, means );
-		return means;
 	}
 
 	vector< double > cma_optimizer::current_std() const
@@ -1220,10 +1214,10 @@ namespace flut
 		// TODO: get this from the covariance matrix
 		auto m = current_mean();
 		vector< double > stds( dim() );
-		for ( index_t pop_idx = 0; pop_idx < current_pop().size(); ++pop_idx )
+		for ( index_t pop_idx = 0; pop_idx < pimpl->bounded_pop.size(); ++pop_idx )
 		{
 			for ( index_t i = 0; i < dim(); ++i )
-				stds[ i ] += math::squared( current_pop()[ pop_idx ][ i ] - m[ i ] ) / current_pop().size();
+				stds[ i ] += math::squared( pimpl->bounded_pop[ pop_idx ][ i ] - m[ i ] ) / pimpl->bounded_pop.size();
 		}
 		for ( index_t i = 0; i < dim(); ++i )
 			stds[ i ] = sqrt( stds[ i ] );
@@ -1256,8 +1250,15 @@ namespace flut
 		return pimpl->cmaes.sigma;
 	}
 
-	const vector< search_point >& cma_optimizer::current_pop() const
+	optimizer::stop_condition cma_optimizer::step( const stop_condition_info& )
 	{
-		return pimpl->bounded_pop;
+		auto& pop = sample_population();
+		auto results = evaluate( pop );
+
+		update_distribution( results );
+
+		++step_count_;
+
+		return no_stop_condition;
 	}
 }

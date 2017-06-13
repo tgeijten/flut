@@ -2,31 +2,60 @@
 #include <future>
 #include "flut/system/log.hpp"
 #include <cmath>
+#include "flut/system_tools.hpp"
 
 namespace flut
 {
 	optimizer::optimizer( const objective& o ) :
 	objective_( o ),
 	current_fitness_( o.info().worst_fitness() ),
-	generation_count_( 0 )
+	step_count_( 0 )
 	{}
 
 	optimizer::~optimizer()
 	{}
 
-	bool optimizer::test_stop_condition( const stop_condition& stop ) const
+	void optimizer::optimize_background()
 	{
-		if ( generation_count() >= stop.max_generations )
-			return true;
-
-		if ( !std::isnan( stop.fitness ) && objective_.info().is_better( current_fitness(), stop.fitness ) )
-			return true;
-
-		// none of the criteria is met -> return false
-		return false;
+		abort_flag_ = false;
+		background_thread = std::thread( [this]() { flut::set_thread_priority( thread_priority ); this->run(); } );
 	}
 
-	fitness_vec_t optimizer::evaluate( const vector< search_point >& pop )
+	flut::optimizer::stop_condition optimizer::run( const stop_condition_info& stop )
+	{
+		for ( auto cb : callbacks_ )
+			cb->start_cb( *this );
+
+		for ( step_count_ = 0; test_stop_condition( stop ) == no_stop_condition; ++step_count_ )
+		{
+			for ( auto cb : callbacks_ )
+				cb->next_generation_cb( step_count_ );
+
+			step( stop );
+		}
+
+		for ( auto cb : callbacks_ )
+			cb->finish_cb( *this );
+
+		return test_stop_condition( stop );
+	}
+
+	optimizer::stop_condition optimizer::test_stop_condition( const stop_condition_info& stop ) const
+	{
+		if ( test_abort() )
+			return user_abort;
+
+		if ( generation_count() >= stop.max_generations )
+			return max_generations_reached;
+
+		if ( stop.target_fitness && objective_.info().is_better( current_fitness(), *stop.target_fitness ) )
+			return target_fitness_reached;
+
+		// none of the criteria is met -> return false
+		return no_stop_condition;
+	}
+
+	fitness_vec_t optimizer::evaluate( const search_point_vec& pop )
 	{
 		vector< double > results( pop.size(), objective_.info().worst_fitness() );
 		try
@@ -47,6 +76,11 @@ namespace flut
 						{
 							// a thread is finished, add it to the results and make room for a new thread
 							results[ it->second ] = it->first.get();
+
+							// run callbacks
+							for ( auto cb : callbacks_ )
+								cb->evaluate_cb( pop[ it->second ], results[ it->second ] );
+
 							it = threads.erase( it );
 						}
 						else ++it;
@@ -59,7 +93,25 @@ namespace flut
 
 			// wait for remaining threads
 			for ( auto& f : threads )
+			{
 				results[ f.second ] = f.first.valid() ? f.first.get() : objective_.info().worst_fitness();
+
+				// run callbacks
+				for ( auto cb : callbacks_ )
+					cb->evaluate_cb( pop[ f.second ], results[ f.second ] );
+			}
+
+			// run callbacks
+			for ( auto cb : callbacks_ )
+				cb->evaluate_cb( pop, results );
+
+			auto best_idx = objective_.info().find_best_fitness( results );
+			if ( results[ best_idx ] > current_fitness_ )
+			{
+				current_fitness_ = results[ best_idx ];
+				for ( auto cb : callbacks_ )
+					cb->new_best_cb( pop[ best_idx ], results[ best_idx ] );
+			}
 		}
 		catch ( std::exception& e )
 		{

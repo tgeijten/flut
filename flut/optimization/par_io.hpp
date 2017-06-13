@@ -13,6 +13,7 @@ namespace flut
 {
 	using par_value = double;
 	using optional_par_value = optional_double;
+	using par_vec = vector< par_value >;
 
 	class FLUT_API par_io
 	{

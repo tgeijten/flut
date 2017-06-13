@@ -22,6 +22,7 @@ namespace flut
 		objective_info& info() { return info_; }
 		size_t dim() const { return info_.dim(); }
 
+		virtual string name() const { return string( "nameless" ); }
 		virtual fitness_t evaluate( const search_point& point ) const = 0;
 
 	protected:

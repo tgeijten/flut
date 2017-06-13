@@ -2,6 +2,7 @@
 
 #include "flut/system/types.hpp"
 #include "system/assert.hpp"
+#include <numeric>
 
 namespace flut
 {

@@ -23,6 +23,13 @@ namespace flut
 		else return optional_par_value();
 	}
 
+	flut::index_t objective_info::find_best_fitness( const fitness_vec_t& f ) const
+	{
+		if ( minimize() )
+			return std::min_element( f.begin(), f.end() ) - f.begin();
+		else return std::max_element( f.begin(), f.end() ) - f.begin();
+	}
+
 	par_value objective_info::add( const string& name, par_value mean, par_value std, par_value min, par_value max )
 	{
 		flut_assert( find( name ) == par_infos_.end() );

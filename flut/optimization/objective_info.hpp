@@ -5,7 +5,7 @@
 #include "flut/flat_map.hpp"
 #include "flut/system/path.hpp"
 #include "par_io.hpp"
-#include "../math/math.hpp"
+#include "flut/math/math.hpp"
 
 #if defined(_MSC_VER)
 #	pragma warning( push )
@@ -14,8 +14,6 @@
 
 namespace flut
 {
-	using par_value = double;
-	using par_vec = vector< par_value >;
 	using fitness_t = double;
 	using fitness_vec_t = vector< fitness_t >;
 
@@ -43,6 +41,7 @@ namespace flut
 		bool minimize() const { return minimize_; }
 		bool maximize() const { return !minimize_; }
 		bool is_better( fitness_t a, fitness_t b ) const { return minimize() ? a < b : a > b; }
+		index_t find_best_fitness( const fitness_vec_t& f ) const;
 		fitness_t worst_fitness() const { return minimize() ? num_const< fitness_t >::max() : num_const< fitness_t >::lowest(); }
 		void set_minimize( bool m ) { minimize_ = m; }
 
@@ -65,11 +64,14 @@ namespace flut
 		size_t import_fixed( const path& filename );
 		void set_global_std( double factor, double offset );
 		void set_mean_std( const vector< par_value >& mean, const vector< par_value >& std );
+		void set_name( const string& name ) { name_ = name; }
+		const string& name() { return name_; }
 
 	private:
 		par_info_vec par_infos_;
 		flat_map< string, par_value > fixed_pars_;
 		bool minimize_;
+		string name_;
 
 		par_info_vec::const_iterator find( const string& name ) const;
 		par_info_vec::iterator find( const string& name );

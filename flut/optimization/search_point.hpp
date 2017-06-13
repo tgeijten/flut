@@ -45,6 +45,9 @@ namespace flut
 		const objective_info& info_;
 		par_vec values_;
 	};
+
+	using search_point_vec = vector< search_point >;
+	pair< par_vec, par_vec > FLUT_API compute_mean_std( const search_point_vec& pop );
 }
 
 #if defined(_MSC_VER)

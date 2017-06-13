@@ -13,13 +13,13 @@ namespace flut
 		virtual ~cma_optimizer();
 
 		// optimization
-		const vector< search_point >& sample_population();
+		const search_point_vec& sample_population();
 		void update_distribution( const fitness_vec_t& results );
+		virtual stop_condition step( const stop_condition_info& ) override;
 
 		// analysis
 		par_vec current_mean() const;
 		par_vec current_std() const;
-		const vector< search_point >& current_pop() const;
 
 		// actual parameters
 		int dim() const;

@@ -21,7 +21,7 @@ namespace flut
 	{
 		optional_pod() : value( std::numeric_limits<T>::quiet_NaN() ) {}
 		optional_pod( const T& v ) : value( v ) {}
-		operator bool() { return value == value; }
+		operator bool() const { return value == value; }
 		T& operator*() { return value; }
 		const T& operator*() const { return value; }
 		T value;

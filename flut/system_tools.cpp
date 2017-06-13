@@ -105,6 +105,23 @@ namespace flut
 #endif
 	}
 
+	FLUT_API path create_unique_folder( const path& folder, int max_attempts )
+	{
+		path unique_folder = folder;
+		bool success = false;
+		for ( int i = 0; i < max_attempts && !success; ++i )
+		{
+			if ( i > 0 )
+				unique_folder = folder + stringf( " (%d)", i );
+
+			if ( !folder_exists( unique_folder ) )
+				success = create_folder( unique_folder ); // try to create folder
+		}
+		flut_error_if( !success, "Could not create unique folder after " + to_str( max_attempts ) + " attempts" );
+
+		return unique_folder;
+	}
+
 	FLUT_API string get_date_time_str( const char* format )
 	{
 		auto in_time_t = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
