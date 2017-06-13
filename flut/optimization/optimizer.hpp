@@ -53,7 +53,8 @@ namespace flut
 
 		void add_callback( callback* cb ) { callbacks_.push_back( cb ); }
 
-		void set_abort() { abort_flag_ = true; }
+		void signal_abort() { abort_flag_ = true; }
+		void abort_and_wait();
 		bool test_abort() const { return abort_flag_; }
 
 		stop_condition test_stop_condition( const stop_condition_info& stop ) const;

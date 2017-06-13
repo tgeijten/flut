@@ -13,7 +13,9 @@ namespace flut
 	{}
 
 	optimizer::~optimizer()
-	{}
+	{
+		abort_and_wait();
+	}
 
 	void optimizer::optimize_background()
 	{
@@ -40,8 +42,18 @@ namespace flut
 		return test_stop_condition( stop );
 	}
 
+	void optimizer::abort_and_wait()
+	{
+		if ( background_thread.joinable() )
+		{
+			signal_abort();
+			background_thread.join();
+		}
+	}
+
 	optimizer::stop_condition optimizer::test_stop_condition( const stop_condition_info& stop ) const
 	{
+		// TODO: make this function virtual and keep internal state
 		if ( test_abort() )
 			return user_abort;
 
