@@ -10,7 +10,7 @@ namespace flut
 		irange() : begin_( T( 0 ) ), end_( T( 0 ) ) {}
 		irange( T b, T e ) : begin_( b ), end_( e ) {}
 
-		struct iterator : public std::iterator< std::forward_iterator_tag, int >
+		struct iterator : public std::iterator< std::forward_iterator_tag, T, T >
 		{
 			typedef T value_type;
 			iterator( T v ) : value_( v ) {}
@@ -35,7 +35,7 @@ namespace flut
 		irange_step( T b, T e, T s = T( 1 ) ) : begin_( b ), end_( e ), step_( s ) {}
 		irange_step( const irange< T >& r, T s = T( 1 ) ) : begin_( r.begin_ ), end_( r.end_ ), step_( s ) {}
 
-		struct iterator : public std::iterator< std::forward_iterator_tag, int >
+		struct iterator : public std::iterator< std::forward_iterator_tag, T, T >
 		{
 			typedef T value_type;
 			iterator( T v, T s ) : value_( v ), step_( s ) {}
