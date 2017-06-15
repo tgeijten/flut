@@ -38,6 +38,26 @@ namespace flut
 		void reserve( size_t s ) { buffer_.resize( s ); }
 		size_t capacity() const { return buffer_.size(); }
 
+		template< typename IT > struct iterator_impl : public std::iterator< std::forward_iterator_tag, IT >
+		{
+			typedef IT value_type;
+			iterator_impl( size_t index, std::vector< IT >& buffer ) : index_( index ), buffer_( buffer ) {}
+			size_t index_;
+			vector< IT >& buffer_;
+			iterator_impl< IT >& operator++() const { return ++index_; }
+			iterator_impl< IT >& operator++( int ) { auto ret = *this; ++index_; return ret; }
+			bool operator==( const iterator& other ) { return other.index_ == index_; }
+			bool operator!=( const iterator& other ) { return other.index_ != index_; }
+			IT operator*() { return buffer_[ index_ % buffer_.size() ]; }
+		};
+		using iterator = iterator_impl< T >;
+		using const_iterator = iterator_impl< const T >;
+
+		iterator begin() { return iterator( front_, buffer_ ); }
+		iterator end() { return iterator( front_ + size_, buffer_ ); }
+		const_iterator begin() const { return const_iterator( front_, buffer_ ); }
+		const_iterator end() const { return const_iterator( front_ + size_, buffer_ ); }
+
 	private:
 		size_t front_;
 		size_t size_;
