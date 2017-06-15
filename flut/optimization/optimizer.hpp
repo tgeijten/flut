@@ -9,7 +9,10 @@
 #include <atomic>
 #include "flut/math/optional_pod.hpp"
 #include <thread>
-#include "../system_tools.hpp"
+
+#include "flut/system_tools.hpp"
+#include "reporter.hpp"
+#include "flut/circular_deque.hpp"
 
 #if defined(_MSC_VER)
 #	pragma warning( push )
@@ -21,47 +24,30 @@ namespace flut
 	class FLUT_API optimizer
 	{
 	public:
-		class FLUT_API callback
-		{
-		public:
-			callback() {}
-			virtual ~callback() {}
-			virtual void start_cb( const optimizer& opt ) {}
-			virtual void finish_cb( const optimizer& opt ) {}
-			virtual void evaluate_cb( const search_point& point, fitness_t fitness_t ) {}
-			virtual void evaluate_cb( const search_point_vec& pop, const fitness_vec_t& fitnesses ) {}
-			virtual void next_generation_cb( size_t gen ) {}
-			virtual void new_best_cb( const search_point& ps, fitness_t fitness ) {}
-		};
-
-		enum stop_condition { no_stop_condition, max_generations_reached, min_progress_reached, target_fitness_reached, user_abort };
-		struct stop_condition_info
-		{
-			size_t max_generations = 10000;
-			size_t progress_window_size = 100;
-			fitness_t min_progress = 0;
-			optional_pod< fitness_t > target_fitness;
-		};
+		enum stop_condition { no_stop_condition, max_steps_reached, min_progress_reached, target_fitness_reached, user_abort };
 
 		optimizer( const objective& o );
 		virtual ~optimizer();
 
-		void optimize_background();
+		void run_threaded();
+		virtual stop_condition run();
+		virtual void step() { FLUT_NOT_IMPLEMENTED; }
 
-		virtual stop_condition run( const stop_condition_info& stop = stop_condition_info() );
-		virtual stop_condition step( const stop_condition_info& ) { FLUT_NOT_IMPLEMENTED; }
-
-		void add_callback( callback* cb ) { callbacks_.push_back( cb ); }
+		void add_reporter( reporter* cb ) { callbacks_.push_back( cb ); }
 
 		void signal_abort() { abort_flag_ = true; }
 		void abort_and_wait();
+
 		bool test_abort() const { return abort_flag_; }
 
-		stop_condition test_stop_condition( const stop_condition_info& stop ) const;
+		virtual stop_condition test_stop_condition() const;
 		fitness_vec_t evaluate( const search_point_vec& pop );
 		
 		int max_threads() const { return max_threads_; }
 		void set_max_threads( int val ) { max_threads_ = val; }
+
+		void set_max_generations( size_t gen ) { max_generations_ = gen; }
+		void set_min_progress( fitness_t relative_improvement_per_step, size_t window );
 
 		size_t generation_count() const { return step_count_; }
 		fitness_t current_fitness() const { return current_fitness_; }
@@ -73,6 +59,7 @@ namespace flut
 		// evaluation settings
 		int max_threads_ = 1;
 		std::atomic_bool abort_flag_ = false;
+		stop_condition stop_condition_;
 
 		std::thread background_thread;
 		flut::thread_priority thread_priority;
@@ -81,8 +68,15 @@ namespace flut
 		fitness_t current_fitness_;
 
 		const objective& objective_;
+		vector< reporter* > callbacks_;
 
-		vector< callback* > callbacks_;
+		// stop conditions
+		size_t max_generations_ = 10000;
+		fitness_t min_progress_ = 0;
+		circular_deque< fitness_t > progress_window;
+		optional_pod< fitness_t > target_fitness_;
+
+		void update_progress( fitness_t current_median );
 	};
 }
 

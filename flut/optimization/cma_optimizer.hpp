@@ -15,7 +15,7 @@ namespace flut
 		// optimization
 		const search_point_vec& sample_population();
 		void update_distribution( const fitness_vec_t& results );
-		virtual stop_condition step( const stop_condition_info& ) override;
+		virtual void step() override;
 
 		// analysis
 		par_vec current_mean() const;

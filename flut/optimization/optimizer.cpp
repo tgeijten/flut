@@ -9,7 +9,8 @@ namespace flut
 	optimizer::optimizer( const objective& o ) :
 	objective_( o ),
 	current_fitness_( o.info().worst_fitness() ),
-	step_count_( 0 )
+	step_count_( 0 ),
+	stop_condition_( no_stop_condition )
 	{}
 
 	optimizer::~optimizer()
@@ -17,29 +18,35 @@ namespace flut
 		abort_and_wait();
 	}
 
-	void optimizer::optimize_background()
+	void optimizer::run_threaded()
 	{
 		abort_flag_ = false;
 		background_thread = std::thread( [this]() { flut::set_thread_priority( thread_priority ); this->run(); } );
 	}
 
-	flut::optimizer::stop_condition optimizer::run( const stop_condition_info& stop )
+	flut::optimizer::stop_condition optimizer::run()
 	{
 		for ( auto cb : callbacks_ )
 			cb->start_cb( *this );
 
-		for ( step_count_ = 0; test_stop_condition( stop ) == no_stop_condition; ++step_count_ )
+		step_count_ = 0;
+		stop_condition_ = test_stop_condition();
+
+		while ( stop_condition_ != no_stop_condition )
 		{
 			for ( auto cb : callbacks_ )
 				cb->next_generation_cb( step_count_ );
 
-			step( stop );
+			step();
+			++step_count_;
+
+			stop_condition_ = test_stop_condition();
 		}
 
 		for ( auto cb : callbacks_ )
 			cb->finish_cb( *this );
 
-		return test_stop_condition( stop );
+		return stop_condition_;
 	}
 
 	void optimizer::abort_and_wait()
@@ -51,16 +58,15 @@ namespace flut
 		}
 	}
 
-	optimizer::stop_condition optimizer::test_stop_condition( const stop_condition_info& stop ) const
+	optimizer::stop_condition optimizer::test_stop_condition() const
 	{
-		// TODO: make this function virtual and keep internal state
 		if ( test_abort() )
 			return user_abort;
 
-		if ( generation_count() >= stop.max_generations )
-			return max_generations_reached;
+		if ( generation_count() >= max_generations_ )
+			return max_steps_reached;
 
-		if ( stop.target_fitness && objective_.info().is_better( current_fitness(), *stop.target_fitness ) )
+		if ( target_fitness_ && objective_.info().is_better( current_fitness(), *target_fitness_ ) )
 			return target_fitness_reached;
 
 		// none of the criteria is met -> return false
@@ -131,5 +137,21 @@ namespace flut
 		}
 
 		return results;
+	}
+
+	void optimizer::set_min_progress( fitness_t relative_improvement_per_step, size_t window )
+	{
+		min_progress_ = relative_improvement_per_step;
+		progress_window.reserve( window );
+	}
+
+	void optimizer::update_progress( fitness_t current_median )
+	{
+		if ( progress_window.capacity() > 0 )
+		{
+			if ( progress_window.size() == progress_window.capacity() )
+				progress_window.pop_front();
+			progress_window.push_back( current_median );
+		}
 	}
 }

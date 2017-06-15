@@ -1167,6 +1167,7 @@ namespace flut
 
 	cma_optimizer::~cma_optimizer()
 	{
+		abort_and_wait();
 		delete pimpl;
 	}
 
@@ -1250,15 +1251,10 @@ namespace flut
 		return pimpl->cmaes.sigma;
 	}
 
-	optimizer::stop_condition cma_optimizer::step( const stop_condition_info& )
+	void cma_optimizer::step()
 	{
 		auto& pop = sample_population();
 		auto results = evaluate( pop );
-
 		update_distribution( results );
-
-		++step_count_;
-
-		return no_stop_condition;
 	}
 }

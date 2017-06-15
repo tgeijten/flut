@@ -24,6 +24,7 @@ namespace flut
 
 		virtual string name() const { return string( "nameless" ); }
 		virtual fitness_t evaluate( const search_point& point ) const = 0;
+		virtual prop_node to_prop_node() const { return prop_node(); }
 
 	protected:
 		objective_info info_;
