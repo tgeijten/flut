@@ -36,8 +36,10 @@ namespace flut
 	template< typename T > T median( const vector< T >& vec ) {
 		auto s = vec.size();
 		flut_assert( s > 0 );
-		if ( ( s & 1 ) == 0 ) return vec[ s / 2 ];
-		else return ( vec[ s / 2 ] + vec[ s / 2 - 1 ] ) / T(2);
+		auto sorted_vec = vec;
+		std::sort( sorted_vec.begin(), sorted_vec.end() );
+		if ( s % 2 == 1 ) return sorted_vec[ s / 2 ];
+		else return ( sorted_vec[ s / 2 ] + sorted_vec[ s / 2 - 1 ] ) / T(2);
 	}
 
 	template< typename T > index_t find_index( const vector< T >& vec, const T& val ) {
@@ -67,6 +69,15 @@ namespace flut
 		It first_, last_;
 		Pr pred_;
 	};
+
+	template< typename T > std::ostream& operator<<( std::ostream& str, const vector< T >& vec )
+	{
+		for ( auto it = vec.begin(); it != vec.end(); ++it ) {
+			if ( it != vec.begin() ) str << "\t";
+			str << *it;
+		}
+		return str;
+	}
 
 	template< typename It, typename Pr > view_if< It, Pr > make_view_if( It first, It last, Pr pred ) {
 		return view_if< It, Pr >( first, last, pred );
