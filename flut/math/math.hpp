@@ -66,7 +66,11 @@ namespace flut
 		template< typename T > T& set_if_bigger( T& value, const T& other ) { if ( other > value ) value = other; return value; }
 
 		/// check if an integer value is a power of two
-		template< typename T > T is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
+		template< typename T > bool is_power_of_two( T v ) { return v != 0 && !( v & ( v - 1 ) ); }
+
+		/// check if an integer value is odd / even
+		template< typename T > bool is_even( T v ) { return ( v & 1 ) == 0; }
+		template< typename T > bool is_odd( T v ) { return ( v & 1 ) == 1; }
 
 		/// clamp a value so that it is between min and max
 		template< typename T > T& clamp( T& v, const T& min, const T& max )
