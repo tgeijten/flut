@@ -10,7 +10,6 @@
 #include "flut/dictionary.hpp"
 #include "flut/system/log_sink.hpp"
 #include "factory_test.h"
-#include "optimizer_test.h"
 #include "container_test.h"
 #include "timer_test.h"
 #include "flut/system/profiler.hpp"
@@ -59,9 +58,6 @@ int main( int argc, char* argv[] )
 		flut::math::angle_test();
 		flut::math::vec_quat_test();
 		sw.add_measure( "math" );
-
-		flut::optimizer_test();
-		sw.add_measure( "optimizer" );
 
 		auto pn = sw.get_report();
 		flut::log::info( pn );
