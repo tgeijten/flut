@@ -76,7 +76,7 @@ namespace flut
 			if ( it != vec.begin() ) str << "\t";
 			str << *it;
 		}
-		return str;
+		return str << std::endl;
 	}
 
 	template< typename It, typename Pr > view_if< It, Pr > make_view_if( It first, It last, Pr pred ) {
