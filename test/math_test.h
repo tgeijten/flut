@@ -22,7 +22,7 @@
 #include "flut/math/math.hpp"
 #include "flut/math/linear_regression.hpp"
 #include "flut/math/irange.hpp"
-#include "flut/math/optional_pod.hpp"
+#include "flut/math/optional.hpp"
 
 using std::cout;
 using std::endl;
@@ -65,21 +65,32 @@ void math_test()
 
 void optional_test()
 {
-	optional_pod< char > a;
+	optional< char > a;
+	FLUT_TEST( sizeof( a ) == sizeof( char ) );
 	FLUT_TEST( !a );
-	*a = 123;
+	a = 123;
 	FLUT_TEST( a );
 	FLUT_TEST( *a == 123 );
-	*a = -128;
+	a = -128;
 	FLUT_TEST( !a );
 
-	optional_pod< double > b;
+	optional< double > b;
+	FLUT_TEST( sizeof( b ) == sizeof( double ) );
 	FLUT_TEST( !b );
-	*b = 1.234;
+	b = 1.234;
 	FLUT_TEST( b );
 	FLUT_TEST( *b == 1.234 );
-	*b = std::numeric_limits< double >::quiet_NaN();
+	b = std::numeric_limits< double >::quiet_NaN();
 	FLUT_TEST( !b );
+
+	optional< vec3f > c;
+	FLUT_TEST( sizeof( c ) != sizeof( vec3f ) );
+	FLUT_TEST( !c );
+	c = vec3f( 1, 2, 3 );
+	FLUT_TEST( c );
+	FLUT_TEST( *c == vec3f( 1, 2, 3 ) );
+	optional< vec3d > d( vec3f( 3, 4, 5 ) );
+	FLUT_TEST( d );
 }
 
 void function_test()
