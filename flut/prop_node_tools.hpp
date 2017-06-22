@@ -24,6 +24,7 @@ namespace flut
 
 	/// load/save contents from prop
 	FLUT_API prop_node load_prop( const path& filename, error_code* ec = nullptr );
+	FLUT_API prop_node parse_prop( string&& str, error_code* ec = nullptr );
 	FLUT_API bool save_prop( const prop_node& pn, const path& filename, bool readable = true );
 
 	/// load contents from prop

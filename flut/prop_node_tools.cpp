@@ -136,16 +136,8 @@ namespace flut
 		}
 	}
 
-	FLUT_API prop_node load_prop( const path& filename, error_code* ec )
+	FLUT_API prop_node load_prop( char_stream& str, error_code* ec )
 	{
-		auto str = char_stream( load_string( filename.str(), ec ), "\n\r\t\v;" );
-		if ( !str.good() )
-		{
-			if ( try_set_error( ec, "Could not open " + filename.str() ) )
-				return prop_node();
-			else flut_error( "Could not open " + filename.str() );
-		}
-
 		prop_node root;
 		string t = get_prop_token( str );
 		while ( is_valid_prop_label( t ) )
@@ -154,6 +146,19 @@ namespace flut
 			t = get_prop_token( str );
 		}
 		return root;
+	}
+
+	FLUT_API prop_node load_prop( const path& filename, error_code* ec )
+	{
+		auto str = load_string( filename.str(), ec );
+		if ( ec && ec->error() )
+			return prop_node();
+		else return parse_prop( std::move( str ), ec );
+	}
+
+	FLUT_API prop_node parse_prop( string&& str, error_code* ec )
+	{
+		return load_prop( char_stream( std::move( str ), "\n\r\t\v;" ), ec );
 	}
 
 	FLUT_API prop_node load_ini( const path& filename )
