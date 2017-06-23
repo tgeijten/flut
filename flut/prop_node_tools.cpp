@@ -187,7 +187,7 @@ namespace flut
 			}
 
 			// must be a key = value line
-			auto kvp = key_value_str( line );
+			auto kvp = make_key_value_str( line );
 			flut_error_if( kvp.first == line, "Error loading ini file, expected '='" );
 			cur_group->set( kvp.first, kvp.second );
 		}

@@ -28,6 +28,13 @@ namespace flut
 	/// get index of a substring in a string
 	inline index_t in_str( const string& str, const string& substr, index_t p = 0 ) { return str.find( substr, p ); }
 
+	/// check if a string ends with a string
+	inline bool str_begins_with( const string& str, const string& substr ) { return str.find( substr ) == 0; }
+
+	/// check if a string ends with a string
+	inline bool str_ends_with( const string& str, const string& substr )
+	{ auto s1 = str.size(), s2 = substr.size(); return s1 >= s2 && ( str.find( substr ) == s1 - s2 ); }
+
 	/// remove leading and trailing spaces and newlines
 	FLUT_API string trim_str( const string& str, const char* trim_chars = " \t\r\n\f\v" );
 
@@ -38,7 +45,7 @@ namespace flut
 	FLUT_API vector< string > split_str( const string& s, const string& sep_chars );
 
 	/// split string into trimmed key / value pair
-	FLUT_API std::pair< string, string > key_value_str( const string& s, const string& sep_char = "=" );
+	FLUT_API std::pair< string, string > make_key_value_str( const string& s, const string& sep_char = "=" );
 
 	inline int scan_str_impl( char_stream& str ) { return 0; }
 	template< typename T, typename... Args > int scan_str_impl( char_stream& str, T& v, Args&... args )

@@ -47,7 +47,7 @@ namespace flut
 		return strings;
 	}
 
-	FLUT_API std::pair< string, string > key_value_str( const string& s, const string& sep_char )
+	FLUT_API std::pair< string, string > make_key_value_str( const string& s, const string& sep_char )
 	{
 		auto pos = s.find_first_of( sep_char.c_str() );
 		if ( pos == string::npos )

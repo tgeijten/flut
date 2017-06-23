@@ -16,6 +16,15 @@ namespace flut
 		/// add a channel and resize buffer if needed
 		index_t add_channel( L label ) { resize( frame_size(), channel_size() + 1 ); labels_.back() = label; return channel_size() - 1; }
 
+		/// add a channel with data, resize buffer if needed
+		index_t add_channel( L label, const vector< T >& data ) {
+			resize( std::max( frame_size(), data.size() ), channel_size() + 1 );
+			labels_.back() = label;
+			auto cidx = channel_size() - 1;
+			for ( index_t fidx = 0; fidx < data.size(); ++fidx ) ( *this )( fidx, cidx ) = data[ fidx ];
+			return cidx;
+		}
+
 		/// set channel label
 		void set_label( index_t channel, L label ) { labels_[ channel ] = label;  }
 
@@ -27,6 +36,14 @@ namespace flut
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
+
+		/// add frame to storage
+		void add_frame( const vector< T >& data ) {
+			flut_assert( data.size() == channel_size() );
+			data_.resize( data_.size() + channel_size() );
+			++frame_size_;
+			std::copy( data.begin(), data.end(), data_.end() - channel_size() );
+		}
 
 		/// number of channels
 		size_t channel_size() const { return labels_.size(); }
@@ -43,9 +60,9 @@ namespace flut
 		const T& at( index_t frame, index_t channel ) const
 		{ flut_assert( frame < frame_size() && channel < channel_size() ); return data_[ frame * channel_size() + channel ]; }
 
-		/// access value
-		T& operator()( index_t frame, index_t channel ) { return at( frame, channel ); }
-		const T& operator()( index_t frame, index_t channel ) const { return at( frame, channel ); }
+		/// access value (no bounds checking)
+		T& operator()( index_t frame, index_t channel ) { return data_[ frame * channel_size() + channel ]; }
+		const T& operator()( index_t frame, index_t channel ) const { return data_[ frame * channel_size() + channel ]; }
 
 		/// access value of most recent frame
 		T& operator[]( index_t channel ) { flut_assert( !data_.empty() ); return at( frame_size() - 1, channel ); }
@@ -77,20 +94,23 @@ namespace flut
 
 		void resize( size_t nframes, size_t nchannels, T value = T(0) ) {
 			flut_error_if( nframes < frame_size() || nchannels < channel_size(), "Cannot shrink storage" );
-			if ( nchannels > channel_size() && frame_size() > 1 ) {
-				// reorganize data
-				std::vector< T > new_data( nchannels * nframes, value );
-				for ( index_t fi = 0; fi < frame_size(); ++fi )
-					for ( index_t ci = 0; ci < channel_size(); ++ci )
-						new_data[ nchannels * fi + ci ] = data_[ channel_size() * fi + ci ];
-				data_ = std::move( new_data );
+			if ( nchannels > channel_size() ) {
+				if ( frame_size() > 1 ) {
+					// reorganize existing data
+					std::vector< T > new_data( nchannels * nframes, value );
+					for ( index_t fi = 0; fi < frame_size(); ++fi )
+						for ( index_t ci = 0; ci < channel_size(); ++ci )
+							new_data[ nchannels * fi + ci ] = data_[ channel_size() * fi + ci ];
+					data_ = std::move( new_data );
+				}
+				else data_.resize( nframes * nchannels, value ); // just resize
+
 				labels_.resize( nchannels );
 				frame_size_ = nframes;
 			}
 			else {
-				// just resize
+				// just resize data
 				data_.resize( nframes * nchannels, value );
-				labels_.resize( nchannels );
 				frame_size_ = nframes;
 			}
 		}
