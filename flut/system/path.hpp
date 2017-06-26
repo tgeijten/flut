@@ -15,19 +15,21 @@ namespace flut
 	{
 	public:
 		path() {}
-		path( const string& p ) : data( p ) {}
-		path( string&& p ) : data( std::move( p ) ) {}
-		path( const path& p ) : data( p.data ) {}
-		path( path&& p ) : data( std::move( p.data ) ) {}
-		path( const char* p ) : data( p ) {}
+		path( const string& p ) : data_( p ) {}
+		path( string&& p ) : data_( std::move( p ) ) {}
+		path( const path& p ) : data_( p.data_ ) {}
+		path( path&& p ) : data_( std::move( p.data_ ) ) {}
+		path( const char* p ) : data_( p ) {}
 
-		path& operator=( const path& p ) { data = p.data; return *this; }
-		path& operator=( path&& p ) { data = std::move( p.data ); return *this; }
+		path& operator=( const path& p ) { data_ = p.data_; return *this; }
+		path& operator=( path&& p ) { data_ = std::move( p.data_ ); return *this; }
+		path& operator=( const string& p ) { data_ = p; return *this; }
+		path& operator=( string&& p ) { data_ = std::move( p ); return *this; }
 
 		static char preferred_separator();
 
-		const string& str() const { return data; }
-		const char* c_str() const { return data.c_str(); }
+		const string& str() const { return data_; }
+		const char* c_str() const { return data_.c_str(); }
 
 		path& replace_extension( const path& ext = "" );
 		path& remove_filename();
@@ -43,11 +45,12 @@ namespace flut
 
 	private:
 		size_t last_separator_pos() const;
-		string data;
+		string data_;
 	};
 
 	FLUT_API path operator/( const path& p1, const path& p2 );
 	FLUT_API path operator+( const path& p1, const string& p2 );
+	FLUT_API path operator+( const string& p1, const path& p2 );
 	FLUT_API bool operator==( const path& p1, const path& p2 );
 	FLUT_API bool operator!=( const path& p1, const path& p2 );
 	FLUT_API std::ostream& operator<<( std::ostream& str, const path& p );

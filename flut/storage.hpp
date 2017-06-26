@@ -115,6 +115,9 @@ namespace flut
 			}
 		}
 
+		const std::vector< L >& labels() const { return labels_; }
+		const std::vector< T >& data() const { return data_; }
+
 	private:
 		size_t frame_size_;
 		std::vector< L > labels_;
