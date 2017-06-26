@@ -15,7 +15,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
-#include "error_code.h"
+#include "system/error_code.hpp"
 
 namespace flut
 {
@@ -45,6 +45,17 @@ namespace flut
 			ofs = s.find_first_not_of( sep_chars.c_str(), ofsend );
 		}
 		return strings;
+	}
+
+	FLUT_API string left_of_str( const string& s, const string& sep_chars )
+	{
+		return s.substr( 0, s.find_first_of( sep_chars.c_str() ) );
+	}
+
+	FLUT_API string right_of_str( const string& s, const string& sep_chars )
+	{
+		auto pos = s.find_last_of( sep_chars.c_str() );
+		return pos != string::npos ? s.substr( pos + 1 ) : s;
 	}
 
 	FLUT_API std::pair< string, string > make_key_value_str( const string& s, const string& sep_char )
@@ -87,21 +98,6 @@ namespace flut
 
 	FLUT_API int to_str_precision()
 	{ return to_str_precision_value; }
-
-	string load_string( const path& filename, error_code* ec )
-	{
-		// this method uses a stringbuf, which may be slower but more stable
-		std::ifstream ifstr( filename.str() );
-		if ( !ifstr.good() )
-		{
-			if ( try_set_error( ec, "Could not open " + filename.str() ) )
-				return "";
-			else flut_error( "Could not open " + filename.str() );
-		}
-		std::stringstream buf;
-		buf << ifstr.rdbuf();
-		return buf.str();
-	}
 
 	FLUT_API string encode_char( char c )
 	{

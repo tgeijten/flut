@@ -32,7 +32,6 @@ int main( int argc, char* argv[] )
 #ifdef FLUT_USE_PROFILER
 		flut::profile_test();
 #endif
-
 		flut::stopwatch sw;
 
 		flut::container_test();
@@ -67,5 +66,11 @@ int main( int argc, char* argv[] )
 		std::cout << e.what();				
 	}
 
-	return flut::test_framework::get_instance().report();
+	int i = flut::test_framework::get_instance().report();
+
+#if FLUT_IS_DEBUG_BUILD && defined( FLUT_COMP_MSVC )
+	flut::wait_for_key();
+#endif
+
+	return i;
 }

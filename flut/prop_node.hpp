@@ -35,6 +35,7 @@ namespace flut
 
 		/// constructors
 		prop_node() : accessed_flag( false ) {}
+		prop_node( const char* pn );
 		prop_node( const value_t& v ) : accessed_flag( false ), value( v ) {}
 		prop_node( value_t&& v ) : accessed_flag( false ), value( std::move( v ) ) {}
 		prop_node( const prop_node& other ) : accessed_flag( false ), value( other.value ), children( other.children ) {}

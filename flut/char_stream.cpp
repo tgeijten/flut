@@ -1,5 +1,6 @@
 #include "char_stream.hpp"
 #include "string_tools.hpp"
+#include "system_tools.hpp"
 #include <cstring>
 
 namespace flut
@@ -38,11 +39,19 @@ namespace flut
 	flut::string char_stream::get_token( const char* operators, const char* quotations )
 	{
 		string s;
-		for ( cur_pos_end = const_cast<char*>( cur_pos ); cur_pos_end != buffer_end; ++cur_pos_end )
+		cur_pos_end = const_cast< char* >( cur_pos );
+		while ( good() )
 		{
-			if ( strchr( quotations, *cur_pos_end ) )
+			if ( cur_pos_end == buffer_end || strchr( delimiters_, *cur_pos_end ) )
 			{
-				// this is a part between quotes, decode accordingly
+				// end of buffer or delimiter
+				s += string( cur_pos, size_t( cur_pos_end - cur_pos ) );
+				cur_pos = cur_pos_end;
+				break;
+			}
+			else if ( strchr( quotations, *cur_pos_end ) )
+			{
+				// this is a part between quotes and must be decoded
 				cur_pos = cur_pos_end;
 				char quote_char = getc();
 				while ( good() )
@@ -61,24 +70,18 @@ namespace flut
 					}
 					else s += getc();
 				}
-
-				// cur_pos_end should be 'cur_pos' in next iteration
-				cur_pos_end = const_cast<char*>( cur_pos ) - 1;
+				cur_pos_end = const_cast<char*>( cur_pos );
 			}
 			else if ( strchr( operators, *cur_pos_end ) )
 			{
+				// operator
 				if ( cur_pos == cur_pos_end && s.empty() )
-					s = *cur_pos_end++; // token consists of an operator char
+					s = *cur_pos_end++; // token is an operator
 				else s += string( cur_pos, size_t( cur_pos_end - cur_pos ) );
 				cur_pos = cur_pos_end;
 				break;
 			}
-			else if ( strchr( delimiters_, *cur_pos_end ) )
-			{
-				s += string( cur_pos, size_t( cur_pos_end - cur_pos ) );
-				cur_pos = cur_pos_end;
-				break;
-			}
+			else ++cur_pos_end;
 		}
 		skip_delimiters();
 		test_eof();

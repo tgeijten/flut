@@ -144,6 +144,31 @@ namespace flut
 		std::this_thread::sleep_for( std::chrono::milliseconds( ms ) );
 	}
 
+	FLUT_API string tidy_identifier( const string& id )
+	{
+		size_t pos = id.find_last_of( ':' );
+		if ( pos != string::npos )
+			return trim_str( id.substr( pos + 1 ), "_" ); // remove anything before :: plus underscores
+		else if ( str_begins_with( id, "m_" ) )
+			return trim_right_str( id.substr( 2 ), "_" ); // remove m_ plus underscores
+		else return trim_str( id, "_" ); // remove underscores
+	}
+
+	FLUT_API string load_string( const path& filename, error_code* ec )
+	{
+		// this method uses a stringbuf, which may be slower but is more stable
+		std::ifstream ifstr( filename.str() );
+		if ( !ifstr.good() )
+		{
+			if ( try_set_error( ec, "Could not open " + filename.str() ) )
+				return "";
+			else flut_error( "Could not open " + filename.str() );
+		}
+		std::stringstream buf;
+		buf << ifstr.rdbuf();
+		return buf.str();
+	}
+
 	FLUT_API void set_thread_priority( thread_priority p )
 	{
 #ifdef FLUT_COMP_MSVC

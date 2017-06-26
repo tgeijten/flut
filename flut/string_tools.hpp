@@ -10,7 +10,6 @@
 #include <sstream>
 #include <algorithm>
 #include <stdlib.h>
-#include "error_code.h"
 
 namespace flut
 {
@@ -43,6 +42,10 @@ namespace flut
 
 	/// split a string into a vector of strings
 	FLUT_API vector< string > split_str( const string& s, const string& sep_chars );
+
+	/// get the string left / right of a delimiter
+	FLUT_API string left_of_str( const string& s, const string& sep_chars );
+	FLUT_API string right_of_str( const string& s, const string& sep_chars );
 
 	/// split string into trimmed key / value pair
 	FLUT_API std::pair< string, string > make_key_value_str( const string& s, const string& sep_char = "=" );
@@ -78,9 +81,6 @@ namespace flut
 		while ( str.good() && vec.size() < max_values ) { T elem; str >> elem; if ( !str.fail() ) vec.push_back( elem ); }
 		return vec;
 	}
-
-	/// make string with contents of a file
-	FLUT_API string load_string( const path& filename, error_code* ec = nullptr );
 
 	/// get a string between quotes
 	FLUT_API string encode_char( char c );

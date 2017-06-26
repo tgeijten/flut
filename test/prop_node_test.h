@@ -30,6 +30,10 @@ namespace flut
 
 	void prop_node_test()
 	{
+		const prop_node literal_pn( "a=appel;b=123" );
+		FLUT_TEST( literal_pn.get< string >( "a" ) == "appel" );
+		FLUT_TEST( literal_pn.get< int >( "b" ) == 123 );
+
 		enum class enumclass { value1, value2, value3 };
 		enum normalenum { value1, value2, value3 };
 

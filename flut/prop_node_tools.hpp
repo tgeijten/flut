@@ -2,15 +2,16 @@
 
 #include "prop_node.hpp"
 #include "system/path.hpp"
-#include "error_code.h"
+#include "system/error_code.hpp"
 #include "system/log.hpp"
+#include "system_tools.hpp"
 
-#define INIT_PROP( _pn_, _var_, _default_ ) _var_ = _pn_.get< decltype( _var_ ) >( #_var_, decltype( _var_ )( _default_ ) )
+#define INIT_PROP( _pn_, _var_, _default_ ) _var_ = _pn_.get< decltype( _var_ ) >( ::flut::tidy_identifier( #_var_ ), decltype( _var_ )( _default_ ) )
 #define INIT_PROP_NAMED( _pn_, _var_, _name_, _default_ ) _var_ = _pn_.get< decltype( _var_ ) >( _name_, _default_ )
-#define INIT_PROP_REQUIRED( _pn_, _var_ ) _var_ = _pn_.get< decltype( _var_ ) >( #_var_ )
+#define INIT_PROP_REQUIRED( _pn_, _var_ ) _var_ = _pn_.get< decltype( _var_ ) >( ::flut::tidy_identifier( #_var_ ) )
 #define INIT_PROP_NAMED_REQUIRED( _pn_, _var_, _name_ ) _var_ = _pn_.get< decltype( _var_ ) >( _name_ )
 
-#define SET_PROP( _pn_, _var_ ) _pn_.set< decltype( _var_ ) >( #_var_, _var_ )
+#define SET_PROP( _pn_, _var_ ) _pn_.set< decltype( _var_ ) >( ::flut::tidy_identifier( #_var_ ), _var_ )
 #define SET_PROP_NAMED( _pn_, _var_, _name_ ) _pn_.set< decltype( _var_ ) >( _name_, _var_ )
 
 namespace flut
@@ -24,7 +25,7 @@ namespace flut
 
 	/// load/save contents from prop
 	FLUT_API prop_node load_prop( const path& filename, error_code* ec = nullptr );
-	FLUT_API prop_node parse_prop( string&& str, error_code* ec = nullptr );
+	FLUT_API prop_node parse_prop( const char* str, error_code* ec = nullptr );
 	FLUT_API bool save_prop( const prop_node& pn, const path& filename, bool readable = true );
 
 	/// load contents from prop

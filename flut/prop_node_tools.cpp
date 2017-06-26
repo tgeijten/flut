@@ -136,7 +136,7 @@ namespace flut
 		}
 	}
 
-	FLUT_API prop_node load_prop( char_stream& str, error_code* ec )
+	prop_node parse_prop( char_stream& str, error_code* ec )
 	{
 		prop_node root;
 		string t = get_prop_token( str );
@@ -148,17 +148,17 @@ namespace flut
 		return root;
 	}
 
+	FLUT_API prop_node parse_prop( const char* str, error_code* ec )
+	{
+		return parse_prop( char_stream( str, "\n\r\t\v;" ), ec );
+	}
+
 	FLUT_API prop_node load_prop( const path& filename, error_code* ec )
 	{
 		auto str = load_string( filename.str(), ec );
 		if ( ec && ec->error() )
 			return prop_node();
-		else return parse_prop( std::move( str ), ec );
-	}
-
-	FLUT_API prop_node parse_prop( string&& str, error_code* ec )
-	{
-		return load_prop( char_stream( std::move( str ), "\n\r\t\v;" ), ec );
+		else return parse_prop( str.c_str(), ec );
 	}
 
 	FLUT_API prop_node load_ini( const path& filename )

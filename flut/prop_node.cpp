@@ -1,4 +1,5 @@
 #include "prop_node.hpp"
+#include "prop_node_tools.hpp"
 
 #include <stdio.h>
 #include <memory>
@@ -7,6 +8,11 @@
 
 namespace flut
 {
+	prop_node::prop_node( const char* pn ) : accessed_flag( false )
+	{
+		*this = parse_prop( pn );
+	}
+
 	prop_node g_empty_prop_node;
 	FLUT_API const prop_node& empty_prop_node()
 	{
