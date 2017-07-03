@@ -27,13 +27,13 @@ namespace flut
 		{ v.x = -v.x; v.y = -v.y; v.z = -v.z; return v; }
 
 		/// Scalar multiplication
-		template< typename T > vec3_<T> operator*( T s, vec3_<T> v )
+		template< typename T, typename TS > vec3_<T> operator*( TS s, vec3_<T> v )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 		/// Scalar multiplication
-		template< typename T > vec3_<T> operator*( vec3_<T> v, T s )
+		template< typename T, typename TS > vec3_<T> operator*( vec3_<T> v, TS s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 		/// Scalar multiplication
-		template< typename T > vec3_<T>& operator*=( vec3_<T>& v, T s )
+		template< typename T, typename TS > vec3_<T>& operator*=( vec3_<T>& v, TS s )
 		{ v.x *= s; v.y *= s; v.z *= s; return v; }
 
 		/// Scalar division
@@ -86,7 +86,7 @@ namespace flut
 
 		/// Make vec3 from radius, inclination & azimuth
 		template< angle_unit U, typename T > vec3_<T> vec3_from_polar( T radius, angle_<U, T> inclination, angle_<U, T> azimuth )
-		{ return vec3_<T>( sin( inclination ) * sin( azimuth ) , cos( inclination ), sin( inclination ) * cos( azimuth ) ); }
+		{ return vec3_<T>( radius * sin( inclination ) * sin( azimuth ) , radius * cos( inclination ), radius * sin( inclination ) * cos( azimuth ) ); }
 
 		/// stream out
 		template< typename T > std::ostream& operator<<( std::ostream& str, const vec3_<T>& v )

@@ -37,6 +37,7 @@ namespace flut
 			T squared_length() const { return x * x + y * y + z * z; }
 			bool is_null() const { return x == T(0) && y == T(0) && z == T(0); }
 			void clear() { x = y = z = T(0); }
+			vec3_< T > normalized() const { T s = inv( length() ); return vec3_< T >( x * s, y * s, z * s ); }
 
 			/// static initializers
 			static vec3_<T> zero() { return vec3_<T>( T(0), T(0), T(0) ); }
