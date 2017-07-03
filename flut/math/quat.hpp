@@ -104,7 +104,8 @@ namespace flut
 		/// get Euler angles from quat
 		template< typename T > vec3_< radian_< T > > euler_from_quat( const quat_<T>& q )
 		{
-			FLUT_NOT_IMPLEMENTED;
+			// TODO: add Euler order as argument
+			return vec3_< radian_< T > >( pitch( q ), yaw( q ), roll( q ) );
 		}
 
 		template< typename T > radian_< T > pitch( const quat_<T>& q )
