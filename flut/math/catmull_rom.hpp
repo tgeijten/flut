@@ -12,13 +12,38 @@ namespace flut
 		d_( -p0 + 3 * p1 - 3 * p2 + p3 )
 		{}
 
-		template< typename T >
-		P operator()( T t ) { return T( 0.5 ) * ( a_ + b_ * t + c_ * t * t + d_ * t * t * t ); }
+		template< typename T > P operator()( T t ) { return T( 0.5 ) * ( a_ + b_ * t + c_ * t * t + d_ * t * t * t ); }
 
 	private:
 		P a_, b_, c_, d_;
 	};
 
+	template< typename P >
+	struct catmull_rom_segment_alpha
+	{
+		catmull_rom_segment_alpha( const P& p0, const P& p1, const P& p2, const P& p3, float alpha ) :
+		p0_( p0 ), p1_( p1 ), p2_( p2 ), p3_( p3 ) {
+			t0 = 0.0f;
+			t1 = pow( distance( p0, p1 ), alpha );
+			t2 = t1 + pow( distance( p1, p2 ), alpha );
+			t3 = t2 + pow( distance( p2, p3 ), alpha );
+		}
+
+		P operator()( float t ) {
+			// TODO: make this implementation more efficient
+			t = t1 + t * ( t2 - t1 );
+			auto A1 = ( t1 - t ) / ( t1 - t0 ) * p0_ + ( t - t0 ) / ( t1 - t0 ) * p1_;
+			auto A2 = ( t2 - t ) / ( t2 - t1 ) * p1_ + ( t - t1 ) / ( t2 - t1 ) * p2_;
+			auto A3 = ( t3 - t ) / ( t3 - t2 ) * p2_ + ( t - t2 ) / ( t3 - t2 ) * p3_;
+			auto B1 = ( t2 - t ) / ( t2 - t0 ) * A1 + ( t - t0 ) / ( t2 - t0 ) * A2;
+			auto B2 = ( t3 - t ) / ( t3 - t1 ) * A2 + ( t - t1 ) / ( t3 - t1 ) * A3;
+			return ( t2 - t ) / ( t2 - t1 ) * B1 + ( t - t1 ) / ( t2 - t1 ) * B2;
+		}
+
+	private:
+		float t0, t1, t2, t3;
+		P p0_, p1_, p2_, p3_;
+	};
 
 	template< typename P, typename T >
 	class catmull_rom

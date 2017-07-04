@@ -62,6 +62,10 @@ namespace flut
 		template< typename T > T is_normalized( vec3_<T> v )
 		{ return equals( v.x * v.x + v.y * v.y + v.z * v.z, T(1) ); }
 
+		/// Get distance between two vec3
+		template< typename T > T distance( const vec3_<T>& v1, const vec3_<T>& v2 )
+		{ return sqrt( squared( v1.x - v2.x ) + squared( v1.y - v2.y ) + squared( v1.z - v2.z ) ); }
+
 		/// compare vec3
 		template< typename T > bool operator==( const vec3_<T>& v1, const vec3_<T>& v2 )
 		{ return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z; }

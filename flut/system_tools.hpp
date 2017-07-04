@@ -18,8 +18,9 @@ namespace flut
 	FLUT_API void crash( const string& message = "" );
 	FLUT_API void sleep( int milliseconds );
 	FLUT_API string tidy_identifier( const string& id );
+	FLUT_API string clean_type_name( const char* name );
+	template< typename T > string clean_type_name() { return clean_type_name( typeid( T ).name() ); }
 	FLUT_API string load_string( const path& filename, error_code* ec = nullptr );
-
 	enum class thread_priority { lowest = -2, low = -1, normal = 0, high = 1, highest = 2 };
 	FLUT_API void set_thread_priority( thread_priority p );
 }

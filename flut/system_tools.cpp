@@ -154,6 +154,20 @@ namespace flut
 		else return trim_str( id, "_" ); // remove underscores
 	}
 
+	FLUT_API string clean_type_name( const char* name )
+	{
+#ifdef FLUT_COMP_MSVC
+		string str = name;
+#else
+		int status;
+		char* cleanType = abi::__cxa_demangle( name, 0, 0, &status );
+		std::string str = std::string( cleanType );
+		free( cleanType );
+#endif
+		size_t pos = str.find_last_of( ": " );
+		return ( pos != std::string::npos ) ? str.substr( pos + 1 ) : str;
+	}
+
 	FLUT_API string load_string( const path& filename, error_code* ec )
 	{
 		// this method uses a stringbuf, which may be slower but is more stable
