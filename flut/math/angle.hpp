@@ -88,6 +88,12 @@ namespace flut
 		template< typename T > angle_< angle_unit::radians, T > rad( T rad ) { return angle_<angle_unit::radians, T>( rad ); }
 		template< typename T > angle_< angle_unit::degrees, T > deg( T deg ) { return angle_<angle_unit::degrees, T>( deg ); }
 
+		/// user-defined literals
+		inline degreef operator"" _degf( long double v ) { return degreef( v ); }
+		inline degreef operator"" _degf( unsigned long long int v ) { return degreef( v ); }
+		inline radianf operator"" _radf( long double v ) { return radianf( v ); }
+		inline radianf operator"" _radf( unsigned long long int v ) { return radianf( v ); }
+
 		/// scalar multiplication
 		template< angle_unit U, typename T, typename TS >
 		angle_<U, T> operator*( const TS& s, const angle_<U, T>& a ) { return angle_<U, T>( T(s) * a.value ); }
