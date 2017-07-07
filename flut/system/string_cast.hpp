@@ -2,12 +2,43 @@
 
 #include <sstream>
 #include "types.hpp"
+#include <string>
 
 namespace flut
 {
 	template< typename T, typename E = void > struct string_cast {
 		static T from( const string& s ) { T value; std::stringstream str( s ); str >> value; return value; }
 		static string to( const T& value ) { std::ostringstream str; str << value; return str.str(); }
+	};
+
+	template<> struct string_cast< float, void > {
+		static float from( const string& s ) { return std::stof( s ); }
+		static string to( float value ) { return std::to_string( value ); }
+	};
+
+	template<> struct string_cast< double, void > {
+		static double from( const string& s ) { return std::stod( s ); }
+		static string to( double value ) { return std::to_string( value ); }
+	};
+
+	template<> struct string_cast< long, void > {
+		static long from( const string& s ) { return std::stol( s ); }
+		static string to( long value ) { return std::to_string( value ); }
+	};
+
+	template<> struct string_cast< long long, void > {
+		static long long from( const string& s ) { return std::stoll( s ); }
+		static string to( long long value ) { return std::to_string( value ); }
+	};
+
+	template<> struct string_cast< unsigned long, void > {
+		static unsigned long from( const string& s ) { return std::stoul( s ); }
+		static string to( unsigned long value ) { return std::to_string( value ); }
+	};
+
+	template<> struct string_cast< unsigned long long, void > {
+		static unsigned long long from( const string& s ) { return std::stoull( s ); }
+		static string to( unsigned long long value ) { return std::to_string( value ); }
 	};
 
 	template<> struct string_cast< const char*, void > {
