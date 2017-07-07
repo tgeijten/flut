@@ -7,10 +7,14 @@ namespace flut
 	class bounds
 	{
 	public:
-		bounds( const T& upper_bound = num_const< T >::max(), const T& lower_bound = num_const< T >::lowest() ) : lower( lower ), upper( upper ) {};
+		template< typename T2 > bounds( const T2& lower_bound, const T2& upper_bound ) : lower( T( lower_bound ) ), upper( T( upper_bound ) ) {};
+		template< typename T2 > bounds( const bounds< T2 >& other ) : lower( T( other.lower ) ), upper( T( other.upper ) ) {};
+		template< typename T2 > bounds( const T2& value ) : lower( T( value ) ), upper( T( value ) ) {};
+		bounds() : lower( T( 0 ) ), upper( T( 0 ) ) {};
 		bounds( const prop_node& props );
 
 		bool is_within( const T& value ) { return ( value >= lower ) && ( value <= upper ); }
+		T range() const { return upper - lower; }
 
 		/// returns negative when value is below lower, positive when value is above upper, 0 when within bounds
 		T get_violation( const T& value )
@@ -27,9 +31,18 @@ namespace flut
 	using boundsd = bounds< double >;
 	using boundsi = bounds< int >;
 
-	template< typename T >
-	flut::bounds<T>::bounds( const prop_node& props ) {
-		lower = props.get_any< T >( { "min", "lower" }, num_const<T>::lowest() );
-		upper = props.get_any<T>( { "max", "upper" }, num_const< T >::max() );
+	template< typename T > flut::bounds<T>::bounds( const prop_node& pn ) {
+		if ( pn.has_value() ) {
+			lower = from_str< T >( pn.get_value() );
+			auto p = pn.get_value().find( ".." );
+			if ( p != string::npos )
+				upper = from_str< T >( pn.get_value().substr( p + 2 ) );
+			else upper = lower;
+		}
+		else if ( pn.size() > 0 ) {
+			lower = pn.get_any< T >( { "min", "lower" }, num_const<T>::lowest() );
+			upper = pn.get_any<T>( { "max", "upper" }, num_const< T >::max() );
+		}
+		else flut_error( "Cannot read bounds from prop_node" );
 	}
 }
