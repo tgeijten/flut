@@ -12,7 +12,7 @@ namespace flut
 		d_( -p0 + 3 * p1 - 3 * p2 + p3 )
 		{}
 
-		template< typename T > P operator()( T t ) { return T( 0.5 ) * ( a_ + b_ * t + c_ * t * t + d_ * t * t * t ); }
+		template< typename T > P operator()( T t ) const { return T( 0.5 ) * ( a_ + b_ * t + c_ * t * t + d_ * t * t * t ); }
 
 	private:
 		P a_, b_, c_, d_;
@@ -29,7 +29,7 @@ namespace flut
 			t3 = t2 + pow( distance( p2, p3 ), alpha );
 		}
 
-		P operator()( float t ) {
+		P operator()( float t ) const {
 			// TODO: make this implementation more efficient
 			t = t1 + t * ( t2 - t1 );
 			auto A1 = ( t1 - t ) / ( t1 - t0 ) * p0_ + ( t - t0 ) / ( t1 - t0 ) * p1_;
@@ -44,6 +44,19 @@ namespace flut
 		float t0, t1, t2, t3;
 		P p0_, p1_, p2_, p3_;
 	};
+
+	template< typename S > double compute_spline_length( const S& spline, float t0, float t1, int steps = 100 )
+	{
+		double dist = 0.0;
+		auto pos = spline( t0 );
+		for ( int i = 1; i <= steps; ++i )
+		{
+			auto new_pos = spline( t0 + ( t1 - t0 ) * i / steps );
+			dist += distance( pos, new_pos );
+			pos = new_pos;
+		}
+		return dist;
+	}
 
 	template< typename P, typename T >
 	class catmull_rom
