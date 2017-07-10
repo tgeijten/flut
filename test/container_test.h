@@ -22,8 +22,8 @@ namespace flut
 		sv.insert( sortable{ 3, "banaan" } );
 		sv.insert( sortable{ 1, "banaan" } );
 
-		for ( auto& e : sv )
-			cout << e.e << e.s << endl;
+		//for ( auto& e : sv )
+		//	cout << e.e << e.s << endl;
 
 		flat_map< string, int > vm;
 		vm[ "Appel" ] = 1;

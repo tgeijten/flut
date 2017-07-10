@@ -16,7 +16,9 @@ namespace flut
 		++num_tests;
 		if ( result )
 		{
-			log::info( "TEST ", num_tests, " ", name, ": passed. ", message );
+			if ( show_passed )
+				log::info( "TEST ", num_tests, " ", name, ": passed. ", message );
+
 			num_passed++;
 			return true;
 		}

@@ -21,6 +21,8 @@ namespace flut
 		int num_failed;
 		int num_passed;
 
+		bool show_passed = false;
+
 		static test_framework& get_instance();
 		static test_framework test_;
 	};

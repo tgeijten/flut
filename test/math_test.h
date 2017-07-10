@@ -196,9 +196,9 @@ void linear_regression_test()
 
 void vec_quat_test()
 {
-	for ( size_t x = 0; x < 2000; ++x )
-		if ( is_power_of_two( x ) )
-			log::debug( x, " is a power of 2" );
+	//for ( size_t x = 0; x < 2000; ++x )
+	//	if ( is_power_of_two( x ) )
+	//		log::debug( x, " is a power of 2" );
 
 	enum TestEnum { Apple, Pear, Banana, Orange };
 	flag_set< TestEnum > flg;

@@ -13,6 +13,7 @@
 #include "container_test.h"
 #include "timer_test.h"
 #include "flut/system/profiler.hpp"
+#include "data_test.h"
 
 using flut::string;
 
@@ -23,12 +24,11 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		flut_logvar2( flut::num_const<double>::epsilon(), flut::num_const<double>::relaxed_epsilon() );
-		flut_logvar2( flut::num_const<float>::epsilon(), flut::num_const<float>::relaxed_epsilon() );
-
-		str.set_log_level( flut::log::trace_level );
+		//flut_logvar2( flut::num_const<double>::epsilon(), flut::num_const<double>::relaxed_epsilon() );
+		//flut_logvar2( flut::num_const<float>::epsilon(), flut::num_const<float>::relaxed_epsilon() );
 
 		flut::timer_test();
+
 #ifdef FLUT_USE_PROFILER
 		flut::profile_test();
 #endif
@@ -36,6 +36,9 @@ int main( int argc, char* argv[] )
 
 		flut::container_test();
 		sw.add_measure( "container" );
+
+		flut::data_test();
+		sw.add_measure( "data" );
 
 		flut::factory_test();
 		sw.add_measure( "factory" );

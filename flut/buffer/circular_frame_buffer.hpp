@@ -1,15 +1,15 @@
 #pragma once
 
-#include "buffer_base.hpp"
+#include "data_header.hpp"
 #include "flut/system/assert.hpp"
 
 namespace flut
 {
 	template< typename T, typename L = void >
-	class circular_frame_buffer : public buffer_base< circular_frame_buffer< T, L >, L > 
+	class circular_frame_buffer
 	{
 	public:
-		circular_frame_buffer( size_t channels = 0, size_t frames = 0 ) : data( frames * channels ), num_frames( frames), cur_frame( 0 ), buffer_base< circular_frame_buffer< T, L >, L >( channels ) {}
+		circular_frame_buffer( size_t channels = 0, size_t frames = 0 ) : data( frames * channels ), num_frames( frames), cur_frame( 0 ), data_header< circular_frame_buffer< T, L >, L >( channels ) {}
 		~circular_frame_buffer() {}
 
 		index_t add_frame() { return ++cur_frame; }
@@ -42,6 +42,7 @@ namespace flut
 		}
 
 	private:
+		data_header< L > header;
         std::vector< T > data;
 		size_t num_frames;
 		index_t cur_frame;

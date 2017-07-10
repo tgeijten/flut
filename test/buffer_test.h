@@ -4,7 +4,7 @@
 #include "flut/math/vec3.hpp"
 #include "flut/system/log.hpp"
 #include "flut/buffer/interpolation.hpp"
-#include "flut/buffer/buffer_base.hpp"
+#include "flut/buffer/data_header.hpp"
 #include "flut/buffer/circular_frame_buffer.hpp"
 #include "flut/circular_deque.hpp"
 #include "flut/storage.hpp"

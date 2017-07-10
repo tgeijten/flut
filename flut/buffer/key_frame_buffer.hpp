@@ -4,10 +4,10 @@ namespace flut
 {
 	// WORK IN PROGRESS!
 	template< typename K, typename T, typename L = void >
-	class key_frame_buffer : public buffer_base< key_frame_buffer< K, T, L >, L >
+	class key_frame_buffer : public data_header< key_frame_buffer< K, T, L >, L >
 	{
 	public:
-		key_frame_buffer( size_t channels = 0 ) : buffer_base< storage< T, L >, L >( channels ), data( channels ) {}
+		key_frame_buffer( size_t channels = 0 ) : data_header< storage< T, L >, L >( channels ), data( channels ) {}
 		~key_frame_buffer() {}
 
 		/// add empty frame to the buffer

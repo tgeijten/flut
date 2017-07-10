@@ -2,6 +2,7 @@
 
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
+#include "buffer/data_header.hpp"
 
 namespace flut
 {
@@ -11,15 +12,16 @@ namespace flut
 	{
 	public:
 		storage( size_t frames = 0, size_t channels = 0, T value = T( 0 ) ) : frame_size_( frames ), labels_( channels ), data_( channels * frames, value ) {}
+
 		~storage() {}
 
 		/// add a channel and resize buffer if needed
-		index_t add_channel( L label ) { resize( frame_size(), channel_size() + 1 ); labels_.back() = label; return channel_size() - 1; }
+		index_t add_channel( L label ) { resize( frame_size(), channel_size() + 1 ); return labels_.set( channel_size() - 1, label ); }
 
 		/// add a channel with data, resize buffer if needed
 		index_t add_channel( L label, const vector< T >& data ) {
 			resize( std::max( frame_size(), data.size() ), channel_size() + 1 );
-			labels_.back() = label;
+			labels_.set( channel_size() - 1, label );
 			auto cidx = channel_size() - 1;
 			for ( index_t fidx = 0; fidx < data.size(); ++fidx ) ( *this )( fidx, cidx ) = data[ fidx ];
 			return cidx;
@@ -32,7 +34,7 @@ namespace flut
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
 
 		/// find index of a label
-		index_t find_channel( const L& label ) const { auto it = std::find( labels_.begin(), labels_.end(), label ); return ( it != labels_.end() ) ? it - labels_.begin(): no_index; }
+		index_t find_channel( const L& label ) const { return labels_.find_index( label ); }
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
@@ -120,7 +122,7 @@ namespace flut
 
 	private:
 		size_t frame_size_;
-		std::vector< L > labels_;
+		data_header< L > labels_;
 		std::vector< T > data_;
 	};
 
