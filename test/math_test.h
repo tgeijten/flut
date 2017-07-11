@@ -99,7 +99,7 @@ void function_test()
 
 	std::ofstream ostr( "test.txt" );
 	for ( real_t x = -2 * real_pi; x < 2 * real_pi; x += 0.1 )
-		ostr << x << "\t" << func.eval( x ) << endl;
+		ostr << x << "\t" << func( x ) << endl;
 
 	timer t;
 	real_t result = 0.0, verify_result = 0.0;
@@ -107,7 +107,7 @@ void function_test()
 	{
 		for ( real_t x = -real_pi; x <= real_pi; x += 0.001 )
 		{
-			result += func.eval( x );
+			result += func( x );
 			verify_result += sin_func( x );
 		}
 	}
@@ -168,6 +168,25 @@ void clamp_test()
 
 void linear_regression_test()
 {
+	double step = 1;
+	for ( double i = 1; i <= 75.0; i += step )
+	{
+		double tot1 = 0.0;
+		double tots = 0.0;
+		double avg = ( i - 1 ) / 2;
+		for ( double v = 0; v < i; v += step )
+		{
+			tot1 += squared( v - avg );
+			tots += squared( v );
+		}
+		auto tots_alg = ( i - 1 ) * ( ( i - 1 ) + step ) * ( 2 * ( i - 1 ) + step ) / ( 6 * step );
+
+		auto hi = 0.5 * ( i - 1 );
+		auto tot1_alg = hi * ( hi + step ) * ( 2 * hi + step ) / ( 3 * step );
+		printf( "%.2f: %8.5f %8.5f %8.5f %8.5f\n", i, tot1, tot1_alg, tots, tots_alg  );
+	}
+
+
 	std::vector< double > x;
 	std::vector< double > y;
 	for ( int i = -100; i < 50; ++i )
@@ -178,7 +197,7 @@ void linear_regression_test()
 
 	//flut::linear_regression lg( x.begin(), x.end(), y.begin(), y.end() );
 
-	auto lg1 = do_linear_regression( x, y );
+	auto lg1 = make_linear_regression( x, y );
 	FLUT_TEST( equals( lg1.slope(), 2.5 ) );
 	FLUT_TEST( equals( lg1.offset(), 4.0 ) );
 
@@ -188,9 +207,12 @@ void linear_regression_test()
 	for ( auto xre : xr )
 		y.push_back( xre * -1.5 - 100 );
 
-	auto lg2 = do_linear_regression( xr, y );
+	auto lg2 = make_linear_regression( xr, y );
 	FLUT_TEST( equals( lg2.slope(), -1.5 ) );
 	FLUT_TEST( equals( lg2.offset(), -100.0 ) );
+
+	auto lg3 = make_linear_regression( -50.0, 2.0, y );
+
 }
 
 

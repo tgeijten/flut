@@ -7,6 +7,7 @@ namespace flut
 	template< typename T >
 	struct irange
 	{
+		typedef T value_type;
 		irange() : begin_( T( 0 ) ), end_( T( 0 ) ) {}
 		irange( T b, T e ) : begin_( b ), end_( e ) {}
 
@@ -32,6 +33,7 @@ namespace flut
 	template< typename T >
 	struct irange_step
 	{
+		typedef T value_type;
 		irange_step( T b, T e, T s = T( 1 ) ) : begin_( b ), end_( e ), step_( s ) {}
 		irange_step( const irange< T >& r, T s = T( 1 ) ) : begin_( r.begin_ ), end_( r.end_ ), step_( s ) {}
 

@@ -30,8 +30,11 @@ namespace flut
 	template< typename C > typename C::const_iterator max_element( const C& cont )
 	{ return std::max_element( std::cbegin( cont ), std::cend( cont ) ); }
 
+	template< typename I > typename I::value_type average( I b, I e )
+	{ return std::accumulate( b, e, I::value_type( 0 ) ) / typename I::value_type( e - b ); }
+
 	template< typename C > typename C::value_type average( const C& cont )
-	{ return std::accumulate( std::cbegin( cont ), std::cend( cont ), C::value_type( 0 ) ) / C::value_type( cont.size() ); }
+	{ return average( std::cbegin( cont ), std::cend( cont ) ); }
 
 	template< typename T > T median( const vector< T >& vec ) {
 		auto s = vec.size();
