@@ -23,4 +23,6 @@ namespace flut
 	template< typename T > using linear_function = polynomial< T, 1 >;
 	template< typename T > using quadratic_function = polynomial< T, 2 >;
 	template< typename T > using cubic_function = polynomial< T, 3 >;
+
+	template< typename T > T solve_x( const linear_function< T >& f, T x ) { return ( f.coeff[ 0 ] - x ) / -f.coeff[ 1 ]; }
 }

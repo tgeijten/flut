@@ -168,24 +168,18 @@ void clamp_test()
 
 void linear_regression_test()
 {
+#if 0
 	double step = 1;
-	for ( double i = 1; i <= 75.0; i += step )
-	{
+	for ( double i = 1; i <= 75.0; i += step ) {
 		double tot1 = 0.0;
-		double tots = 0.0;
 		double avg = ( i - 1 ) / 2;
 		for ( double v = 0; v < i; v += step )
-		{
 			tot1 += squared( v - avg );
-			tots += squared( v );
-		}
-		auto tots_alg = ( i - 1 ) * ( ( i - 1 ) + step ) * ( 2 * ( i - 1 ) + step ) / ( 6 * step );
-
 		auto hi = 0.5 * ( i - 1 );
 		auto tot1_alg = hi * ( hi + step ) * ( 2 * hi + step ) / ( 3 * step );
 		printf( "%.2f: %8.5f %8.5f %8.5f %8.5f\n", i, tot1, tot1_alg, tots, tots_alg  );
 	}
-
+#endif
 
 	std::vector< double > x;
 	std::vector< double > y;
@@ -214,6 +208,13 @@ void linear_regression_test()
 	auto lg3 = linear_regression( -50.0, 2.0, y );
 	FLUT_TEST( equals( lg3.coeff[ 1 ], -1.5 ) );
 	FLUT_TEST( equals( lg3.coeff[ 0 ], -100.0 ) );
+
+	auto x0 = solve_x( lg3, 0.0 );
+	auto x1 = solve_x( lg3, 10.0 );
+	auto x2 = solve_x( lg3, -10.0 );
+	FLUT_TEST( equals( lg3( x0 ), 0.0 ) );
+	FLUT_TEST( equals( lg3( x1 ), 10.0 ) );
+	FLUT_TEST( equals( lg3( x2 ), -10.0 ) );
 }
 
 
