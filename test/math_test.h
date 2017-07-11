@@ -197,9 +197,9 @@ void linear_regression_test()
 
 	//flut::linear_regression lg( x.begin(), x.end(), y.begin(), y.end() );
 
-	auto lg1 = make_linear_regression( x, y );
-	FLUT_TEST( equals( lg1.slope(), 2.5 ) );
-	FLUT_TEST( equals( lg1.offset(), 4.0 ) );
+	auto lg1 = linear_regression( x.begin(), x.end(), y.begin(), y.end() );
+	FLUT_TEST( equals( lg1.coeff[ 1 ], 2.5 ) );
+	FLUT_TEST( equals( lg1.coeff[ 0 ], 4.0 ) );
 
 	x.clear();
 	y.clear();
@@ -207,12 +207,13 @@ void linear_regression_test()
 	for ( auto xre : xr )
 		y.push_back( xre * -1.5 - 100 );
 
-	auto lg2 = make_linear_regression( xr, y );
-	FLUT_TEST( equals( lg2.slope(), -1.5 ) );
-	FLUT_TEST( equals( lg2.offset(), -100.0 ) );
+	auto lg2 = linear_regression( xr, y );
+	FLUT_TEST( equals( lg2.coeff[ 1 ], -1.5 ) );
+	FLUT_TEST( equals( lg2.coeff[ 0 ], -100.0 ) );
 
-	auto lg3 = make_linear_regression( -50.0, 2.0, y );
-
+	auto lg3 = linear_regression( -50.0, 2.0, y );
+	FLUT_TEST( equals( lg3.coeff[ 1 ], -1.5 ) );
+	FLUT_TEST( equals( lg3.coeff[ 0 ], -100.0 ) );
 }
 
 
