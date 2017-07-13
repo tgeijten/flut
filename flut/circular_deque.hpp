@@ -44,11 +44,14 @@ namespace flut
 			iterator_impl( size_t index, std::vector< IT >& buffer ) : index_( index ), buffer_( buffer ) {}
 			size_t index_;
 			vector< IT >& buffer_;
-			iterator_impl< IT >& operator++() const { return ++index_; }
+			iterator_impl< IT >& operator++() { ++index_; return *this;  }
 			iterator_impl< IT >& operator++( int ) { auto ret = *this; ++index_; return ret; }
+			iterator_impl< IT > operator+( int v ) { return iterator_impl< IT >( index_ + v, buffer_ ); }
+			iterator_impl< IT > operator-( int v ) { return iterator_impl< IT >( index_ - v, buffer_ ); }
 			bool operator==( const iterator& other ) { return other.index_ == index_; }
 			bool operator!=( const iterator& other ) { return other.index_ != index_; }
 			IT operator*() { return buffer_[ index_ % buffer_.size() ]; }
+			IT* operator->() { return &buffer_[ index_ % buffer_.size() ]; }
 		};
 		using iterator = iterator_impl< T >;
 		using const_iterator = iterator_impl< const T >;

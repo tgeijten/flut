@@ -11,6 +11,7 @@
 #include "system/log.hpp"
 #include <chrono>
 #include <thread>
+#include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -120,6 +121,11 @@ namespace flut
 		flut_error_if( !success, "Could not create unique folder after " + to_str( max_attempts ) + " attempts" );
 
 		return unique_folder;
+	}
+
+	FLUT_API bool remove( const path& file )
+	{
+		return std::remove( file.c_str() ) == 0;
 	}
 
 	FLUT_API string get_date_time_str( const char* format )
