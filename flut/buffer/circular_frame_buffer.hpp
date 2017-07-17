@@ -9,18 +9,11 @@ namespace flut
 	class circular_frame_buffer
 	{
 	public:
-		circular_frame_buffer( size_t channels = 0, size_t frames = 0 ) : data( frames * channels ), num_frames( frames), cur_frame( 0 ), data_header< circular_frame_buffer< T, L >, L >( channels ) {}
+		circular_frame_buffer( size_t channels = 0, size_t frames = 0 ) : data( frames * channels ), num_frames( frames ), cur_frame( 0 ), data_header< L, L >( channels ) {}
 		~circular_frame_buffer() {}
 
 		index_t add_frame() { return ++cur_frame; }
 		size_t frame_count() { return cur_frame + 1; }
-
-		void set_frame_size( size_t frames ) { num_frames = frames; resize_buffer(); }
-
-		void resize_buffer() {
-			flut_assert_msg( cur_frame == 0, "regular_ring_buffer can only be resized when empty" );
-			data.resize( num_frames * this->channel_count() );
-		}
 
 		void set_value( index_t channel, const T& value ) { data[ cur_frame * this->channel_count() + this->channel_count() ] = value; }
 

@@ -28,8 +28,8 @@ namespace flut
 		return linear_function< T >( avgY - slope * avgx, slope );
 	}
 
-	template< typename TX, typename CY >
-	linear_function< typename CY::value_type > linear_regression( TX x_begin, TX x_step, const CY& cy )
+	template< typename CY >
+	linear_function< typename CY::value_type > linear_regression( typename CY::value_type x_begin, typename CY::value_type x_step, const CY& cy )
 	{
 		using T = typename CY::value_type;
 		auto n = cy.size();

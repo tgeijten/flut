@@ -9,7 +9,10 @@ namespace flut
 	class circular_deque
 	{
 	public:
-		circular_deque( size_t buf_size = 0 ) : front_( 0 ), size_( 0 ), buffer_( buf_size ) {}
+		using value_type = T;
+		using buffer_type = std::vector< T >;
+
+		circular_deque( size_t init_capacity = 0 ) : front_( 0 ), size_( 0 ), buffer_( init_capacity ) {}
 		~circular_deque() {}
 
 		void push_back( const T& value ) {
@@ -33,6 +36,7 @@ namespace flut
 		size_t size() const { return size_; }
 
 		bool empty() const { return size_ == 0; }
+		bool full() const { return size() == capacity(); }
 		void clear() { front_ = size_ = 0; }
 
 		void reserve( size_t s ) { buffer_.resize( s ); }
@@ -40,18 +44,20 @@ namespace flut
 
 		template< typename IT > struct iterator_impl : public std::iterator< std::forward_iterator_tag, IT >
 		{
-			typedef IT value_type;
-			iterator_impl( size_t index, std::vector< IT >& buffer ) : index_( index ), buffer_( buffer ) {}
-			size_t index_;
-			vector< IT >& buffer_;
+			using value_type = IT;
+			iterator_impl( size_t index, const buffer_type& buffer ) : index_( index ), buffer_( buffer ) {}
 			iterator_impl< IT >& operator++() { ++index_; return *this;  }
 			iterator_impl< IT >& operator++( int ) { auto ret = *this; ++index_; return ret; }
-			iterator_impl< IT > operator+( int v ) { return iterator_impl< IT >( index_ + v, buffer_ ); }
-			iterator_impl< IT > operator-( int v ) { return iterator_impl< IT >( index_ - v, buffer_ ); }
-			bool operator==( const iterator& other ) { return other.index_ == index_; }
-			bool operator!=( const iterator& other ) { return other.index_ != index_; }
-			IT operator*() { return buffer_[ index_ % buffer_.size() ]; }
-			IT* operator->() { return &buffer_[ index_ % buffer_.size() ]; }
+			iterator_impl< IT > operator+( int v ) const { return iterator_impl< IT >( index_ + v, buffer_ ); }
+			iterator_impl< IT > operator-( int v ) const { return iterator_impl< IT >( index_ - v, buffer_ ); }
+			difference_type operator-( const iterator_impl< IT >& other ) const { return index_ - other.index_; }
+			bool operator==( const iterator_impl< IT >& other ) { return other.index_ == index_; }
+			bool operator!=( const iterator_impl< IT >& other ) { return other.index_ != index_; }
+			IT& operator*() { return const_cast< IT& >( buffer_[ index_ % buffer_.size() ] ); }
+			IT* operator->() { return const_cast< IT* >( &buffer_[ index_ % buffer_.size() ] ); }
+
+			size_t index_;
+			const buffer_type& buffer_;
 		};
 		using iterator = iterator_impl< T >;
 		using const_iterator = iterator_impl< const T >;
@@ -64,7 +70,6 @@ namespace flut
 	private:
 		size_t front_;
 		size_t size_;
-
-		std::vector< T > buffer_;
+		buffer_type buffer_;
 	};
 }

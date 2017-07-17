@@ -86,7 +86,6 @@ namespace flut
 		if ( !folder.empty() )
 		{
 			struct stat status;
-
 			if ( stat( folder.c_str(), &status ) == 0 )
 			{
 				if ( status.st_mode & S_IFDIR )

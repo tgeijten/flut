@@ -163,11 +163,13 @@ namespace flut
 			else return nullptr;
 		}
 
-
-
 		/// get a child node or add it if not existing
 		prop_node& get_or_add_child( const key_t& key )
 		{ access(); auto it = find( key ); if ( it != end() ) return it->second.access(); else return push_back( key ); }
+
+		/// get a child node or a default if not existing
+		const prop_node& try_get_child( const key_t& key, const prop_node& default_node ) const
+		{ access(); auto it = find( key ); return it != end() ? it->second.access() : default_node; }
 
 		/// access child by name
 		const prop_node& operator[]( const key_t& key ) const { return get_child( key ); }

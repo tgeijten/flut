@@ -34,7 +34,7 @@ namespace flut
 	{ return std::accumulate( b, e, I::value_type( 0 ) ) / typename I::value_type( e - b ); }
 
 	template< typename C > typename C::value_type average( const C& cont )
-	{ return average( std::cbegin( cont ), std::cend( cont ) ); }
+	{ return average( std::begin( cont ), std::end( cont ) ); }
 
 	template< typename T > T median( const vector< T >& vec ) {
 		auto s = vec.size();

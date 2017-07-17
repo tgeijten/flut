@@ -17,6 +17,9 @@ namespace flut
 			for ( auto it = std::begin( coeff ) + 1; it != std::end( coeff ); ++it ) { result += factor * *it; factor *= v; }
 			return result;
 		}
+		T offset() const { return coeff[ 0 ]; }
+		T slope() const { return coeff[ 1 ]; }
+
 		std::array< T, D + 1 > coeff;
 	};
 
