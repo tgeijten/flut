@@ -17,15 +17,12 @@ namespace flut
 				s->try_send_log_message( l, str );
 		}
 
-		void messagef( level l, const char* format, ... )
+		void log_vstring( level l, const char* format, va_list list )
 		{
 			if ( test_log_level( l ) )
 			{
-				va_list args;
-				va_start( args, format );
 				char buf[ 1024 ];
-				vsnprintf( buf, sizeof( buf ), format, args );
-				va_end( args );
+				vsnprintf( buf, sizeof( buf ), format, list );
 				log_string( l, string( buf ) ); // TODO: use string_view
 			}
 		}

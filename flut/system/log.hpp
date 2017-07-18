@@ -7,6 +7,7 @@
 #include "flut/string_tools.hpp"
 #include <iostream>
 #include <functional>
+#include <stdarg.h>
 
 #define FLUT_LOG_LEVEL_ALL 1
 #define FLUT_LOG_LEVEL_TRACE 1
@@ -44,54 +45,66 @@ namespace flut
 
 		FLUT_API void set_global_log_level( level l );
 		FLUT_API level get_global_log_level();
-
 		FLUT_API bool test_log_level( level l );
+
 		FLUT_API void log_string( level l, const string& str );
+		FLUT_API void log_vstring( level l, const char* format, va_list list );
 
 		inline void log_stream( level l, std::stringstream& msg ) { log_string( l, msg.str() ); }
-		template< typename T, typename... Args >
-		void log_stream( level l, std::stringstream& str, T var, const Args&... args )
-		{ str << var; log_stream( l, str, args... ); }
-		template< typename... Args > void message( level l, const Args&... args )
-		{ if ( test_log_level( l ) ) { std::stringstream str; log_stream( l, str, args... ); }	}
+		template< typename T, typename... Args > void log_stream( level l, std::stringstream& str, T var, const Args&... args ) { str << var; log_stream( l, str, args... ); }
 
-		/// get formatted string (printf style)
-		FLUT_API void messagef( level l, const char* format, ... );
+		// log message at level
+		template< typename... Args > void message( level l, const Args&... args ) { if ( test_log_level( l ) ) { std::stringstream str; log_stream( l, str, args... ); }	}
 
-		template< typename... Args > void trace( const Args&... args ) {
+		// log formatted message at level
+		inline void messagef( level l, const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( l, format, va ); va_end( va ); }
+
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )
-			message( trace_level, args... );
+		template< typename... Args > void trace( const Args&... args ) { message( trace_level, args... ); }
+		inline void tracef( const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( trace_level, format, va ); va_end( va ); }
+#else
+		template< typename... Args > void trace( const Args&... args ) {}
+		inline void tracef( const char* format, ... ) {}
 #endif
-		}
 
-		template< typename... Args > void debug( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_DEBUG )
-			message( debug_level, args... );
+		template< typename... Args > void debug( const Args&... args ) { message( debug_level, args... ); }
+		inline void debugf( const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( debug_level, format, va ); va_end( va ); }
+#else
+		template< typename... Args > void debug( const Args&... args ) {}
+		inline void debugf( const char* format, ... ) {}
 #endif
-		}
 
-		template< typename... Args > void info( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_INFO )
-			message( info_level, args... );
+		template< typename... Args > void info( const Args&... args ) {	message( info_level, args... ); }
+		inline void infof( const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( info_level, format, va ); va_end( va ); }
+#else
+		template< typename... Args > void info( const Args&... args ) {}
+		inline void infof( const char* format, ... ) {}
 #endif
-		}
 
-		template< typename... Args > void warning( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_WARNING )
-			message( warning_level, args... );
+		template< typename... Args > void warning( const Args&... args ) { message( warning_level, args... ); }
+		inline void warningf( const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( warning_level, format, va ); va_end( va ); }
+#else
+		template< typename... Args > void warning( const Args&... args ) {}
+		inline void warningf( const char* format, ... ) {}
 #endif
-		}
 
-		template< typename... Args > void error( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_ERROR )
-			message( error_level, args... );
+		template< typename... Args > void error( const Args&... args ) { message( error_level, args... ); }
+		inline void errorf( const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( error_level, format, va ); va_end( va ); }
+#else
+		template< typename... Args > void error( const Args&... args ) {}
+		inline void errorf( const char* format, ... ) {}
 #endif
-		}
 
-		template< typename... Args > void critical( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_CRITICAL )
-			message( critical_level, args... );
+		template< typename... Args > void critical( const Args&... args ) { message( critical_level, args... ); }
+		inline void criticalf( const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( critical_level, format, va ); va_end( va ); }
+#else
+		template< typename... Args > void critical( const Args&... args ) {}
+		inline void criticalf( const char* format, ... ) {}
 #endif
-		}
 	}
 }
