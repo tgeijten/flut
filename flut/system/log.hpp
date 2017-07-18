@@ -46,14 +46,17 @@ namespace flut
 		FLUT_API level get_global_log_level();
 
 		FLUT_API bool test_log_level( level l );
+		FLUT_API void log_string( level l, const string& str );
 
-		FLUT_API void log_output( level l, std::stringstream& msg );
-
-		template< typename T, typename... Args > void log_output( level l, std::stringstream& str, T var, const Args&... args )
-		{ str << var; log_output( l, str, args... ); }
-
+		inline void log_stream( level l, std::stringstream& msg ) { log_string( l, msg.str() ); }
+		template< typename T, typename... Args >
+		void log_stream( level l, std::stringstream& str, T var, const Args&... args )
+		{ str << var; log_stream( l, str, args... ); }
 		template< typename... Args > void message( level l, const Args&... args )
-		{ if ( test_log_level( l ) ) { std::stringstream str; log_output( l, str, args... ); }	}
+		{ if ( test_log_level( l ) ) { std::stringstream str; log_stream( l, str, args... ); }	}
+
+		/// get formatted string (printf style)
+		FLUT_API void messagef( level l, const char* format, ... );
 
 		template< typename... Args > void trace( const Args&... args ) {
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )

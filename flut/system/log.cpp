@@ -1,6 +1,7 @@
 #include "assert.hpp"
 #include "log.hpp"
 #include "log_sink.hpp"
+#include <stdarg.h>
 
 namespace flut
 {
@@ -10,10 +11,23 @@ namespace flut
 		level lowest_log_level = level::never_log_level;
 		std::vector< sink* > global_sinks;
 
-		void log_output( level l, std::stringstream& msg )
+		void log_string( level l, const string& str )
 		{
 			for ( auto s : global_sinks )
-				s->try_send_log_message( l, msg.str() );
+				s->try_send_log_message( l, str );
+		}
+
+		void messagef( level l, const char* format, ... )
+		{
+			if ( test_log_level( l ) )
+			{
+				va_list args;
+				va_start( args, format );
+				char buf[ 1024 ];
+				vsnprintf( buf, sizeof( buf ), format, args );
+				va_end( args );
+				log_string( l, string( buf ) ); // TODO: use string_view
+			}
 		}
 
 		void add_sink( sink* s )
@@ -33,7 +47,7 @@ namespace flut
 			get_global_log_level();
 		}
 
-		FLUT_API void set_global_log_level( level l )
+		void set_global_log_level( level l )
 		{
 			for ( auto s : global_sinks )
 				s->set_log_level( l );
@@ -52,5 +66,5 @@ namespace flut
 		{
 			return l >= lowest_log_level;
 		}
-	}
+}
 }
