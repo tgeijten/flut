@@ -38,25 +38,24 @@ namespace flut
 	{
 		enum level { trace_level = FLUT_LOG_LEVEL_TRACE, debug_level, info_level, warning_level, error_level, critical_level, never_log_level };
 
-		/// output sink
+		// output sink
 		class sink;
 		FLUT_API void add_sink( sink* s );
 		FLUT_API void remove_sink( sink* s );
 
+		// dynamic log level
 		FLUT_API void set_global_log_level( level l );
 		FLUT_API level get_global_log_level();
 		FLUT_API bool test_log_level( level l );
 
+		// log independent of level
 		FLUT_API void log_string( level l, const string& str );
 		FLUT_API void log_vstring( level l, const char* format, va_list list );
-
 		inline void log_stream( level l, std::stringstream& msg ) { log_string( l, msg.str() ); }
 		template< typename T, typename... Args > void log_stream( level l, std::stringstream& str, T var, const Args&... args ) { str << var; log_stream( l, str, args... ); }
 
-		// log message at level
+		// log at specified level
 		template< typename... Args > void message( level l, const Args&... args ) { if ( test_log_level( l ) ) { std::stringstream str; log_stream( l, str, args... ); }	}
-
-		// log formatted message at level
 		inline void messagef( level l, const char* format, ... ) { va_list va; va_start( va, format ); log_vstring( l, format, va ); va_end( va ); }
 
 #if ( FLUT_STATIC_LOG_LEVEL <= FLUT_LOG_LEVEL_TRACE )
