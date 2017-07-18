@@ -28,7 +28,7 @@ namespace flut
 		}
 
 		/// set channel label
-		void set_label( index_t channel, L label ) { labels_[ channel ] = label;  }
+		void set_label( index_t channel, L label ) { labels_.set( channel, label ); }
 
 		/// get channel label
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
