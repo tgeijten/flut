@@ -14,6 +14,7 @@ namespace flut
 	FLUT_API bool folder_exists( const path& folder );
 	FLUT_API bool create_folder( const path& folder );
 	FLUT_API path create_unique_folder( const path& folder, int max_attempts = 9999 );
+	FLUT_API void append_string( const path& file, const string& str );
 	FLUT_API bool remove( const path& file );
 	FLUT_API string get_date_time_str( const char* format = "%Y-%m-%d_%H.%M.%S" );
 	FLUT_API void crash( const string& message = "" );

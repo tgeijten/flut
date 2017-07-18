@@ -122,6 +122,12 @@ namespace flut
 		return unique_folder;
 	}
 
+	FLUT_API void append_string( const path& file, const string& str )
+	{
+		std::ofstream ofs( file.str(), std::ios::app );
+		ofs << str;
+	}
+
 	FLUT_API bool remove( const path& file )
 	{
 		return std::remove( file.c_str() ) == 0;
