@@ -35,7 +35,7 @@ namespace flut
 		V& operator[]( const K& key ) {
 			auto it = find( key );
 			if ( it == this->end() ) {
-				this->emplace_back( key, V( 0 ) );
+				this->emplace_back( key, V() );
 				return this->back().second;
 			}
 			else return it->second;
