@@ -37,18 +37,17 @@ namespace flut
 		timer() : epoch( timer_t::now() ) {}
 		void reset() { epoch = timer_t::now(); }
 
-		double seconds() { return std::chrono::duration< double, std::ratio< 1 > >( elapsed() ).count(); }
-		double minutes() { return std::chrono::duration< double, std::ratio< 60 > >( elapsed() ).count(); }
-		double hours() { return std::chrono::duration< double, std::ratio< 3600 > >( elapsed() ).count(); }
-
-		long long milliseconds() { return std::chrono::duration_cast< std::chrono::milliseconds >( elapsed() ).count(); }
-		long long microseconds() { return std::chrono::duration_cast< std::chrono::microseconds >( elapsed() ).count(); }
-		long long nanoseconds() { return std::chrono::duration_cast< std::chrono::nanoseconds >( elapsed() ).count(); }
+		double seconds() const { return std::chrono::duration< double, std::ratio< 1 > >( elapsed() ).count(); }
+		double minutes() const { return std::chrono::duration< double, std::ratio< 60 > >( elapsed() ).count(); }
+		double hours() const { return std::chrono::duration< double, std::ratio< 3600 > >( elapsed() ).count(); }
+		long long milliseconds() const { return std::chrono::duration_cast< std::chrono::milliseconds >( elapsed() ).count(); }
+		long long microseconds() const { return std::chrono::duration_cast< std::chrono::microseconds >( elapsed() ).count(); }
+		long long nanoseconds() const { return std::chrono::duration_cast< std::chrono::nanoseconds >( elapsed() ).count(); }
 		long long ticks() { return elapsed().count(); }
 
 	private:
 		timer_t::time_point epoch;
-		timer_t::duration elapsed() { return timer_t::now() - epoch; }
+		timer_t::duration elapsed() const { return timer_t::now() - epoch; }
 	};
 }
 
