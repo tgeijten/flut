@@ -36,6 +36,13 @@ namespace flut
 	template< typename C > typename C::value_type average( const C& cont )
 	{ return average( std::begin( cont ), std::end( cont ) ); }
 
+	template < typename C > vector< index_t > sort_index( const C& cont ) {
+		vector< size_t > idx_vec( last - first );
+		for ( index_t i = 0; i < cont.size(); ++i ) idx_vec[ i ] = i;
+		sort( idx_vec.begin(), idx_vec.end(), [ &cont ]( size_t i1, size_t i2 ) { return cont[ i1 ] < cont[ i2 ]; } );
+		return idx_vec;
+	}
+
 	template< typename T > T median( const vector< T >& vec ) {
 		auto s = vec.size();
 		flut_assert( s > 0 );

@@ -17,9 +17,14 @@ namespace flut
 			for ( auto it = std::begin( coeff ) + 1; it != std::end( coeff ); ++it ) { result += factor * *it; factor *= v; }
 			return result;
 		}
+
+		T& operator[]( size_t idx ) { return coeff[ idx ]; }
+		const T& operator[]( size_t idx ) const { return coeff[ idx ]; }
+
 		T offset() const { return coeff[ 0 ]; }
 		T slope() const { return coeff[ 1 ]; }
 
+	private:
 		std::array< T, D + 1 > coeff;
 	};
 
@@ -27,5 +32,5 @@ namespace flut
 	template< typename T > using quadratic_function = polynomial< T, 2 >;
 	template< typename T > using cubic_function = polynomial< T, 3 >;
 
-	template< typename T > T solve_x( const linear_function< T >& f, T x ) { return ( f.coeff[ 0 ] - x ) / -f.coeff[ 1 ]; }
+	template< typename T > T intersect_y( const linear_function< T >& f, T y ) { return ( y - f.offset() ) / f.slope(); }
 }

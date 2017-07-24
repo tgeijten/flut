@@ -192,8 +192,8 @@ void linear_regression_test()
 	//flut::linear_regression lg( x.begin(), x.end(), y.begin(), y.end() );
 
 	auto lg1 = linear_regression( x.begin(), x.end(), y.begin(), y.end() );
-	FLUT_TEST( equals( lg1.coeff[ 1 ], 2.5 ) );
-	FLUT_TEST( equals( lg1.coeff[ 0 ], 4.0 ) );
+	FLUT_TEST( equals( lg1[ 1 ], 2.5 ) );
+	FLUT_TEST( equals( lg1[ 0 ], 4.0 ) );
 
 	x.clear();
 	y.clear();
@@ -202,16 +202,16 @@ void linear_regression_test()
 		y.push_back( xre * -1.5 - 100 );
 
 	auto lg2 = linear_regression( xr, y );
-	FLUT_TEST( equals( lg2.coeff[ 1 ], -1.5 ) );
-	FLUT_TEST( equals( lg2.coeff[ 0 ], -100.0 ) );
+	FLUT_TEST( equals( lg2[ 1 ], -1.5 ) );
+	FLUT_TEST( equals( lg2[ 0 ], -100.0 ) );
 
 	auto lg3 = linear_regression( -50.0, 2.0, y );
-	FLUT_TEST( equals( lg3.coeff[ 1 ], -1.5 ) );
-	FLUT_TEST( equals( lg3.coeff[ 0 ], -100.0 ) );
+	FLUT_TEST( equals( lg3[ 1 ], -1.5 ) );
+	FLUT_TEST( equals( lg3[ 0 ], -100.0 ) );
 
-	auto x0 = solve_x( lg3, 0.0 );
-	auto x1 = solve_x( lg3, 10.0 );
-	auto x2 = solve_x( lg3, -10.0 );
+	auto x0 = intersect_y( lg3, 0.0 );
+	auto x1 = intersect_y( lg3, 10.0 );
+	auto x2 = intersect_y( lg3, -10.0 );
 	FLUT_TEST( equals( lg3( x0 ), 0.0 ) );
 	FLUT_TEST( equals( lg3( x1 ), 10.0 ) );
 	FLUT_TEST( equals( lg3( x2 ), -10.0 ) );
