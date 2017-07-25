@@ -2,6 +2,7 @@
 
 namespace flut
 {
+	const size_t path::npos = string::npos;
 
 	char path::preferred_separator()
 	{
@@ -74,6 +75,11 @@ namespace flut
 	bool path::has_filename() const
 	{
 		return last_separator_pos() != data_.size() - 1;
+	}
+
+	bool path::has_parent_path() const
+	{
+		return last_separator_pos() != npos;
 	}
 
 	size_t path::last_separator_pos() const

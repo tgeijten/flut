@@ -98,6 +98,10 @@ namespace flut
 
 	FLUT_API bool create_folder( const path& folder )
 	{
+		// make sure parent folders exist
+		if ( folder.has_parent_path() && !folder_exists( folder.parent_path() ) )
+			create_folder( folder.parent_path() );
+
 #ifdef FLUT_COMP_MSVC
 		return CreateDirectory( folder.c_str(), NULL ) != 0;
 #else

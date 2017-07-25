@@ -41,7 +41,11 @@ namespace flut
 		path stem();
 		bool empty() const;
 		path& operator/=( const path& p );
+
 		bool has_filename() const;
+		bool has_parent_path() const;
+
+		static const size_t npos;
 
 	private:
 		size_t last_separator_pos() const;
