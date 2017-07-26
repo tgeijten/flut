@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <algorithm>
+#include "system/types.hpp"
 
 namespace flut
 {
@@ -12,8 +12,13 @@ namespace flut
 		typedef T* iterator;
 		typedef const T* const_iterator;
 
+		dynarray() : data_( nullptr ), end_( nullptr ) {}
 		dynarray( size_t n ) : data_( new T[ n ] ), end_( data_.get() + n ) {}
 		dynarray( size_t n, const T& v ) : data_( new T[ n ] ), end_( data_.get() + n ) { assign( v ); }
+		dynarray( const dynarray& o ) : data_( new T[ o.size() ] ), end_( data_.get() + o.size() ) { std::copy( o.begin(), o.end(), begin() ); }
+		dynarray( dynarray&& o ) : data_( std::move( o.data_ ) ), end_( o.end_ ) {}
+		dynarray<T>& operator=( const dynarray& o ) { data_ = u_ptr< T[] >( new T[ o.size() ] ); end_ = data_.get() + o.size(); std::copy( o.begin(), o.end(), begin() ); return *this; }
+		dynarray<T>& operator=( dynarray&& o ) { data_ = std::move( o.data() ); end_ = o.end_; return *this; }
 		~dynarray() {}
 
 		T& operator[]( size_t i ) { return data_[ i ]; }
@@ -22,13 +27,13 @@ namespace flut
 		T& at( size_t i ) { flut_error_if( i >= size(), "dynarray index out of bounds" ); return data_[ i ]; }
 		const T& at( size_t i ) const { flut_error_if( i >= size(), "dynarray index out of bounds" ); return data_[ i ]; }
 
-		T* begin() { return data_.get(); }
-		const T* begin() const { return data_.get(); }
-		const T* cbegin() const { return data_.get(); }
+		iterator begin() { return data_.get(); }
+		const_iterator begin() const { return data_.get(); }
+		const_iterator cbegin() const { return data_.get(); }
 
-		T* end() { return end_; }
-		const T* end() const { return end_; }
-		const T* cend() const { return end_; }
+		iterator end() { return end_; }
+		const_iterator end() const { return end_; }
+		const_iterator cend() const { return end_; }
 
 		size_t size() const { return end() - begin(); }
 
@@ -38,7 +43,7 @@ namespace flut
 		const T* data() const { return data_.get(); }
 
 	private:
-		std::unique_ptr< T[] > data_;
+		u_ptr< T[] > data_;
 		T* end_;
 	};
 }
