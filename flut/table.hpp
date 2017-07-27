@@ -22,7 +22,7 @@ namespace flut
 
 		index_t add_column( const L& label, const T& default_value = T(0) ) {
 			resize( row_size(), column_size() + 1 );
-			return col_labels.set_back( label );
+			return col_labels.set( column_size() - 1, label );
 		}
 
 		void resize( size_t rows, size_t cols ) {

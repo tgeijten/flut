@@ -12,7 +12,6 @@ namespace flut
 	{
 	public:
 		storage( size_t frames = 0, size_t channels = 0, T value = T( 0 ) ) : frame_size_( frames ), labels_( channels ), data_( channels * frames, value ) {}
-
 		~storage() {}
 
 		/// add a channel and resize buffer if needed
@@ -34,7 +33,7 @@ namespace flut
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
 
 		/// find index of a label
-		index_t find_channel( const L& label ) const { return labels_.find_index( label ); }
+		index_t find_channel( const L& label ) const { return labels_.find( label ); }
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
