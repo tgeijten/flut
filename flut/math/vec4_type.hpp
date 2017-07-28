@@ -21,14 +21,14 @@ namespace flut
 			// const properties
 			T length() const { return sqrt( x * x + y * y + z * z + w * w ); }
 			T squared_length() const { return x * x + y * y + z * z + w * w; }
-			bool is_null() const { return x == T(0) && y == T(0) && z == T(0) && w == T(0); }
+			bool is_null() const { return x == T() && y == T() && z == T() && w == T(); }
 
 			// static initializers
-			static vec4_<T> zero() { return vec4_<T>( T(0), T(0), T(0), T(0) ); }
-			static vec4_<T> unit_x() { return vec4_<T>( T(1), T(0), T(0), T(0) ); }
-			static vec4_<T> unit_y() { return vec4_<T>( T(0), T(1), T(0), T(0) ); }
-			static vec4_<T> unit_z() { return vec4_<T>( T(0), T(0), T(1), T(0) ); }
-			static vec4_<T> unit_w() { return vec4_<T>( T(0), T(0), T(0), T(1) ); }
+			static vec4_<T> zero() { return vec4_<T>( T(), T(), T(), T() ); }
+			static vec4_<T> unit_x() { return vec4_<T>( T(1), T(), T(), T() ); }
+			static vec4_<T> unit_y() { return vec4_<T>( T(), T(1), T(), T() ); }
+			static vec4_<T> unit_z() { return vec4_<T>( T(), T(), T(1), T() ); }
+			static vec4_<T> unit_w() { return vec4_<T>( T(), T(), T(), T(1) ); }
 		};
 
 		/// template instantiations

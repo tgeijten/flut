@@ -7,7 +7,7 @@ namespace flut
 	template< typename T, int N = 2 >
 	struct delayer
 	{
-		delayer( float delay = 1.0f, const T& init_value = T(0) ) : delay_( delay / ( N - 1 ) ), data_{ init_value }, idx_( 0 ), time_( 0 ) {
+		delayer( float delay = 1.0f, const T& init_value = T() ) : delay_( delay / ( N - 1 ) ), data_{ init_value }, idx_( 0 ), time_( 0 ) {
 			static_assert( N >= 2, "flut::delayer resolution parameter must be >= 2" );
 		}
 

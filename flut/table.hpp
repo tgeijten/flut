@@ -14,25 +14,25 @@ namespace flut
 		table( size_t rows = 0, size_t cols = 0 ) : row_labels( rows ), col_labels( cols ), data( rows * cols ) {}
 		~table() {}
 
-		index_t add_row( const L& label, const T& default_value = T(0) ) {
+		index_t add_row( const L& label, const T& default_value = T() ) {
 			row_labels.add( label );
 			data.resize( row_size() * column_size(), default_value );
 			return row_size() - 1;
 		}
 
-		index_t add_column( const L& label, const T& default_value = T(0) ) {
+		index_t add_column( const L& label, const T& default_value = T() ) {
 			resize( row_size(), column_size() + 1 );
 			return col_labels.set( column_size() - 1, label );
 		}
 
 		void resize( size_t rows, size_t cols ) {
-			flut_error_if( rows < row_size() || cols < column_size(), "Cannot shrink table" );
+			flut_error_if( rows < row_size() || cols < column_size(), "tables cannot be shrinked" );
 
 			// reorganize existing data
 			data.resize( row_size * cols );
 			for ( index_t ri = rows; ri-- > 0; )
 				for ( index_t ci = cols; ci-- > 0 )
-					data_[ cols * ri + ci ] = ( ri < row_size() && ci < column_size() ) ? data[ column_size() * ri + ci ] : T(0);
+					data_[ cols * ri + ci ] = ( ri < row_size() && ci < column_size() ) ? data[ column_size() * ri + ci ] : T();
 			col_labels.resize( cols );
 			row_labels.resize( rows );
 		}

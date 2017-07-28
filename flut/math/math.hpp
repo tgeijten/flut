@@ -48,7 +48,7 @@ namespace flut
 		template< typename T > T invsqrt( T v ) { return T(1) / sqrt( v ); }
 
 		/// sqrt based on sign: if v >= 0 sqrt( v ) else -sqrt( -v )
-		template< typename T > T signed_sqrt( T v ) { return v >= T(0) ? sqrt( v ) : -sqrt( -v ); }
+		template< typename T > T signed_sqrt( T v ) { return v >= T() ? sqrt( v ) : -sqrt( -v ); }
 
 		/// squared
 		template< typename T > T squared( T v ) { return v * v; }
@@ -57,7 +57,7 @@ namespace flut
 		template< typename T > T cubed( T v ) { return v * v * v; }
 
 		/// sign of v: 1 or -1
-		template< typename T > T sign( T v ) { return v >= T(0) ? T(1) : T(-1); }
+		template< typename T > T sign( T v ) { return v >= T() ? T(1) : T(-1); }
 
 		/// set if smaller
 		template< typename T > T& set_if_smaller( T& value, const T& other ) { if ( other < value ) value = other; return value; }

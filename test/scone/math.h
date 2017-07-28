@@ -22,7 +22,7 @@ namespace scone
 	inline Real RandUni( Real lower, Real upper ) { return lower + ( upper - lower ) * rand() / RAND_MAX; }
 
 	// sign function returns -1.0 on negative, 1.0 otherwise
-	template< typename T > int Sign( const T& value ) { return (value < T(0)) ? -1 : 1; }
+	template< typename T > int Sign( const T& value ) { return (value < T()) ? -1 : 1; }
 
 	// float comparison
 	template< typename T >

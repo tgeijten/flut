@@ -24,7 +24,7 @@ namespace flut
 		struct angle_
 		{
 			/// default constructor
-			explicit angle_() : value( T(0) ) {}
+			explicit angle_() : value( T() ) {}
 
 			/// constructor taking any value type
 			template< typename T2 > explicit angle_( const T2& v ) : value( T( v ) ) {}

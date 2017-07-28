@@ -141,7 +141,7 @@ namespace flut
 				return quat_<T>::zero();
 
 			auto clen = length( c );
-			if ( equals( clen, T(0) ) ) // check if vectors are 180 deg apart
+			if ( equals( clen, T() ) ) // check if vectors are 180 deg apart
 				return quat_<T>( 0, 1, 0, 0 ); // this doesn't work if source is unit_x
 
 			c /= clen;
@@ -178,7 +178,7 @@ namespace flut
 				T s = T(1) / l;
 				return std::pair< vec3_<T>, radian_<T> >{ vec3f( s * q.x, s * q.y, s * q.z ), radian_<T>( T(2) * std::acos( q.w ) ) };
 			}
-			else return std::pair< vec3_<T>, radian_<T> >{ vec3_<T>::unit_x(), radian_<T>( T(0) ) };
+			else return std::pair< vec3_<T>, radian_<T> >{ vec3_<T>::unit_x(), radian_<T>( T() ) };
 		}
 
 		/// Get quaternion using three axis vectors
