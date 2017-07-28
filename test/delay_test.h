@@ -10,13 +10,17 @@ namespace flut
 	template< int N > void do_delay_test( float delay_inc, float dt, int times = 1 )
 	{
 		storage< float > sto;
-		std::vector< delayer< float, N > > delvec;
+		std::vector< delayer< float, N > > delvec1;
 		for ( int i = 1; i <= times; ++i )
-			delvec.push_back( delayer< float, N >( i * delay_inc ) );
+			delvec1.push_back( delayer< float, N >( i * delay_inc ) );
+
+		std::vector< smooth_delayer< float, N > > delvec2;
+		for ( int i = 1; i <= times; ++i )
+			delvec2.emplace_back( i * delay_inc );
 
 		for ( float t = 0; t < 1.0; t += dt )
 		{
-			auto f = sin( t * 8 * math::float_pi );
+			auto f = sin( t * 8 * float_pi );
 			sto.add_frame();
 			sto[ "time" ] = t;
 			sto[ "func" ] = f;
@@ -24,15 +28,19 @@ namespace flut
 			for ( int i = 0; i < times; ++i )
 			{
 				auto delay_amount = ( i + 1 ) * delay_inc;
-				delvec[ i ].add_sample( f, t == 0 ? 0.0f : dt );
-				auto dd = delvec[ i ].delayed_value();
-				auto df = t > delay_amount ? sin( ( t - delay_amount ) * 8 * math::float_pi ) : 0;
-				sto[ stringf( "delay%.2f", delay_amount ) ] = dd;
+				delvec1[ i ].add_sample( f, t == 0 ? 0.0f : dt );
+				delvec2[ i ].add_sample( f, t == 0 ? 0.0f : dt );
+				auto dd1 = delvec1[ i ].delayed_value();
+				auto dd2 = delvec2[ i ].delayed_value();
+				auto df = t > delay_amount ? sin( ( t - delay_amount ) * 8 * float_pi ) : 0;
+				sto[ stringf( "delay%.2f", delay_amount ) ] = dd1;
+				sto[ stringf( "sdelay%.2f", delay_amount ) ] = dd2;
 				sto[ stringf( "fdelay%.2f", delay_amount ) ] = df;
-				sto[ stringf( "error%.2f", delay_amount ) ] = dd - df;
+				sto[ stringf( "error%.2f", delay_amount ) ] = dd1 - df;
+				sto[ stringf( "serror%.2f", delay_amount ) ] = dd2 - df;
 			}
 		}
-		std::ofstream fs( stringf( "X:/test_%d_%.3f_%.3f.txt", N, delay_inc, dt ) );
+		std::ofstream fs( stringf( "X:/delay_test_%d_%.3f_%.3f.txt", N, delay_inc, dt ) );
 		fs << sto;
 	}
 

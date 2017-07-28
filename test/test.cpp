@@ -14,6 +14,7 @@
 #include "timer_test.h"
 #include "flut/system/profiler.hpp"
 #include "data_test.h"
+#include "delay_test.h"
 
 using flut::string;
 
@@ -33,6 +34,8 @@ int main( int argc, char* argv[] )
 		flut::profile_test();
 #endif
 		flut::stopwatch sw;
+
+		flut::delay_test();
 
 		flut::container_test();
 		sw.add_measure( "container" );
