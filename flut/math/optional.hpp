@@ -22,10 +22,10 @@ namespace flut
 	template< typename T > struct optional< T, typename std::enable_if< std::is_integral<T>::value >::type >
 	{
 		using value_type = T;
-		optional() : value_( num_const<T>::rare() ) {}
+		optional() : value_( constants<T>::sentinel() ) {}
 		optional( const T& v ) : value_( v ) {}
 		optional< T >& operator=( const T& v ) { value_ = v; return *this; }
-		operator bool() const { return value_ != num_const<T>::rare(); }
+		operator bool() const { return value_ != constants<T>::sentinel(); }
 		const T& operator*() const { return value_; }
 		T value_;
 	};

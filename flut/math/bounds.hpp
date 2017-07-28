@@ -40,8 +40,8 @@ namespace flut
 			else upper = lower;
 		}
 		else if ( pn.size() > 0 ) {
-			lower = pn.get_any< T >( { "min", "lower" }, num_const<T>::lowest() );
-			upper = pn.get_any<T>( { "max", "upper" }, num_const< T >::max() );
+			lower = pn.get_any< T >( { "min", "lower" }, constants<T>::lowest() );
+			upper = pn.get_any<T>( { "max", "upper" }, constants< T >::max() );
 		}
 		else flut_error( "Cannot read bounds from prop_node" );
 	}

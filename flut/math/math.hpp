@@ -6,7 +6,7 @@
 namespace flut
 {
 	/// constants
-	template< typename T > struct num_const
+	template< typename T > struct constants
 	{
 		static constexpr T pi() { return T( 3.14159265358979 ); }
 		static T half_pi() { return T( 0.5 ) * T( 3.14159265358979 ); }
@@ -19,27 +19,27 @@ namespace flut
 		static T min() { return std::numeric_limits<T>::min(); }
 		static T lowest() { return std::numeric_limits<T>::lowest(); }
 		static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
-		static constexpr T rare() { return std::numeric_limits<T>::is_signed ? std::numeric_limits<T>::lowest() : std::numeric_limits<T>::max(); }
+		static constexpr T sentinel() { return std::numeric_limits<T>::is_signed ? std::numeric_limits<T>::lowest() : std::numeric_limits<T>::max(); }
 	};
 
-	typedef num_const< int > num_const_i;
-	typedef num_const< float > num_const_f;
-	typedef num_const< double > num_const_d;
+	typedef constants< int > constantsi;
+	typedef constants< float > constantsf;
+	typedef constants< double > constantsd;
 
-	const real_t real_pi = num_const< real_t >::pi();
-	const float float_pi = num_const< float >::pi();
-	const double double_pi = num_const< double >::pi();
+	const real_t real_pi = constants< real_t >::pi();
+	const float float_pi = constants< float >::pi();
+	const double double_pi = constants< double >::pi();
 
 	namespace math
 	{
 		/// convert rad to deg
-		template< typename T > T rad_to_deg( T rad_value ) { return ( T( 180 ) / num_const<T>::pi() ) * rad_value; }
+		template< typename T > T rad_to_deg( T rad_value ) { return ( T( 180 ) / constants<T>::pi() ) * rad_value; }
 
 		/// convert deg to rad
-		template< typename T > T deg_to_rad( T deg_value ) { return ( num_const<T>::pi() / T( 180 ) ) * deg_value; }
+		template< typename T > T deg_to_rad( T deg_value ) { return ( constants<T>::pi() / T( 180 ) ) * deg_value; }
 
 		/// compare floating point variables using relaxed_epsilon
-		template< typename T > bool equals( T v1, T v2, T e = num_const<T>::relaxed_epsilon() ) { return std::abs( v1 - v2 ) <= std::abs( v1 ) * e; }
+		template< typename T > bool equals( T v1, T v2, T e = constants<T>::relaxed_epsilon() ) { return std::abs( v1 - v2 ) <= std::abs( v1 ) * e; }
 
 		/// inverse of v (1 / v)
 		template< typename T > T inv( T v ) { return T(1) / v; }

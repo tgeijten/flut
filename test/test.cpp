@@ -24,8 +24,8 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		//flut_logvar2( flut::num_const<double>::epsilon(), flut::num_const<double>::relaxed_epsilon() );
-		//flut_logvar2( flut::num_const<float>::epsilon(), flut::num_const<float>::relaxed_epsilon() );
+		//flut_logvar2( flut::constants<double>::epsilon(), flut::constants<double>::relaxed_epsilon() );
+		//flut_logvar2( flut::constants<float>::epsilon(), flut::constants<float>::relaxed_epsilon() );
 
 		flut::timer_test();
 

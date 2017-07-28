@@ -11,11 +11,11 @@ namespace flut
 	class storage
 	{
 	public:
-		storage( size_t frames = 0, size_t channels = 0, T value = T( 0 ) ) : frame_size_( frames ), labels_( channels ), data_( channels * frames, value ) {}
+		storage( size_t frames = 0, size_t channels = 0, T value = T(0) ) : frame_size_( frames ), labels_( channels ), data_( channels * frames, value ) {}
 		~storage() {}
 
 		/// add a channel and resize buffer if needed
-		index_t add_channel( L label ) { resize( frame_size(), channel_size() + 1 ); return labels_.set( channel_size() - 1, label ); }
+		index_t add_channel( L label, const T& value = T(0) ) { resize( frame_size(), channel_size() + 1, value ); return labels_.set( channel_size() - 1, label ); }
 
 		/// add a channel with data, resize buffer if needed
 		index_t add_channel( L label, const vector< T >& data ) {
@@ -26,14 +26,20 @@ namespace flut
 			return cidx;
 		}
 
+		/// find index of a label
+		index_t find_channel( const L& label ) const { return labels_.find( label ); }
+
+		/// find or add a channel
+		index_t find_or_add_channel( const L& label, const T& value = T(0) ) {
+			auto idx = find_channel( label );
+			return idx == no_index ? add_channel( label, value ) : idx;
+		}
+
 		/// set channel label
 		void set_label( index_t channel, L label ) { labels_.set( channel, label ); }
 
 		/// get channel label
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
-
-		/// find index of a label
-		index_t find_channel( const L& label ) const { return labels_.find( label ); }
 
 		/// add frame to storage
 		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
@@ -66,15 +72,11 @@ namespace flut
 		const T& operator()( index_t frame, index_t channel ) const { return data_[ frame * channel_size() + channel ]; }
 
 		/// access value of most recent frame
-		T& operator[]( index_t channel ) { flut_assert( !data_.empty() ); return at( frame_size() - 1, channel ); }
-		const T& operator[]( index_t channel ) const { flut_assert( !data_.empty() ); return at( frame_size() - 1, channel ); }
+		T& operator[]( index_t channel ) { flut_assert( !data_.empty() ); return (*this)( frame_size() - 1, channel ); }
+		const T& operator[]( index_t channel ) const { flut_assert( !data_.empty() ); return *this( frame_size() - 1, channel ); }
 
 		/// access value of most recent frame by channel name, add channel if not existing
-		T& operator[]( const L& label ) {
-			auto idx = find_channel( label );
-			if ( idx == no_index ) idx = add_channel( label );
-			return (*this)[ idx ];
-		}
+		T& operator[]( const L& label ) { return (*this)[ find_or_add_channel( label ) ]; }
 
 		/// access value of most recent frame by channel name
 		const T& operator()( const L& label ) const { return *this( find_channel( label ) ); }

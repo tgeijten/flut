@@ -33,7 +33,7 @@ namespace flut
 namespace math
 {
 template< typename T >
-void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = num_const<T>::relaxed_epsilon() )
+void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = constants<T>::relaxed_epsilon() )
 {
 	bool eq = equals( v1.x, v2.x, e ) && equals( v1.y, v2.y, e ) && equals( v1.z, v2.z, e );
 	auto diff = std::abs( v1.x - v2.x ) + std::abs( v1.y - v2.y ) + std::abs( v1.z - v2.z );
@@ -43,7 +43,7 @@ void compare( const vec3_<T>& v1, const scone::Vec3& v2, T e = num_const<T>::rel
 }
 
 template< typename T >
-void compare( const quat_<T>& q1, const scone::Quat& q2, T e = num_const<T>::relaxed_epsilon() )
+void compare( const quat_<T>& q1, const scone::Quat& q2, T e = constants<T>::relaxed_epsilon() )
 {
 	bool eq = equals( q1.w, q2.W(), e ) && equals( q1.x, q2.X(), e ) && equals( q1.y, q2.Y(), e ) && equals( q1.z, q2.Z(), e );
 	auto diff = std::abs( q1.w - q2.W() ) + std::abs( q1.x - q2.X() ) + std::abs( q1.y - q2.Y() ) + std::abs( q1.z - q2.Z() );
@@ -121,13 +121,13 @@ void angle_test()
 	//auto ang2 = radian( ang1 );
 	//auto ang3 = ang1 + degree( 180 );
 
-	auto a1_rd = rad( num_const< double >::half_pi() );
+	auto a1_rd = rad( constants< double >::half_pi() );
 	auto a2_dd = deg( 180.0 );
 	auto a3 = a1_rd + a2_dd.radian();
 	auto a4 = a2_dd + a1_rd.degree();
 
 	auto a5_rf = radianf( deg( 90.0f ) );
-	auto a6_df = degreef( radiand( num_const<float>::half_pi() ) );
+	auto a6_df = degreef( radiand( constants<float>::half_pi() ) );
 
 	auto a1s = 0.5 * a1_rd;
 	auto a2s = 0.5f * a2_dd;
