@@ -30,7 +30,7 @@ int main( int argc, char* argv[] )
 
 		flut::timer_test();
 
-#ifdef FLUT_USE_PROFILER
+#ifdef FLUT_ENABLE_PROFILER
 		flut::profile_test();
 #endif
 		flut::stopwatch sw;

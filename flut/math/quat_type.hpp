@@ -11,7 +11,7 @@ namespace flut
 		struct quat_
 		{
 		public:
-			quat_() {}
+			quat_() : w(1), x(0), y(0), z(0) {}
 			quat_( const prop_node& pn ) : w( pn.get<T>( "w" ) ), x( pn.get<T>( "x" ) ), y( pn.get<T>( "y" ) ), z( pn.get<T>( "z" ) ) {}
 			quat_( T w, T x, T y, T z ) : w( w ), x( x ), y( y ), z( z ) {}
 			template< typename T2 > quat_( const quat_<T2>& o ) : w( T(o.w) ), x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}
@@ -24,7 +24,7 @@ namespace flut
 			T w, x, y, z;
 
 			/// generate quat with zero rotation
-			static quat_<T> zero() { return quat_<T>( T(1), T(), T(), T() ); }
+			static quat_<T> identity() { return quat_<T>( T(1), T(0), T(0), T(0) ); }
 		};
 		
 		typedef quat_< real_t > quat;

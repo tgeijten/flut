@@ -138,7 +138,7 @@ namespace flut
 			T d = dot_product( s, t );
 
 			if ( equals( d, T(1) ) ) // check if vectors are the same
-				return quat_<T>::zero();
+				return quat_<T>::identity();
 
 			auto clen = length( c );
 			if ( equals( clen, T() ) ) // check if vectors are 180 deg apart

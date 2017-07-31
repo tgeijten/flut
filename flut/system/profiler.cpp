@@ -1,4 +1,4 @@
-#include "profiler.hpp"
+﻿#include "profiler.hpp"
 #include <algorithm>
 #include <thread>
 
@@ -94,7 +94,7 @@ namespace flut
 		double over = total_overhead( s ) / 1e6;
 		double rel_over = 100.0 * over / total;
 
-		pn[ s->name ] = stringf( "%8.3fms %6.2f%% (%5.2f%% exclusive %.2f%% overhead)", total, rel_total, rel_ex, rel_over );
+		pn[ s->name ] = stringf( "%6.0fms %6.2f%% (%5.2f%% exclusive %5.2f%% overhead)", total, rel_total, rel_ex, rel_over );
 
 		auto children = get_children( s->id );
 		std::sort( children.begin(), children.end(), [&]( section* s1, section* s2 ) { return s1->total_time > s2->total_time; } );

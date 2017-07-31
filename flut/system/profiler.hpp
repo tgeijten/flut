@@ -1,26 +1,12 @@
 #pragma once
 
-#include "types.hpp"
-#include <utility>
-#include <map>
+#include "flut/system/types.hpp"
 #include "flut/timer.hpp"
 #include "flut/prop_node.hpp"
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
 #	pragma warning( disable: 4251 )
-#endif
-
-#ifdef FLUT_USE_PROFILER
-#	define FLUT_PROFILE_FUNCTION flut::profile_section unique_profile_section( __FUNCTION__ )
-#	define FLUT_PROFILE_SCOPE( scope_name_arg ) flut::profile_section unique_profile_section( scope_name_arg )
-#	define FLUT_PROFILE_RESET flut::profiler::instance().reset()
-#	define FLUT_PROFILE_REPORT flut::profiler::instance().report()
-#else
-#	define FLUT_PROFILE_FUNCTION
-#	define FLUT_PROFILE_SCOPE( scope_name_arg )
-#	define FLUT_PROFILE_RESET
-#	define FLUT_PROFILE_REPORT flut::prop_node()
 #endif
 
 namespace flut
@@ -64,13 +50,12 @@ namespace flut
 		static profiler instance_;
 		section* current_section_;
 		nanoseconds_t duration_of_now;
-
 	};
 
-	struct FLUT_API profile_section
+	struct FLUT_API scoped_section_profiler
 	{
-		profile_section( const char* name ) { profiler::instance().start_section( name ); }
-		~profile_section() { profiler::instance().end_section(); }
+		scoped_section_profiler( const char* name ) { profiler::instance().start_section( name ); }
+		~scoped_section_profiler() { profiler::instance().end_section(); }
 	};
 }
 

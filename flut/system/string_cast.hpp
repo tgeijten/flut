@@ -7,7 +7,7 @@
 namespace flut
 {
 	template< typename T, typename E = void > struct string_cast {
-		static T from( const string& s ) { T value; std::stringstream str( s ); str >> value; return value; }
+		static T from( const string& s ) { T value = T(); std::stringstream str( s ); str >> value; return value; }
 		static string to( const T& value ) { std::ostringstream str; str << value; return str.str(); }
 	};
 

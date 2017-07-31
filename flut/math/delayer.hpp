@@ -7,28 +7,28 @@ namespace flut
 	template< typename T, int N = 2 >
 	struct delayer
 	{
-		delayer( float delay = 1.0f, const T& init_value = T() ) : delay_( delay / ( N - 1 ) ), data_{ init_value }, idx_( 0 ), time_( 0 ) {
+		delayer( float delay = 1.0f, const T& init_value = T() ) : window_( delay / ( N - 1 ) ), data_{ init_value }, idx_( 0 ), time_( 0 ) {
 			static_assert( N >= 2, "flut::delayer resolution parameter must be >= 2" );
 		}
 
 		void add_sample( const T& value, float delta_time ) {
 			time_ += delta_time;
-			if ( time_ + 0.5f * delta_time > delay_ ) {
-				time_ -= delay_;
+			if ( time_ + 0.5f * delta_time > window_ ) {
+				time_ -= window_;
 				++idx_ %= N;
 				data_[ idx_ ] = value;
 			}
 		}
 
 		T delayed_value() const {
-			auto w = time_ / delay_;
+			auto w = time_ / window_;
 			return w * data_[ ( idx_ + N + 2 ) % N ] + ( 1.0f - w ) * data_[ ( idx_ + N + 1 ) % N ];
 		}
 
 		T operator()( const T& value, float delta_time ) { add_sample( value, delta_time ); return delayed_value(); }
 		T operator()() { return delayed_value(); }
 
-		float delay_;
+		float window_;
 		float time_;
 		index_t idx_;
 		std::array< T, N > data_;
@@ -37,31 +37,31 @@ namespace flut
 	template< typename T, int N = 2 >
 	struct smooth_delayer
 	{
-		smooth_delayer( float delay = 1.0f, const T& init_value = T() ) : delay_( delay / ( T(N) - T(0.5) ) ), data_{ init_value }, idx_( 0 ), time_( 0 ), inter_( 0 ) {
+		smooth_delayer( float delay = 1.0f, const T& init_value = T() ) : window_( delay / ( T(N) - T(0.5) ) ), data_{ init_value }, idx_( 0 ), time_( 0 ), inter_( 0 ) {
 			static_assert( N >= 2, "flut::delayer resolution parameter must be >= 2" );
 		}
 
 		void add_sample( const T& value, float delta_time ) {
 			time_ += delta_time;
-			if ( time_ + 0.5f * delta_time > delay_ ) {
-				inter_ += ( delay_ - time_ + delta_time ) * value;
+			if ( time_ >= window_ ) {
+				inter_ += ( window_ - time_ + delta_time ) * value;
 				++idx_ %= N;
-				data_[ idx_ ] = inter_ / delay_;
-				time_ -= delay_;
+				data_[ idx_ ] = inter_ / window_;
+				time_ -= window_;
 				inter_ = time_ * value;
 			}
 			else inter_ += value * delta_time;
 		}
 
 		T delayed_value() const {
-			auto w = time_ / delay_;
+			auto w = time_ / window_;
 			return w * data_[ ( idx_ + N + 2 ) % N ] + ( 1.0f - w ) * data_[ ( idx_ + N + 1 ) % N ];
 		}
 
 		T operator()( const T& value, float delta_time ) { add_sample( value, delta_time ); return delayed_value(); }
 		T operator()() { return delayed_value(); }
 
-		float delay_;
+		float window_;
 		float time_;
 		float inter_;
 		index_t idx_;

@@ -13,7 +13,7 @@ namespace flut
 			typedef T* iterator;
 			typedef const T* const_iterator;
 
-			vec3_() {}
+			vec3_() : x(), y(), z() {}
 			vec3_( T px, T py, T pz ) : x( px ), y( py ), z( pz ) {}
 			vec3_( T v ) : x( v ), y( v ), z( v ) {}
 			template< typename T2 > vec3_( const vec3_<T2>& o ) : x( T(o.x) ), y( T(o.y) ), z( T(o.z) ) {}

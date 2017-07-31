@@ -2,7 +2,7 @@
 #include "flut/timer.hpp"
 #include "flut/system_tools.hpp"
 #include "flut/system/log.hpp"
-#include "flut/system/profiler.hpp"
+#include "flut/system/profiler_config.hpp"
 
 namespace flut
 {
@@ -60,11 +60,11 @@ namespace flut
 
 	void profile_test()
 	{
-		FLUT_PROFILE_RESET;
+		flut_profiler_reset();
 
 		for ( int i = 0; i < 100000; ++i )
 			profile3( i );
 
-		flut::log::info( FLUT_PROFILE_REPORT );
+		flut_profiler_log_report( log::info_level );
 	}
 }

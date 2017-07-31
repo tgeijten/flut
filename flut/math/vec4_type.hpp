@@ -10,7 +10,7 @@ namespace flut
 	{
 		template< typename T > struct vec4_
 		{
-			vec4_() {}
+			vec4_() : x(), y(), z(), w() {}
 			vec4_( T px, T py, T pz, T pw ) : x( px ), y( py ), z( pz ), w( pw ) {}
 
 			// element access

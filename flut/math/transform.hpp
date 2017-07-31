@@ -14,7 +14,7 @@ namespace flut
 			transform_() {}
 			transform_( const prop_node& pn ) : p( pn[ "p" ] ), q( pn[ "q" ] ) {}
 			transform_( vec3_<T> pos, quat_<T> ori ) : p( pos ), q( ori ) {}
-			transform_( vec3_<T> pos ) : p( pos ), q( quat_<T>::zero() ) {}
+			transform_( vec3_<T> pos ) : p( pos ), q( quat_<T>::identity() ) {}
 			transform_( quat_<T> ori ) : p( vec3_<T>::zero() ), q( ori ) {}
 
 			vec3_<T> p;
@@ -39,7 +39,7 @@ namespace flut
 			transform_<T> transform( const transform_<T>& t ) const { return transform_<T>( p + q * t.p, q * t.q ); }
 			transform_<T> inv_transform( const transform_<T>& t ) const { return transform_<T>( -q * ( t.p - p ), -q * t.q ); }
 
-			static transform_<T> identity() { return transform_<T>( vec3_<T>::zero(), quat_<T>::zero() ); }
+			static transform_<T> identity() { return transform_<T>( vec3_<T>::zero(), quat_<T>::identity() ); }
 		};
 
 		typedef transform_< real_t > transform;
