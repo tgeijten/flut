@@ -144,6 +144,9 @@ namespace flut
 		sto[ str + ".z" ] = q.z;
 	}
 
+	// TODO: move to tools file?
+	template< typename T > void store( storage<T>& sto, const string& str, const T& v ) { sto[ str ] = v; }
+
 	// TODO: move to IO file
 	template< typename T, typename L > std::ostream& operator<<( std::ostream& str, const storage< T, L >& buf )
 	{
