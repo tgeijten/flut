@@ -1,7 +1,7 @@
 #pragma once
 
-#include <sstream>
 #include "types.hpp"
+#include <sstream>
 #include <string>
 
 namespace flut

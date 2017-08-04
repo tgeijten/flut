@@ -3,6 +3,8 @@
 #include "flut/system/types.hpp"
 #include "flut/system/assert.hpp"
 #include "buffer/data_header.hpp"
+#include "math/vec3_type.hpp"
+#include "math/quat_type.hpp"
 
 namespace flut
 {
@@ -127,6 +129,22 @@ namespace flut
 		std::vector< T > data_;
 	};
 
+	// TODO: move to tools file?
+	template< typename T > void store( storage<T>& sto, const string& str, const math::vec3_<T>& v ) {
+		sto[ str + ".x" ] = v.x;
+		sto[ str + ".y" ] = v.y;
+		sto[ str + ".z" ] = v.z;
+	}
+
+	// TODO: move to tools file?
+	template< typename T > void store( storage<T>& sto, const string& str, const math::quat_<T>& q ) {
+		sto[ str + ".w" ] = q.w;
+		sto[ str + ".x" ] = q.x;
+		sto[ str + ".y" ] = q.y;
+		sto[ str + ".z" ] = q.z;
+	}
+
+	// TODO: move to IO file
 	template< typename T, typename L > std::ostream& operator<<( std::ostream& str, const storage< T, L >& buf )
 	{
 		for ( index_t ci = 0; ci < buf.channel_size(); ++ci ) {

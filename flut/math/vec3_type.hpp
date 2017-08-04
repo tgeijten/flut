@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cmath>
 #include "flut/system/types.hpp"
 #include "flut/prop_node.hpp"
 
