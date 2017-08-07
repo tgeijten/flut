@@ -31,6 +31,10 @@ namespace flut
 	using boundsd = bounds< double >;
 	using boundsi = bounds< int >;
 
+	template< typename T > std::ostream& operator<<( std::ostream& str, const bounds< T >& v ) {
+		return str << v.lower << ' ' << v.upper;
+	}
+
 	template< typename T > flut::bounds<T>::bounds( const prop_node& pn ) {
 		if ( pn.has_value() ) {
 			lower = from_str< T >( pn.get_value() );
