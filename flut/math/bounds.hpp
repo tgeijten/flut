@@ -10,7 +10,7 @@ namespace flut
 		template< typename T2 > bounds( const T2& lower_bound, const T2& upper_bound ) : lower( T( lower_bound ) ), upper( T( upper_bound ) ) {};
 		template< typename T2 > bounds( const bounds< T2 >& other ) : lower( T( other.lower ) ), upper( T( other.upper ) ) {};
 		template< typename T2 > bounds( const T2& value ) : lower( T( value ) ), upper( T( value ) ) {};
-		bounds() : lower( T( 0 ) ), upper( T( 0 ) ) {};
+		bounds() : lower( T() ), upper( T() ) {};
 		bounds( const prop_node& props );
 
 		bool is_within( const T& value ) { return ( value >= lower ) && ( value <= upper ); }
