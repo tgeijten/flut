@@ -9,7 +9,7 @@ namespace flut
 	{
 	public:
 		version( int maj, int min, int bugfix, int bld = 0, string post = "" ) :
-			major( major ), minor( minor ), patch( bugfix ), build( bld ), postfix( post ) {}
+			major( maj ), minor( min ), patch( bugfix ), build( bld ), postfix( post ) {}
 
 		version( const string& version ) {
 			std::stringstream str( version );
@@ -30,7 +30,6 @@ namespace flut
 		int minor;
 		int patch;
 		int build;
-
 		string postfix;
 	};
 
