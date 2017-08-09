@@ -37,7 +37,7 @@ namespace flut
 	template< typename T, int N = 2 >
 	struct smooth_delayer
 	{
-		smooth_delayer( float delay = 1.0f, const T& init_value = T() ) : window_( delay / ( T(N) - T(0.5) ) ), data_{ init_value }, idx_( 0 ), time_( 0 ), inter_( 0 ) {
+		smooth_delayer( float delay = 1.0f, const T& init_value = T() ) : window_( delay / ( N - 0.5f ) ), data_{ init_value }, idx_( 0 ), time_( 0 ), inter_( 0 ) {
 			static_assert( N >= 2, "flut::delayer resolution parameter must be >= 2" );
 		}
 
@@ -63,7 +63,7 @@ namespace flut
 
 		float window_;
 		float time_;
-		float inter_;
+		T inter_;
 		index_t idx_;
 		std::array< T, N > data_;
 	};
