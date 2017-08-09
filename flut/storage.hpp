@@ -130,14 +130,14 @@ namespace flut
 	};
 
 	// TODO: move to tools file?
-	template< typename T > void store( storage<T>& sto, const string& str, const math::vec3_<T>& v ) {
+	template< typename T > void write_storage( storage<T>& sto, const string& str, const math::vec3_<T>& v ) {
 		sto[ str + ".x" ] = v.x;
 		sto[ str + ".y" ] = v.y;
 		sto[ str + ".z" ] = v.z;
 	}
 
 	// TODO: move to tools file?
-	template< typename T > void store( storage<T>& sto, const string& str, const math::quat_<T>& q ) {
+	template< typename T > void write_storage( storage<T>& sto, const string& str, const math::quat_<T>& q ) {
 		sto[ str + ".w" ] = q.w;
 		sto[ str + ".x" ] = q.x;
 		sto[ str + ".y" ] = q.y;
@@ -145,7 +145,7 @@ namespace flut
 	}
 
 	// TODO: move to tools file?
-	template< typename T > void store( storage<T>& sto, const string& str, const T& v ) { sto[ str ] = v; }
+	//template< typename T > void write_storage( storage<T>& sto, const string& str, const T& v ) { sto[ str ] = v; }
 
 	// TODO: move to IO file
 	template< typename T, typename L > std::ostream& operator<<( std::ostream& str, const storage< T, L >& buf )
