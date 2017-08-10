@@ -13,15 +13,17 @@ namespace flut
 		bounds() : lower( T() ), upper( T() ) {};
 		bounds( const prop_node& props );
 
-		bool is_within( const T& value ) { return ( value >= lower ) && ( value <= upper ); }
+		bool is_within( const T& value ) const { return ( value >= lower ) && ( value <= upper ); }
 		T range() const { return upper - lower; }
 
 		/// returns negative when value is below lower, positive when value is above upper, 0 when within bounds
-		T get_violation( const T& value )
-		{ if ( value < lower ) return value - lower; else if ( value > upper ) return value - upper; else return T( 0 ); }
+		T get_violation( const T& value ) const { if ( value < lower ) return value - lower; else if ( value > upper ) return value - upper; else return T( 0 ); }
 
-		T& clamp( T& value ) { math::clamp( value, lower, upper ); return value; }
-		T& soft_clamp( T& value, const T& boundary ) { math::soft_clamped( value, lower, upper, boundary ); return value; }
+		T& clamp( T& value ) const { return math::clamp( value, lower, upper ); }
+		T& soft_clamp( T& value, const T& boundary ) const { return math::soft_clamp( value, lower, upper, boundary ); }
+
+		// return inverted bounds
+		bounds< T > operator-() const { return bounds( -upper, -lower ); }
 
 		T lower;
 		T upper;

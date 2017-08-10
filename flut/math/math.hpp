@@ -77,8 +77,7 @@ namespace flut
 		{ if ( v < min ) v = min; else if ( v > max ) v = max; return v; } // TODO: use efficient instructions
 
 		/// return clamped value that is between min and max
-		template< typename T > T clamped( T v, const T& min, const T& max )
-		{ return clamp( v, min, max ); }
+		template< typename T > T clamped( T v, const T& min, const T& max ) { return clamp( v, min, max ); }
 
 		/// limit transform function
 		template< typename T > T limit_transfer( T x, T limit ) { return limit - limit * limit / ( x + limit ); }
