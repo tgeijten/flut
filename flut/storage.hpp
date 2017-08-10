@@ -44,7 +44,7 @@ namespace flut
 		const L& get_label( index_t channel ) const { return labels_[ channel ]; }
 
 		/// add frame to storage
-		void add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; }
+		storage< T, L >& add_frame( T value = T( 0 ) ) { data_.resize( data_.size() + channel_size(), value ); ++frame_size_; return *this; }
 
 		/// add frame to storage
 		void add_frame( const vector< T >& data ) {
@@ -62,6 +62,9 @@ namespace flut
 
 		/// check if there is any data
 		bool empty() const { return data_.empty(); }
+
+		/// clear the storage
+		void clear() { frame_size_ = 0; labels_.clear(); data_.clear(); }
 
 		/// access value with bounds checking
 		T& at( index_t frame, index_t channel )
@@ -82,10 +85,6 @@ namespace flut
 
 		/// access value of most recent frame by channel name
 		const T& operator()( const L& label ) const { return *this( find_channel( label ) ); }
-
-		/// get access to the data in a specific frame (DO WE NEED THIS?)
-		const T* get_frame( index_t frame = frame_size() - 1 )
-		{ flut_assert( frame < frame_size() ); return &data_[ frame * this->channel_size() ]; }
 
 		/// get the interpolated value of a specific frame / channel
 		T get_interpolated_value( T frame_idx, index_t channel ) {
