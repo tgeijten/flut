@@ -44,7 +44,7 @@ namespace flut
 	path path::parent_path() const
 	{
 		size_t n = last_separator_pos();
-		return n != string::npos ? data_.substr( 0, n ) : path();
+		return n != string::npos ? path( data_.substr( 0, n ) ) : path();
 	}
 
 	path path::extension() const
@@ -96,7 +96,17 @@ namespace flut
 
 	flut::path operator/( const path& p1, const path& p2 )
 	{
-		return p1.has_filename() ? path( p1.str() + path::preferred_separator() + p2.str() ) : path( p1.str() + p2.str() );
+		return p1 / p2.str();
+	}
+
+	path operator/( const path& p1, const string& p2 )
+	{
+		return p1.has_filename() ? path( p1.str() + path::preferred_separator() + p2 ) : path( p1.str() + p2 );
+	}
+
+	path operator/( const path& p1, const char* p2 )
+	{
+		return p1 / string( p2 );
 	}
 
 	flut::path operator+( const path& p1, const string& p2 )

@@ -15,8 +15,8 @@ namespace flut
 	{
 	public:
 		path() {}
-		path( const string& p ) : data_( p ) {}
-		path( string&& p ) : data_( std::move( p ) ) {}
+		explicit path( const string& p ) : data_( p ) {}
+		explicit path( string&& p ) : data_( std::move( p ) ) {}
 		path( const path& p ) : data_( p.data_ ) {}
 		path( path&& p ) : data_( std::move( p.data_ ) ) {}
 		path( const char* p ) : data_( p ) {}
@@ -53,6 +53,8 @@ namespace flut
 	};
 
 	FLUT_API path operator/( const path& p1, const path& p2 );
+	FLUT_API path operator/( const path& p1, const string& p2 );
+	FLUT_API path operator/( const path& p1, const char* p2 );
 	FLUT_API path operator+( const path& p1, const string& p2 );
 	FLUT_API path operator+( const string& p1, const path& p2 );
 	FLUT_API bool operator==( const path& p1, const path& p2 );

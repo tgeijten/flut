@@ -1,6 +1,7 @@
 #include "char_stream.hpp"
 #include "string_tools.hpp"
 #include "system_tools.hpp"
+#include "filesystem.hpp"
 #include <cstring>
 
 namespace flut
@@ -97,7 +98,7 @@ namespace flut
 		skip_delimiters();
 	}
 
-	flut::char_stream load_char_stream( const string& filename, const char* delimiters, error_code* ec )
+	flut::char_stream load_char_stream( const path& filename, const char* delimiters, error_code* ec )
 	{
 		return char_stream( load_string( filename, ec ), delimiters );
 	}

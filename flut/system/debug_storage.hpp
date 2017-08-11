@@ -5,6 +5,6 @@
 
 namespace flut
 {
-	void FLUT_API set_debug_output( const path& filename );
-	void FLUT_API write_debug( const string& label, float data );
+	FLUT_API void set_debug_output( const path& filename );
+	FLUT_API void write_debug( const string& label, float data );
 }

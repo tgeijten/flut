@@ -20,6 +20,7 @@ namespace rapidxml {
 	}
 }
 #include <contrib/rapidxml-1.13/rapidxml_print.hpp>
+#include "filesystem.hpp"
 
 namespace flut
 {
@@ -155,7 +156,7 @@ namespace flut
 
 	FLUT_API prop_node load_prop( const path& filename, error_code* ec )
 	{
-		auto str = load_string( filename.str(), ec );
+		auto str = load_string( filename, ec );
 		if ( ec && ec->error() )
 			return prop_node();
 		else return parse_prop( str.c_str(), ec );
@@ -166,7 +167,7 @@ namespace flut
 		prop_node pn;
 		prop_node* cur_group = &pn;
 
-		auto str = load_char_stream( filename.str() );
+		auto str = load_char_stream( filename );
 		while ( str.good() )
 		{
 			string line = trim_str( str.get_line() );

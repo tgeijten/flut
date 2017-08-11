@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <type_traits>
+#include "flut/char_stream.hpp"
 
 namespace flut
 {
@@ -40,6 +41,12 @@ namespace flut
 		const T& operator*() const { return value_; }
 		T value_;
 	};
+
+	template< typename T > std::istream& operator>>( std::istream& str, optional< T >& v )
+	{ T tmp; str >> tmp; if ( !str.fail() ) v = tmp; return str; }
+
+	template< typename T > char_stream& operator>>( char_stream& str, optional< T >& v )
+	{ T tmp; str >> tmp; if ( !str.fail() ) v = tmp; return str; }
 
 	using optional_int = optional< int >;
 	using optional_size = optional< size_t >;

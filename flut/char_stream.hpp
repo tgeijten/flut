@@ -74,7 +74,7 @@ namespace flut
 	};
 
 	/// load file into char buffer
-	FLUT_API char_stream load_char_stream( const string& filename, const char* delimiters = default_delimiters(), error_code* ec = nullptr );
+	FLUT_API char_stream load_char_stream( const path& filename, const char* delimiters = default_delimiters(), error_code* ec = nullptr );
 }
 
 #ifdef FLUT_COMP_MSVC
