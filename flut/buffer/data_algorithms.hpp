@@ -1,5 +1,5 @@
 #pragma once
-#include "../table.hpp"
+#include "flut/table.hpp"
 #include <vector>
 
 namespace flut

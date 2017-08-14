@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include "flut/system/types.hpp"
-#include "../system/assert.hpp"
+#include "flut/system/assert.hpp"
 
 namespace flut
 {
