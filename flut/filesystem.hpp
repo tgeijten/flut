@@ -14,4 +14,6 @@ namespace flut
 	FLUT_API bool create_folder( const path& folder );
 	FLUT_API path create_unique_folder( const path& folder, int max_attempts = 9999 );
 	FLUT_API string load_string( const path& filename, error_code* ec = nullptr );
+	FLUT_API void current_path( const path& p );
+	FLUT_API path current_path();
 }

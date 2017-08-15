@@ -9,6 +9,7 @@
 #	include <shlobj.h>
 #	pragma warning( disable: 4996 )
 #endif
+#include <direct.h>
 
 
 namespace flut
@@ -125,5 +126,18 @@ namespace flut
 		std::stringstream buf;
 		buf << ifstr.rdbuf();
 		return buf.str();
+	}
+
+	FLUT_API void current_path( const path& p )
+	{
+		chdir( p.c_str() );
+	}
+
+	FLUT_API path current_path()
+	{
+		char* buf = getcwd( NULL, 0 );
+		path p( buf );
+		free( buf );
+		return p;
 	}
 }
