@@ -199,6 +199,7 @@ namespace flut
 		/// see if this node has been accessed (touched)
 		bool is_accessed() const { return accessed_flag; }
 		size_t count_unaccessed() const { size_t t = is_accessed() ? 0 : 1; for ( auto& c : children ) t += c.second.count_unaccessed(); return t; }
+		void clear_accessed_recursively() { accessed_flag = false; for ( auto& c : children ) c.second.clear_accessed_recursively(); }
 
 	private:
 		const prop_node& access() const { accessed_flag = true; return *this; }

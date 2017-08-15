@@ -297,6 +297,7 @@ namespace flut
 
 		prop_node pn = load_file( filename );
 		resolve_include_files( pn, filename, include_directive, level );
+		pn.clear_accessed_recursively();
 
 		return pn;
 	}
