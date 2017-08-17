@@ -87,21 +87,25 @@ namespace flut
 		return data_.find_last_of( "/\\" );
 	}
 
-	flut::path& path::operator/=( const path& p )
+	flut::path& path::operator/=( const string& p )
 	{
-		if ( has_filename() ) data_ += preferred_separator() + p.data_;
-		else data_ += p.data_;
+		data_ += has_filename() ? preferred_separator() + p : p;
 		return *this;
 	}
 
-	flut::path operator/( const path& p1, const path& p2 )
+	flut::path& path::operator/=( const path& p )
 	{
-		return p1 / p2.str();
+		return *this /= p.str();
 	}
 
 	path operator/( const path& p1, const string& p2 )
 	{
 		return p1.has_filename() ? path( p1.str() + path::preferred_separator() + p2 ) : path( p1.str() + p2 );
+	}
+
+	flut::path operator/( const path& p1, const path& p2 )
+	{
+		return p1 / p2.str();
 	}
 
 	path operator/( const path& p1, const char* p2 )

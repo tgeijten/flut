@@ -41,6 +41,7 @@ namespace flut
 		path stem();
 		bool empty() const;
 		path& operator/=( const path& p );
+		path& operator/=( const string& p );
 
 		bool has_filename() const;
 		bool has_parent_path() const;
