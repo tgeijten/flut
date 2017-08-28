@@ -15,6 +15,7 @@
 #include "flut/system/profiler.hpp"
 #include "data_test.h"
 #include "delay_test.h"
+#include "filter_test.h"
 
 using flut::string;
 
@@ -25,8 +26,8 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		//flut_logvar2( flut::constants<double>::epsilon(), flut::constants<double>::relaxed_epsilon() );
-		//flut_logvar2( flut::constants<float>::epsilon(), flut::constants<float>::relaxed_epsilon() );
+		flut::filter_test();
+		flut::delay_test();
 
 		flut::timer_test();
 
@@ -34,8 +35,6 @@ int main( int argc, char* argv[] )
 		flut::profile_test();
 #endif
 		flut::stopwatch sw;
-
-		flut::delay_test();
 
 		flut::container_test();
 		sw.add_measure( "container" );
