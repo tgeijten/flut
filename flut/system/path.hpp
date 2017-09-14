@@ -38,7 +38,7 @@ namespace flut
 		path parent_path() const;
 		path extension() const;
 		path filename() const;
-		path stem();
+		path stem() const;
 		bool empty() const;
 		path& operator/=( const path& p );
 		path& operator/=( const string& p );

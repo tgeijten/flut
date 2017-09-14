@@ -59,7 +59,7 @@ namespace flut
 		return n != string::npos ? path( data_.substr( n + 1 ) ) : path();
 	}
 
-	path path::stem()
+	path path::stem() const
 	{
 		size_t n1 = last_separator_pos();
 		size_t n2 = data_.find_last_of( '.' );
