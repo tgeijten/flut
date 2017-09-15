@@ -74,6 +74,7 @@ namespace flut
 
 		/// see if this prop_node has a value
 		bool has_value() const { return !value.empty(); }
+		bool has_value( const key_t& key ) const { auto c = find( key ); return c != end() && c->second.has_value(); }
 
 		/// see if this prop_node has a specific key
 		bool has_key( const key_t& key ) const { return find( key ) != end(); }
