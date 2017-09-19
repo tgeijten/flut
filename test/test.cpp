@@ -26,8 +26,9 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		flut::filter_test();
-		flut::delay_test();
+		//flut::math::wrap_test();
+		//flut::filter_test();
+		//flut::delay_test();
 
 		flut::timer_test();
 

@@ -166,6 +166,12 @@ void clamp_test()
 	//std::ofstream( "X:/clamp_test.txt" ) << sto;
 }
 
+void wrap_test()
+{
+	for ( double x = -10; x < 10; x += 0.1 )
+		log::info( x, ":\t", wrapped( x, 0.0, 1.0 ), "\t", wrapped( x, -1.5, 2.5 ), "\t", wrapped( x, -3.5, -1.5 ) );
+}
+
 void linear_regression_test()
 {
 #if 0

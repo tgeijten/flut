@@ -93,6 +93,16 @@ namespace flut
 		template< typename T > T soft_clamped( T v, const T& min, const T& max, const T& boundary )
 		{ return soft_clamp( v, min, max, boundary ); }
 
+		/// wrap a value to a range
+		template< typename T > T& wrap( T& v, const T& lower, const T& upper )
+		{
+			if ( ( v - lower ) >= 0 )
+				return v = fmod( v - lower, upper - lower ) + lower;
+			else return v = fmod( v - lower, upper - lower ) + upper;
+		}
+
+		/// wrap a value to a range
+		template< typename T > T wrapped( T v, const T& lower, const T& upper ) { return wrap( v, lower, upper ); }
 
 		/// check a value is within a range
 		template< typename T > bool is_between( T v, T min, T max ) { return ( v >= min && v <= max ); }
