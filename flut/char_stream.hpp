@@ -46,8 +46,8 @@ namespace flut
 
 		string get_line();
 		string get_token( const char* operators = "", const char* quotations = "\"" );
-		char getc() { if ( cur_pos == buffer_end ) { buffer_flags.set< eof_flag >(); return '\0'; } else return *cur_pos++; }
-		char peekc() { if ( cur_pos == buffer_end ) { buffer_flags.set< eof_flag >(); return '\0'; } else return *cur_pos; }
+		char getc() { char c = *cur_pos++; test_eof(); return c; }
+		char peekc() { return *cur_pos; }
 
 		bool good() { return !buffer_flags.any(); }
 		bool eof() { return buffer_flags.get< eof_flag >(); }
@@ -59,7 +59,7 @@ namespace flut
 		void skip_delimiters() { while ( !test_eof() && strchr( delimiters_, *cur_pos ) ) ++cur_pos; }
 		void skip_delimiters( const char* delim ) { while ( !test_eof() && strchr( delim, *cur_pos ) ) ++cur_pos; }
 		bool test_eof() { if ( cur_pos == buffer_end ) { buffer_flags.set< eof_flag >(); return true; } else return false; }
-		void process_end_pos() { if ( cur_pos == cur_pos_end ) buffer_flags.set< fail_flag >(); cur_pos = cur_pos_end; skip_delimiters(); }
+		void process_end_pos() { if ( cur_pos == cur_pos_end ) buffer_flags.set< fail_flag >(); else { cur_pos = cur_pos_end; skip_delimiters(); } }
 
 		int radix = 10;
 		string str_buffer;
