@@ -25,6 +25,8 @@
 #define flut_logvar3( var1_, var2_, var3_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_, "\t", #var3_"=", var3_ )
 #define flut_logvar4( var1_, var2_, var3_, var4_ ) flut::log::trace( #var1_"=", var1_, "\t", #var2_"=", var2_, "\t", #var3_"=", var3_, "\t", #var4_"=", var4_ )
 
+#define flut_trace_call( function_ ) flut::log::trace( "--> "#function_ ); function_; flut::log::trace( "<-- "#function_ )
+
 namespace flut
 {
 	struct setfixed
