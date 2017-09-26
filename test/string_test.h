@@ -4,18 +4,30 @@
 #include "flut/system/test_framework.hpp"
 #include "flut/system/path.hpp"
 #include "flut/dictionary.hpp"
+#include "flut/hash.hpp"
 
 namespace flut
 {
 	void string_test()
 	{
-		enum fruit { no_fruit, appel, peer, banaan };
+		enum fruit { no_fruit, appel, peer, banaan, fruit_count };
 		auto fruit_dict = flut::dictionary< fruit >( { { appel, "appel" }, { peer, "peer" }, { banaan, "banaan" } } );
 
 		FLUT_TEST( fruit_dict( "appel", no_fruit ) == appel );
 		FLUT_TEST( fruit_dict( "peer", no_fruit ) == peer );
 		FLUT_TEST( fruit_dict( "banaan", no_fruit ) == banaan );
 		FLUT_TEST( fruit_dict( "peerr", no_fruit ) == no_fruit );
+
+		for ( int f = appel; f < fruit_count; ++f )
+		{
+			switch ( hash( fruit_dict( fruit( f ) ) ) )
+			{
+			case "appel"_hash: FLUT_TEST( f == appel ); break;
+			case "peer"_hash: FLUT_TEST( f == peer ); break;
+			case "banaan"_hash: FLUT_TEST( f == banaan ); break;
+			default: FLUT_TEST_MSG( 1 == 2, "hash error" );
+			}
+		}
 
 		string s = "Test 0.123 24";
 		string a;
