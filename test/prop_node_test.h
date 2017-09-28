@@ -82,21 +82,19 @@ namespace flut
 
 		int count_s = 0;
 		for ( auto& selection : pn.select( "duplicate" ) )
-		{
-			log::info( selection.first, "=", selection.second.get_value() );
 			FLUT_TEST( selection.second.get< int >() == ++count_s );
-		}
 		FLUT_TEST( count_s == 4 );
 
 		int count_v = 0;
 		auto view = pn.select( "duplicate" );
 		for ( auto it = view.begin(); it != view.end(); ++it )
 			FLUT_TEST( it->second.get< int >() == ++count_v );
+		FLUT_TEST( count_v == 4 );
 
 		int count_sp = 0;
 		for ( auto& selection : pn.select_pattern( "*test" ) )
 			++count_sp;
-		FLUT_TEST( count_s == 3 );
+		FLUT_TEST( count_sp == 3 );
 
 		save_prop( pn, "prop_node_test.prop" );
 		auto pn_loaded = load_prop( "prop_node_test.prop" );
