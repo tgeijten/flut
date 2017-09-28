@@ -3,6 +3,7 @@
 #include "flut/prop_node_tools.hpp"
 #include <iostream>
 #include "flut/math/vec3_type.hpp"
+#include "flut/container_tools.hpp"
 
 namespace flut
 {
@@ -46,6 +47,9 @@ namespace flut
 		pn.push_back( "test", 1.23f );
 		FLUT_TEST( pn.get< float >( "test" ) == 1.23f );
 
+		pn.push_back( "duplicate", 1 );
+		pn.push_back( "duplicate", 2 );
+
 		std::vector< custom_struct > vec;
 		for ( int i = 1; i <= 3; ++i ) vec.push_back( custom_struct( stringf( "name%d", i ), i * 1.5 ) );
 		pn.push_back( "vec_test", vec );
@@ -67,10 +71,32 @@ namespace flut
 		p2.set( "test", pn );
 		FLUT_TEST( p2.get_child( "test" ) == pn );
 
+		pn.push_back( "duplicate", 3 );
+
 		// test delimiters
 		pn.set_delimited( "this.is.a.subfolder", 1.5 );
 		FLUT_TEST( pn[ "this" ][ "is" ][ "a" ][ "subfolder" ].get< double >() == 1.5 );
 		FLUT_TEST( pn.get_delimited< double >( "this.is.a.subfolder" ) == 1.5 );
+
+		pn.push_back( "duplicate", 4 );
+
+		int count_s = 0;
+		for ( auto& selection : pn.select( "duplicate" ) )
+		{
+			log::info( selection.first, "=", selection.second.get_value() );
+			FLUT_TEST( selection.second.get< int >() == ++count_s );
+		}
+		FLUT_TEST( count_s == 4 );
+
+		int count_v = 0;
+		auto view = pn.select( "duplicate" );
+		for ( auto it = view.begin(); it != view.end(); ++it )
+			FLUT_TEST( it->second.get< int >() == ++count_v );
+
+		int count_sp = 0;
+		for ( auto& selection : pn.select_pattern( "*test" ) )
+			++count_sp;
+		FLUT_TEST( count_s == 3 );
 
 		save_prop( pn, "prop_node_test.prop" );
 		auto pn_loaded = load_prop( "prop_node_test.prop" );

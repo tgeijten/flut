@@ -6,6 +6,7 @@
 #include "flut/system/assert.hpp"
 #include "flut/system/string_cast.hpp"
 #include <algorithm>
+#include "container_tools.hpp"
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
@@ -193,6 +194,10 @@ namespace flut
 		iterator end() { return children.end(); }
 		const_iterator end() const { return children.end(); }
 		const_iterator cend() const { return children.cend(); }
+
+		/// access selection of a specific type
+		auto select( const string& key ) const { return make_view_if( begin(), end(), [=]( const pair_t& kvp ) { return kvp.first == key; } ); }
+		auto select_pattern( const string& pattern ) const { return make_view_if( begin(), end(), [=]( const pair_t& kvp ) { return pattern_match( kvp.first, pattern ); } ); }
 
 		/// erase a child
 		iterator erase( const_iterator it ) { return children.erase( it ); }
