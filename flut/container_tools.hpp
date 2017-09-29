@@ -43,13 +43,20 @@ namespace flut
 		return idx_vec;
 	}
 
+	template< typename C > C sorted_copy( const C& cont ) { C res( cont ); std::sort( res.begin(), res.end() ); return res; }
+
 	template< typename T > T median( const vector< T >& vec ) {
+		flut_assert( vec.size() > 0 );
 		auto s = vec.size();
-		flut_assert( s > 0 );
-		auto sorted_vec = vec;
-		std::sort( sorted_vec.begin(), sorted_vec.end() );
-		if ( s % 2 == 1 ) return sorted_vec[ s / 2 ];
-		else return ( sorted_vec[ s / 2 ] + sorted_vec[ s / 2 - 1 ] ) / T(2);
+		auto v = sorted_copy( vec );
+		if ( s % 2 == 1 ) return v[ s / 2 ];
+		else return ( v[ s / 2 ] + v[ s / 2 - 1 ] ) / T(2);
+	}
+
+	template< typename T > T top_average( const vector< T >& vec, size_t count ) {
+		vector< T > result( count );
+		std::partial_sort_copy( vec.begin(), vec.end(), result.begin(), result.end() );
+		return average( result );
 	}
 
 	template< typename T > index_t find_index( const vector< T >& vec, const T& val ) {

@@ -1,4 +1,4 @@
-#include "interruptible.h"
+#include "interruptible.hpp"
 
 namespace flut
 {
