@@ -4,15 +4,15 @@
 namespace flut
 {
 	template< typename T, size_t N >
-	class stackvec
+	class local_vector
 	{
 	public:
 		typedef T* iterator;
 		typedef const T* const_iterator;
 
-		stackvec() : end_( data_ ) {}
-		stackvec( size_t n, const T& v ) : end_( data_ + n ) { assign( v ); }
-		~stackvec() { for ( auto it = begin(); it != end(); ++it ) { it->~T(); } }
+		local_vector() : end_( data_ ) {}
+		local_vector( size_t n, const T& v ) : end_( data_ + n ) { assign( v ); }
+		~local_vector() { for ( auto it = begin(); it != end(); ++it ) { it->~T(); } }
 
 		T& operator[]( index_t i ) { return *reinterpret_cast< T* >( data_ + i ); }
 		const T& operator[]( index_t i ) const { return *reinterpret_cast< const T* >( data_ + i ); }
