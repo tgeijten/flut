@@ -34,15 +34,15 @@ namespace flut
 		using T = typename CY::value_type;
 		auto n = cy.size();
 		T avgx = x_begin + ( T( n - 1 ) * x_step ) / 2;
-		T avgY = average( cy );
+		T avgy = average( cy );
 		T num = 0.0;
 		T xval = x_begin;
 		for ( auto ity = std::begin( cy ); ity != std::end( cy ); ++ity, xval += x_step )
-			num += ( xval - avgx ) * ( *ity - avgY );
+			num += ( xval - avgx ) * ( *ity - avgy );
 		T x_hsiz = T( n - 1 ) * x_step / 2;
 		T den = x_hsiz * ( x_hsiz + x_step ) * ( 2 * x_hsiz + x_step ) / ( 3 * x_step ); // analytical solution for den with fixed steps
 		T slope = num / den;
-		return linear_function< T >( avgY - slope * avgx, slope );
+		return linear_function< T >( avgy - slope * avgx, slope );
 	}
 
 	template< typename C1, typename C2 >
