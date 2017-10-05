@@ -4,6 +4,7 @@
 #include <iosfwd>
 #include <vector>
 #include "flut/container_tools.hpp"
+#include "buffer/data_header.hpp"
 
 namespace flut
 {
@@ -25,14 +26,24 @@ namespace flut
 			return col_labels.set( column_size() - 1, label );
 		}
 
+		index_t get_or_add_row( const L& label, const T& default_value = T() ) {
+			auto idx = row_labels.find( label );
+			return idx == no_index ? add_row( label, default_value ) : idx;
+		}
+
+		index_t get_or_add_column( const L& label, const T& default_value = T() ) {
+			auto idx = col_labels.find( label );
+			return idx == no_index ? add_column( label, default_value ) : idx;
+		}
+
 		void resize( size_t rows, size_t cols ) {
 			flut_error_if( rows < row_size() || cols < column_size(), "tables cannot be shrinked" );
 
 			// reorganize existing data
-			data.resize( row_size * cols );
+			data.resize( row_size() * cols );
 			for ( index_t ri = rows; ri-- > 0; )
-				for ( index_t ci = cols; ci-- > 0 )
-					data_[ cols * ri + ci ] = ( ri < row_size() && ci < column_size() ) ? data[ column_size() * ri + ci ] : T();
+				for ( index_t ci = cols; ci-- > 0; )
+					data[ cols * ri + ci ] = ( ri < row_size() && ci < column_size() ) ? data[ column_size() * ri + ci ] : T();
 			col_labels.resize( cols );
 			row_labels.resize( rows );
 		}
@@ -43,19 +54,8 @@ namespace flut
 		const T& operator()( index_t row, index_t col ) const { flut_assert( row < row_size() && col < column_size() ); return data[ row * column_size() + col ]; }
 		T& operator()( index_t row, index_t col ) { flut_assert( row < row_size() && col < column_size() ); return data[ row * column_size() + col ]; }
 
-		/// set the value of a specific cell (must exist!)
-		void set( index_t row, index_t col, const T& value ) { at( row, col ) = value; }
-		const T& get( const L& row, const L& col ) const { return at( row_index( row ), column_index( col ) ); }
-
-		void set( const L& row, const L& col, const T& value ) {
-			auto ridx = row_index( row );
-			if ( ridx == no_index ) ridx = add_row( row ) - 1;
-
-			auto cidx = column_index( col );
-			if ( cidx == no_index ) cidx = add_column( col ) - 1;
-
-			set( row_index( row ), column_index( col ), value );
-		}
+		const T& operator()( const L& row, const L& col ) const { return (*this)( row_index( row ), col_index( col ) ); }
+		T& operator()( const L& row, const L& col ) { return (*this)( get_or_add_row( row ), get_or_add_column( col ) ); }
 
 		template< typename T1 >
 		friend std::ostream& operator<<( std::ostream& str, const table< T1 >& t );
