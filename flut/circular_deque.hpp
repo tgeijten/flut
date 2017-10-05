@@ -24,6 +24,9 @@ namespace flut
 			else { front_ = ( front_ + capacity() - 1 ) % capacity(); front() = value; }
 		}
 
+		T& operator[]( index_t idx ) { return buffer_[ ( front_ + idx ) % buffer_.size() ]; }
+		const T& operator[]( index_t idx ) const { return buffer_[ ( front_ + idx ) % buffer_.size() ]; }
+
 		void pop_back() { flut_assert( size_ > 0 ); --size_; }
 		void pop_front() { flut_assert( size_ > 0 ); front_ = ( front_ + 1 ) % capacity(); --size_; }
 
