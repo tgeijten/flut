@@ -28,7 +28,7 @@ namespace flut
 		void reset();
 		section* start_section( const char* name );
 		void end_section();
-		nanoseconds_t now() { return timer_.nanoseconds(); }
+		nanoseconds_t now() const { return timer_.nanoseconds(); }
 		prop_node report();
 		static profiler& instance() { return instance_; }
 
