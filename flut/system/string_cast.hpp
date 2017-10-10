@@ -55,4 +55,9 @@ namespace flut
 		static T from( const string& s ) { return static_cast< T >( string_cast< int >::from( s ) ); }
 		static string to( const T& v ) { return string_cast< int >::to( static_cast< int >( v ) ); }
 	};
+
+	template< typename T > bool string_is( const string& s ) {
+		try { T result = string_cast<T>::from( s ); return true; }
+		catch( std::exception& e ) { return false; }
+	}
 }

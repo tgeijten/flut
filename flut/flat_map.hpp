@@ -32,6 +32,12 @@ namespace flut
 			return std::find_if( cbegin(), cend(), [&]( const value_type& kvp ) { return kvp.first == key; } );
 		}
 
+		size_t count( const K& key ) const {
+			return std::count_if( cbegin(), cend(), [&]( const value_type& kvp ) { return kvp.first == key; } );
+		}
+
+		bool has_key( const K& key ) const { return find( key ) != end(); }
+
 		V& operator[]( const K& key ) {
 			auto it = find( key );
 			if ( it == this->end() ) {
@@ -40,6 +46,8 @@ namespace flut
 			}
 			else return it->second;
 		}
+
+		const V& operator[]( const K& key ) const { return at( key ); }
 
 		V& at( const K& key ) {
 			auto it = find( key );
