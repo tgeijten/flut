@@ -2,13 +2,16 @@
 
 #include <vector>
 #include "string_tools.hpp"
+#include "prop_node.hpp"
 
 namespace flut
 {
 	struct pattern_matcher
 	{
 		pattern_matcher() {}
-		pattern_matcher( const std::string& pattern, const char* delimeters = ";" ) : patterns( split_str( pattern, delimeters ) ) {}
+		pattern_matcher( const prop_node& pn ) : patterns( split_str( pn.get_value(), ";" ) ) {}
+		pattern_matcher( const char* pattern, const char* delimeters = ";" ) : patterns( split_str( pattern, delimeters ) ) {}
+		pattern_matcher( const string& pattern, const char* delimeters = ";" ) : patterns( split_str( pattern, delimeters ) ) {}
 
 		// returns true if pattern matches string
 		bool operator()( const string& str ) const {
@@ -24,6 +27,9 @@ namespace flut
 			while ( begin != end && !match( static_cast< const string& >( *begin ) ) ) ++begin;
 		}
 
-		std::vector< std::string > patterns;
+		vector< string > patterns;
 	};
+
+	IS_PROP_NODE_CONSTRUCTABLE( pattern_matcher );
 }
+
