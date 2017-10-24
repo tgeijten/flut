@@ -87,7 +87,7 @@ namespace flut
 		return data_.find_last_of( "/\\" );
 	}
 
-	flut::path& path::operator/=( const string& p )
+	flut::path& path::operator/=( const flut::string& p )
 	{
 		data_ += has_filename() ? preferred_separator() + p : p;
 		return *this;

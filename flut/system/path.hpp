@@ -29,6 +29,7 @@ namespace flut
 		static char preferred_separator();
 
 		const string& str() const { return data_; }
+		const string& string() const { return data_; }
 		const char* c_str() const { return data_.c_str(); }
 
 		path& replace_extension( const path& ext = "" );
@@ -41,7 +42,7 @@ namespace flut
 		path stem() const;
 		bool empty() const;
 		path& operator/=( const path& p );
-		path& operator/=( const string& p );
+		path& operator/=( const flut::string& p );
 
 		bool has_filename() const;
 		bool has_parent_path() const;
@@ -50,7 +51,7 @@ namespace flut
 
 	private:
 		size_t last_separator_pos() const;
-		string data_;
+		flut::string data_;
 	};
 
 	FLUT_API path operator/( const path& p1, const path& p2 );
