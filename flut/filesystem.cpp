@@ -58,6 +58,35 @@ namespace flut
 #endif
 	}
 
+	FLUT_API bool copy_file( const path& from, const path& to, bool overwrite )
+	{
+#ifdef FLUT_COMP_MSVC
+		return CopyFile( from.c_str(), to.c_str(), overwrite ) == TRUE;
+#else
+		if ( overwrite || !file_exists( to ) )
+		{
+			std::ifstream src( from.str(), std::ios::binary );
+			std::ofstream dst( to.str(), std::ios::binary );
+			if ( src.good() && dst.good() )
+			{
+				dst << src.rdbuf();
+				return true;
+			}
+		}
+		return false;
+#endif
+	}
+
+	FLUT_API bool exists( const path& p )
+	{
+#ifdef FLUT_COMP_MSVC
+		return GetFileAttributes( path( p ).make_preferred().c_str() ) != INVALID_FILE_ATTRIBUTES;
+#else
+		struct stat info;
+		return stat( path, &info ) == 0;
+#endif
+	}
+
 	FLUT_API bool file_exists( const path& file )
 	{
 		std::ifstream ifs( file.str() );
@@ -70,24 +99,21 @@ namespace flut
 		DWORD dwAttrib = GetFileAttributes( path( folder ).make_preferred().c_str() );
 		return ( dwAttrib != INVALID_FILE_ATTRIBUTES && ( dwAttrib & FILE_ATTRIBUTE_DIRECTORY ) );
 #else
-		if ( !folder.empty() )
+		struct stat status;
+		if ( stat( folder.c_str(), &status ) == 0 )
 		{
-			struct stat status;
-			if ( stat( folder.c_str(), &status ) == 0 )
-			{
-				if ( status.st_mode & S_IFDIR )
-					return true;
-			}
+			if ( status.st_mode & S_IFDIR )
+				return true;
 		}
 		return false; // if any condition fails
 #endif
 	}
 
-	FLUT_API bool create_folder( const path& folder )
+	FLUT_API bool create_directories( const path& folder )
 	{
 		// make sure parent folders exist
 		if ( folder.has_parent_path() && !folder_exists( folder.parent_path() ) )
-			create_folder( folder.parent_path() );
+			create_directories( folder.parent_path() );
 
 #ifdef FLUT_COMP_MSVC
 		return CreateDirectory( folder.c_str(), NULL ) != 0;
@@ -106,7 +132,7 @@ namespace flut
 				unique_folder = folder + stringf( " (%d)", i );
 
 			if ( !folder_exists( unique_folder ) )
-				success = create_folder( unique_folder ); // try to create folder
+				success = create_directories( unique_folder ); // try to create folder
 		}
 		flut_error_if( !success, "Could not create unique folder after " + to_str( max_attempts ) + " attempts" );
 
