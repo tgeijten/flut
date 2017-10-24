@@ -11,7 +11,6 @@
 #endif
 #include <direct.h>
 
-
 namespace flut
 {
 #ifdef FLUT_COMP_MSVC
