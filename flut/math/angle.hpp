@@ -126,5 +126,8 @@ namespace flut
 
 		template< angle_unit U, typename T > std::istream& operator>>( std::istream& str, angle_<U, T>& a )
 		{ return ( str >> a.value ); }
+
+		template< angle_unit U, typename T > char_stream& operator>>( char_stream& str, angle_<U, T>& a )
+		{ return ( str >> a.value ); }
 	}
 }
