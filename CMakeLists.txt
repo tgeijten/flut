@@ -7,7 +7,7 @@ project(flut)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 find_path(FLUT_INCLUDE_DIR
-    NAMES flut/system/types.hpp
+    NAMES xo/system/build_config.hpp
 	PATHS ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
@@ -50,7 +50,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 # Process source code.
-add_subdirectory(flut)
+add_subdirectory(xo)
 add_subdirectory(test)
 
 enable_testing()

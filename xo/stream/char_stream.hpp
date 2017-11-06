@@ -1,11 +1,11 @@
 #pragma once
 
-#include "system/platform.hpp"
-#include "system/types.hpp"
-#include "system/assert.hpp"
-#include "system/error_code.hpp"
-#include "system/path.hpp"
-#include "flag_set.hpp"
+#include "xo/system/platform.hpp"
+#include "xo/utility/types.hpp"
+#include "xo/debug/assert.hpp"
+#include "xo/system/error_code.hpp"
+#include "xo/filesystem/path.hpp"
+#include "xo/container/flag_set.hpp"
 
 #ifdef FLUT_COMP_MSVC
 #	pragma warning( push )
